@@ -1,10 +1,11 @@
-'use client'
 import React from 'react'
 import Image from 'next/image'
 import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+
 import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { getQuizBySlug } from '@/lib/actions'
+import Link from 'next/link'
 
 const records = [
   {
@@ -34,11 +35,15 @@ const records = [
   },
 ]
 
-const SingleQuizPage = () => {
+const SingleQuizPage = async (params: any) => {
+  const slug = params.params.slug
+  const quiz = await getQuizBySlug(slug)
+  console.log(quiz)
+
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
-        <h1 className="">Krajobrazy</h1>
+        <h1 className="">{quiz.title}</h1>
       </div>
       <div className="text-black text-2xl  p4 col-span-1 text-center min-h-[150px] rounded-xl relative  overflow-hidden">
         <Image
@@ -50,9 +55,11 @@ const SingleQuizPage = () => {
       </div>
       <div className="text-white   p4 col-span-1  min-h-[150px] rounded-xl flex flex-col items-center justify-between  text-md gap-1">
         <div className="">Test z wiedzy o Włoskich krajobrazach</div>
-        <Button className="w-full bg-purple-600 hover:bg-purple-500">
-          Graj
-        </Button>
+        <Link href={`/game/${quiz.slug}`} className="block w-full">
+          <Button className="w-full bg-purple-600 hover:bg-purple-500 text-2xl py-8">
+            Graj
+          </Button>
+        </Link>
       </div>
       <div className="text-white text-sm bg-slate-800 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center ">
         <div className="flex flex-col  justify-center items-center">
@@ -95,9 +102,9 @@ const SingleQuizPage = () => {
         <h1 className="">Rekordy</h1>
       </div>
       <div className="text-white  bg-slate-800  col-span-2 w-full text-center min-h-[150px] rounded-xl flex-col justify-center items-center p-4  ">
-        {records.map((record) => (
+        {records.map((record, i) => (
           <div
-            key={record.username}
+            key={i}
             className="flex text-sm  justify-between items-center py-1"
           >
             <div className="flex items-center gap-2">

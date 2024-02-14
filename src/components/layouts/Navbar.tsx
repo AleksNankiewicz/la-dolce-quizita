@@ -22,7 +22,7 @@ const Navbar = () => {
         }  w-2/3 justify-start font-bold text-center`}
       >
         <Link href={'/'} className="pl-3 text-xl">
-          La Dolce Quzita
+          Włoski Quiz
         </Link>
       </div>
       <div
@@ -36,17 +36,10 @@ const Navbar = () => {
       <div
         className={`${
           isGameStart ? 'flex' : 'hidden'
-        }  w-1/3 justify-start font-bold text-center`}
-      >
-        <p className="pl-3">0/14</p>
-      </div>
-      <div
-        className={`${
-          isGameStart ? 'flex' : 'hidden'
         } w-1/3 flex flex-col items-center justify-center gap-2`}
       >
         <Timer />
-        <Progress value={33} className="h-2" />
+        <Progress value={33} className="h-2 " />
       </div>
       <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
         <Avatar>
@@ -55,21 +48,15 @@ const Navbar = () => {
             src="/noavatar.png"
             alt="avatar"
           />
-          <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
         <div className="flex flex-col justify-end">
-          {isUserLogged ? (
-            <>
-              <div className="">Alex N</div>
-              <div className="text-green-400 font-bold">180</div>
-            </>
-          ) : (
-            <Link href={'/auth/login'}>
-              <div className="">Zaloguj</div>
-              <div className="text-center">się</div>
-            </Link>
-          )}
+          <div className="">{isUserLogged ? 'Aleks N' : 'Gość'}</div>
+
+          {isGameStart && <div className="text-green-400 font-bold">180</div>}
+          {/* <Link href={'/auth/login'}>
+            <div className="">Gość</div>
+          </Link> */}
         </div>
       </div>
     </div>

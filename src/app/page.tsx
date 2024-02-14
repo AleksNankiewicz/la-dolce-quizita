@@ -1,5 +1,6 @@
 import CardWrapper from '@/components/auth/CardWrapper'
 import LoginForm from '@/components/auth/LoginForm'
+import { getQuizes } from '@/lib/actions'
 import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
 
 import Image from 'next/image'
@@ -56,24 +57,29 @@ const records = [
   },
 ]
 
-export default function Home() {
+export default async function Home() {
+  const quizesFromDb = await getQuizes()
+  console.log(quizesFromDb)
+
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
         <h1 className="">Wyzwanie miesiąca</h1>
       </div>
       <Link
-        href={'/quizes/12323'}
+        href={'/quizes/2813256'}
         className="block text-black text-2xl  p4 col-span-2 w-full text-center h-[250px] sm:h-[250px] md:h-[350px] lg:h-[600px] rounded-xl relative group overflow-hidden"
       >
         <Image
-          src={'/italian-background1.jpg'}
+          src={
+            'https://images.pexels.com/photos/344649/pexels-photo-344649.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+          }
           fill
           alt="background"
           className="overflow-hidden rounded-2xl opacity-40 group-hover:scale-125  duration-300"
         />
         <p className="absolute  w-full h-full top-1/2 -translate-y-[15%] text-4xl text-white">
-          Krajobrazy
+          Kultura
         </p>
       </Link>
       <div className=" text-2xl text-white p4 col-span-2 w-full">
@@ -128,9 +134,9 @@ export default function Home() {
         <h1 className="">Najlepsi użytkownicy</h1>
       </div>
       <div className="text-white  bg-slate-800  col-span-2 w-full text-center min-h-[150px] rounded-xl flex-col justify-center items-center p-4  ">
-        {records.map((record) => (
+        {records.map((record, i) => (
           <div
-            key={record.username}
+            key={i}
             className="flex text-sm  justify-between items-center py-1"
           >
             <div className="flex items-center gap-2">

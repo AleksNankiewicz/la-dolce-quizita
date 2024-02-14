@@ -1,3 +1,5 @@
+'use server'
+
 import { connectToDb } from './connectToDb'
 import { Question, Quiz, User } from './models'
 
@@ -58,4 +60,16 @@ export const addUser = async (
     username: name,
   })
   await newUser.save()
+}
+
+export const getQuizBySlug = async (slug: string) => {
+  try {
+    connectToDb()
+    const quiz = await Quiz.findOne({ slug: slug })
+
+    return quiz
+  } catch (err) {
+    console.log(err)
+    throw new Error('Failed to fetch user by email!')
+  }
 }

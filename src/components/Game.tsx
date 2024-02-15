@@ -71,32 +71,6 @@ const Game = (params: any) => {
   const intervalId = useRef<any>(null)
   const timerIntervalId = useRef<any>(null)
 
-  useEffect(() => {
-    init()
-    setIsGameRunning(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isGameRunning) return
-
-    if (index == questions.length - 1) return
-
-    setInitialQuestionTime()
-    console.log('działa')
-    timerIntervalId.current = setInterval(() => {
-      toggleActualQuestionTime()
-    }, 1)
-
-    intervalId.current = setInterval(() => {
-      nextQuestion()
-    }, 10000)
-
-    return () => {
-      clearInterval(intervalId.current)
-      clearInterval(timerIntervalId.current)
-    }
-  }, [isGameRunning])
-
   const checkAnswear = (isCorrect: boolean, i: number) => {
     if (!isGameRunning) return
     const newButtonColors = buttonColors.map((button) => 'bg-red-600')
@@ -122,6 +96,38 @@ const Game = (params: any) => {
     setButtonColors(startButtonColors)
     toggleActualQuestionsNumber(index + 2)
   }
+
+  useEffect(() => {
+    init()
+    setIsGameRunning(true)
+  }, [init])
+
+  useEffect(() => {
+    if (!isGameRunning) return
+
+    if (index == questions.length - 1) return
+
+    setInitialQuestionTime()
+    console.log('działa')
+    timerIntervalId.current = setInterval(() => {
+      toggleActualQuestionTime()
+    }, 1)
+
+    intervalId.current = setInterval(() => {
+      nextQuestion()
+    }, 10000)
+
+    return () => {
+      clearInterval(intervalId.current)
+      clearInterval(timerIntervalId.current)
+    }
+  }, [
+    isGameRunning,
+    nextQuestion,
+    questions.length,
+    setInitialQuestionTime,
+    toggleActualQuestionTime,
+  ])
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 ">

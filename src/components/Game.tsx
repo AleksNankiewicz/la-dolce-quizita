@@ -55,11 +55,6 @@ const Game = (params: any) => {
     setGamePoints(initialValue)
   }
 
-  const init = () => {
-    toggleQuestionsNumber(initialQuestionsNumber)
-    toggleGameStart(true)
-  }
-
   const [buttonColors, setButtonColors] = useState(startButtonColors)
 
   const [correctAnswears, setCorrectAnswears] = useState(0)
@@ -98,9 +93,13 @@ const Game = (params: any) => {
   }
 
   useEffect(() => {
+    const init = () => {
+      toggleQuestionsNumber(initialQuestionsNumber)
+      toggleGameStart(true)
+    }
     init()
     setIsGameRunning(true)
-  }, [init])
+  }, [])
 
   useEffect(() => {
     if (!isGameRunning) return
@@ -127,6 +126,7 @@ const Game = (params: any) => {
     questions.length,
     setInitialQuestionTime,
     toggleActualQuestionTime,
+    index,
   ])
 
   return (

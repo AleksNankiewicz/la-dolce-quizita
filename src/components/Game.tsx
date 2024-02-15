@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
+import { useGameStore } from '@/lib/store'
 
 const startButtonColors = [
   'bg-orange-600',
@@ -12,56 +13,114 @@ const startButtonColors = [
 
 const Game = (params: any) => {
   const quiz = params.data
-
   const { questions } = quiz
-  const [buttonColors, setButtonColors] = useState(startButtonColors)
-
   const [index, setIndex] = useState<number>(0)
+
+  const isGameStarted = useGameStore((state) => state.isGameStarted)
+
+  const initialQuestionTime = questions[index]?.time
+  const initialQuestionsNumber = questions.length
+
+  const setIsGameStarted = useGameStore((state) => state.setIsGameStarted)
+
+  const toggleGameStart = (isStarted: boolean) => {
+    setIsGameStarted(isStarted)
+  }
+  const setQuestionsNumber = useGameStore((state) => state.setQuestionsNumber)
+
+  const toggleQuestionsNumber = (initialValue: number) => {
+    setQuestionsNumber(initialValue)
+  }
+
+  const setInitialQuestionTime = useGameStore((state) => state.setQuestionTime)
+
+  const setActualQuestionsNumber = useGameStore(
+    (state) => state.setActualQuestionsNumber
+  )
+
+  const toggleActualQuestionsNumber = (value: number) => {
+    setActualQuestionsNumber(value)
+  }
+
+  const setActualQuestionTime = useGameStore(
+    (state) => state.decrementActualQuestionTime
+  )
+
+  const toggleActualQuestionTime = () => {
+    setActualQuestionTime()
+  }
+
+  const setGamePoints = useGameStore((state) => state.setGamePoints)
+  const toggleGamePoints = (initialValue: number) => {
+    setGamePoints(initialValue)
+  }
+
+  const init = () => {
+    toggleQuestionsNumber(initialQuestionsNumber)
+    toggleGameStart(true)
+  }
+
+  const [buttonColors, setButtonColors] = useState(startButtonColors)
 
   const [correctAnswears, setCorrectAnswears] = useState(0)
   const [incorrectAnswears, setIncorrectAnswears] = useState(0)
   const [isTransition, setIsTransition] = useState(false)
 
-  const [isRunning, setIsRunning] = useState(true)
-  const [elapsedTime, setElapsedTime] = useState(0)
+  const [isGameRunning, setIsGameRunning] = useState(false)
+
   const intervalId = useRef<any>(null)
+  const timerIntervalId = useRef<any>(null)
 
   useEffect(() => {
-    if (!isRunning) return
+    init()
+    setIsGameRunning(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isGameRunning) return
+
     if (index == questions.length - 1) return
 
+    setInitialQuestionTime()
+    console.log('działa')
+    timerIntervalId.current = setInterval(() => {
+      toggleActualQuestionTime()
+    }, 1)
+
     intervalId.current = setInterval(() => {
-      setIndex((prevIndex) => prevIndex + 1)
+      nextQuestion()
     }, 10000)
 
     return () => {
       clearInterval(intervalId.current)
+      clearInterval(timerIntervalId.current)
     }
-  }, [index])
+  }, [isGameRunning])
 
   const checkAnswear = (isCorrect: boolean, i: number) => {
-    if (!isRunning) return
+    if (!isGameRunning) return
     const newButtonColors = buttonColors.map((button) => 'bg-red-600')
 
     if (isCorrect) {
       newButtonColors[i] = 'bg-green-600'
-      setCorrectAnswears((prev) => prev + 1)
     } else {
       const correctIndex = questions[index].answears.findIndex(
         (answear: any) => answear.isCorrect
       )
       newButtonColors[correctIndex] = 'bg-green-600'
-      setIncorrectAnswears((prev) => prev + 1)
     }
     setButtonColors(newButtonColors)
-    setIsRunning(false)
+    setIsGameRunning(false)
     clearInterval(intervalId.current)
   }
 
   const nextQuestion = () => {
     if (index == questions.length - 1) return console.log('koniec gry')
     setIndex((prev) => prev + 1)
-    setIsRunning(true)
+    setInitialQuestionTime()
+    setIsGameRunning(true)
+    setButtonColors(startButtonColors)
+    toggleActualQuestionsNumber(index + 2)
   }
 
   return (
@@ -77,7 +136,7 @@ const Game = (params: any) => {
       <div className=" text-2xl text-white p4 col-span-2 w-full text-center py-5">
         <p>{questions[index].title}</p>
       </div>
-      {!isRunning && (
+      {!isGameRunning && (
         <Button
           onClick={nextQuestion}
           className="col-span-2 py-10 bg-purple-600 hover:bg-purple-500 text-3xl"

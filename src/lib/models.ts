@@ -74,6 +74,10 @@ const questionSchema = new mongoose.Schema({
   timePerQuestion: {
     type: Number,
   },
+  time: {
+    type: Number,
+    default: 20,
+  },
 })
 const answearSchema = new mongoose.Schema({
   title: {

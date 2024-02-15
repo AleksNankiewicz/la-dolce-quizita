@@ -47,7 +47,7 @@ const SingleQuizPage = async (params: any) => {
       </div>
       <div className="text-black text-2xl  p4 col-span-1 text-center min-h-[150px] rounded-xl relative  overflow-hidden">
         <Image
-          src={'/italian-background1.jpg'}
+          src={quiz.img}
           fill
           alt="background"
           className="overflow-hidden rounded-2xl opacity-40   duration-300"

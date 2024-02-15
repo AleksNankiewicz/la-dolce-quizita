@@ -4,21 +4,30 @@ import { Timer } from 'lucide-react'
 import React, { useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
+import { useGameStore } from '@/lib/store'
 
 const Navbar = () => {
-  const [isGameStart, setIsGameStart] = useState(false)
+  const isGameStarted = useGameStore((state) => state.isGameStarted)
+
+  const actualQuestionTime = useGameStore((state) => state.actualQuestionTime)
+
+  const questionsNumber = useGameStore((state) => state.questionsNumber)
+
+  const actualQuestionsNumber = useGameStore(
+    (state) => state.actualQuestionsNumber
+  )
 
   const [isUserLogged, setIsUserLogged] = useState(false)
 
   return (
     <div
       className={`w-full   text-white flex bg-purple-700 p-4 ${
-        isGameStart ? 'justify-center' : 'justify-end'
+        isGameStarted ? 'justify-center' : 'justify-end'
       }  items-center rounded-b-xl`}
     >
       <div
         className={`${
-          isGameStart ? 'hidden' : 'flex'
+          isGameStarted ? 'hidden' : 'flex'
         }  w-2/3 justify-start font-bold text-center`}
       >
         <Link href={'/'} className="pl-3 text-xl">
@@ -27,19 +36,19 @@ const Navbar = () => {
       </div>
       <div
         className={`${
-          isGameStart ? 'flex' : 'hidden'
+          isGameStarted ? 'flex' : 'hidden'
         }  w-1/3 justify-start font-bold text-center`}
       >
-        <p className="pl-3">0/14</p>
+        <p className="pl-3">{`${actualQuestionsNumber}/${questionsNumber}`}</p>
       </div>
 
       <div
         className={`${
-          isGameStart ? 'flex' : 'hidden'
+          isGameStarted ? 'flex' : 'hidden'
         } w-1/3 flex flex-col items-center justify-center gap-2`}
       >
         <Timer />
-        <Progress value={33} className="h-2 " />
+        <Progress value={actualQuestionTime / 22 + 100} className="h-2 " />
       </div>
       <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
         <Avatar>
@@ -53,7 +62,7 @@ const Navbar = () => {
         <div className="flex flex-col justify-end">
           <div className="">{isUserLogged ? 'Aleks N' : 'Gość'}</div>
 
-          {isGameStart && <div className="text-green-400 font-bold">180</div>}
+          {isGameStarted && <div className="text-green-400 font-bold">180</div>}
           {/* <Link href={'/auth/login'}>
             <div className="">Gość</div>
           </Link> */}

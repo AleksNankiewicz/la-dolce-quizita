@@ -13,7 +13,7 @@ export const connectToDb = async (): Promise<void> => {
       return
     }
 
-    const db: any = await mongoose.connect(process.env.MONGO as string)
+    const db: any = await mongoose.connect(process.env.MONGO as any)
 
     connection.isConnected = db.readyState === 1
   } catch (err: any) {

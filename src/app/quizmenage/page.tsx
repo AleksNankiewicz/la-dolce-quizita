@@ -1,8 +1,8 @@
-import { addQuestion } from '@/lib/actions'
+//import { addQuestion } from '@/lib/actions'
 import React from 'react'
 
-const page = async () => {
-  await addQuestion()
+const page = () => {
+  // await addQuestion()
   return <div>pageeee</div>
 }
 

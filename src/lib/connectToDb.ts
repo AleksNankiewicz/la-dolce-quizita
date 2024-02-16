@@ -13,7 +13,9 @@ export const connectToDb = async (): Promise<void> => {
       return
     }
 
-    const db: any = await mongoose.connect(process.env.MONGO as any)
+    const db: any = await mongoose.connect(
+      'mongodb+srv://aleksnankiewicz:BXGNcSNV3dQQrzbW@cluster0.2joxpdm.mongodb.net/italian-quiz?retryWrites=true&w=majority' as any
+    )
 
     connection.isConnected = db.readyState === 1
   } catch (err: any) {

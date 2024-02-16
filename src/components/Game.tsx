@@ -131,7 +131,7 @@ const Game = (params: any) => {
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 ">
-      <div className=" text-3xl text-black  col-span-2 w-full  min-h-[250px]  rounded-2xl flex justify-center items-center  relative">
+      <div className=" text-3xl text-black  col-span-2 w-full md:w-2/5  min-h-[230px]  rounded-2xl flex justify-center items-center  relative mx-auto">
         <Image
           src={questions[index]?.img}
           fill
@@ -154,7 +154,7 @@ const Game = (params: any) => {
         <button
           onClick={() => checkAnswear(answear.isCorrect, i)}
           key={i}
-          className={` text-2xl text-white p4 col-span-1 w-full  min-h-[200px] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center`}
+          className={` text-2xl text-white p4 col-span-1 w-full  min-h-[100px] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center`}
         >
           <p>{answear.title}</p>
         </button>

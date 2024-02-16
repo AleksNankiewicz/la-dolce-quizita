@@ -71,12 +71,23 @@ const questionSchema = new mongoose.Schema({
   answears: {
     type: Array,
   },
-  timePerQuestion: {
-    type: Number,
-  },
+
   time: {
     type: Number,
     default: 20,
+  },
+  desc: {
+    type: String,
+  },
+  points: {
+    type: Number,
+  },
+  level: {
+    type: String,
+  },
+
+  records: {
+    type: Array,
   },
 })
 const answearSchema = new mongoose.Schema({

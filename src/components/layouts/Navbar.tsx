@@ -21,7 +21,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`w-full   text-white flex bg-purple-700 p-4 ${
+      className={`w-full   text-white flex bg-purple-700 p-1 ${
         isGameStarted ? 'justify-center' : 'justify-end'
       }  items-center rounded-b-xl`}
     >

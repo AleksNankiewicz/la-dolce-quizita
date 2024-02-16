@@ -21,14 +21,42 @@ export const addQuestion = async () => {
   try {
     connectToDb()
 
-    const newQuestion = new Question({
-      title: 'test2',
-      answears: [],
-    })
+    const newQuestion = {
+      title:
+        'Polacy mają Kowalskiego i Nowaka, a jakie nazwisko jest najpopularniejsze we Włoszech?',
+      img: 'https://images.pexels.com/photos/1194412/pexels-photo-1194412.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      points: 100,
+      time: 20,
+      answears: [
+        {
+          title: 'Rosso',
+          isCorrect: false,
+        },
+        {
+          title: 'Russo',
+          isCorrect: true,
+        },
+        {
+          title: 'Bianco',
+          isCorrect: false,
+        },
+        {
+          title: 'Di Pasquale',
+          isCorrect: false,
+        },
+      ],
+      records: [
+        { user: 'Aleks', score: 99, time: 90 },
+        { user: 'Aleks', score: 99, time: 90 },
+        { user: 'Aleks', score: 99, time: 90 },
+        { user: 'Aleks', score: 99, time: 90 },
+      ],
+    }
 
     const quiz = await getQuizes()
     quiz[0].questions.push(newQuestion)
     await quiz[0].save()
+    console.log('question pushed')
   } catch (err: any) {
     console.log(err)
     throw new Error(err)

@@ -7,54 +7,56 @@ import { Button } from '@/components/ui/button'
 import { getQuizBySlug } from '@/lib/actions'
 import Link from 'next/link'
 
-const records = [
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-]
+// const records = [
+//   {
+//     img: '/noavatar.png',
+//     username: 'Aleks Nankiewicz',
+//     points: 400,
+//   },
+//   {
+//     img: '/noavatar.png',
+//     username: 'Aleks Nankiewicz',
+//     points: 400,
+//   },
+//   {
+//     img: '/noavatar.png',
+//     username: 'Aleks Nankiewicz',
+//     points: 400,
+//   },
+//   {
+//     img: '/noavatar.png',
+//     username: 'Aleks Nankiewicz',
+//     points: 400,
+//   },
+//   {
+//     img: '/noavatar.png',
+//     username: 'Aleks Nankiewicz',
+//     points: 400,
+//   },
+// ]
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
   const quiz = await getQuizBySlug(slug)
-  console.log(quiz)
+  // console.log(quiz)
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
         <h1 className="">{quiz.title}</h1>
       </div>
-      <div className="text-black text-2xl  p4 col-span-1 text-center min-h-[150px] rounded-xl relative  overflow-hidden">
-        <Image
-          src={quiz.img}
-          fill
-          alt="background"
-          className="overflow-hidden rounded-2xl opacity-40   duration-300"
-        />
+      <div className="text-black text-2xl  p4 col-span-2 text-center min-h-[150px] rounded-xl relative  overflow-hidden flex justify-center">
+        <div className="relative w-52 h-full">
+          <Image
+            src={quiz.img}
+            fill
+            alt="background"
+            className="overflow-hidden rounded-2xl opacity-40   duration-300 "
+          />
+        </div>
       </div>
-      <div className="text-white   p4 col-span-1  min-h-[150px] rounded-xl flex flex-col items-center justify-between  text-md gap-1">
-        <div className="">Test z wiedzy o Włoskich krajobrazach</div>
+      <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">
+        {/* <div className="">Test z wiedzy o Włoskich krajobrazach</div> */}
         <Link href={`/game/${quiz.slug}`} className="block w-full">
           <Button className="w-full bg-purple-600 hover:bg-purple-500 text-2xl py-8">
             Graj
@@ -70,7 +72,7 @@ const SingleQuizPage = async (params: any) => {
         <div className="flex flex-col  justify-center items-center">
           <Gamepad2 size={30} />
           <p className=" border-b-[2px] border-white">Poziom</p>
-          <p>Łatwy</p>
+          <p>{quiz.level}</p>
         </div>
         <div className="flex flex-col  justify-center items-center">
           <Coins size={30} />
@@ -84,25 +86,14 @@ const SingleQuizPage = async (params: any) => {
         </div>
       </div>
 
-      <div className="text-white   p4 col-span-2  min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam
-          corrupti ipsam, explicabo ut aliquam minima numquam voluptas, quae
-          eum, expedita qui libero. Quidem ipsum temporibus odit quia molestiae?
-          Laborum possimus quisquam rerum, dolorem magnam nisi eos veniam
-          architecto deleniti sequi alias omnis repellendus in ut? Laborum
-          praesentium deserunt accusantium asperiores hic modi. Repellendus
-          deserunt ratione ad suscipit accusantium voluptatum placeat provident
-          eius sapiente temporibus. Officiis quas animi esse eaque minus, quo
-          molestiae ducimus obcaecati itaque, necessitatibus nemo, repellat
-          autem porro?
-        </p>
+      <div className="text-white   p4 col-span-2  r min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
+        <p>{quiz.desc}</p>
       </div>
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
         <h1 className="">Rekordy</h1>
       </div>
-      <div className="text-white  bg-slate-800  col-span-2 w-full text-center min-h-[150px] rounded-xl flex-col justify-center items-center p-4  ">
-        {records.map((record, i) => (
+      <div className="text-white  bg-slate-800  col-span-2 w-full text-center  rounded-xl flex-col justify-center items-center p-4  ">
+        {quiz.records.map((record: any, i: number) => (
           <div
             key={i}
             className="flex text-sm  justify-between items-center py-1"
@@ -111,7 +102,7 @@ const SingleQuizPage = async (params: any) => {
               {' '}
               <Image
                 className="rounded-full w-10 h-10"
-                src={record.img}
+                src={record.img ? record.img : '/noavatar.png'}
                 alt="avatar"
                 width={25}
                 height={25}
@@ -120,7 +111,7 @@ const SingleQuizPage = async (params: any) => {
             </div>
 
             <div className="flex flex-col-reverse">
-              <p>{record.points}</p>
+              <p>{record.score}</p>
               <Coins size={25} />
             </div>
           </div>

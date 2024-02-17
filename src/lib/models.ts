@@ -57,6 +57,12 @@ const quizSchema = new mongoose.Schema(
       type: String,
       default: Math.floor(Math.random() * 9999999),
     },
+    level: {
+      type: String,
+    },
+    records: {
+      type: Array,
+    },
   },
   { timestamps: true }
 )
@@ -81,13 +87,6 @@ const questionSchema = new mongoose.Schema({
   },
   points: {
     type: Number,
-  },
-  level: {
-    type: String,
-  },
-
-  records: {
-    type: Array,
   },
 })
 const answearSchema = new mongoose.Schema({

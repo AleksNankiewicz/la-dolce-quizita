@@ -17,6 +17,8 @@ const Navbar = () => {
     (state) => state.actualQuestionsNumber
   )
 
+  const gamePoints = useGameStore((state) => state.gamePoints)
+
   const [isUserLogged, setIsUserLogged] = useState(false)
 
   return (
@@ -53,7 +55,7 @@ const Navbar = () => {
       <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
         <Avatar>
           <AvatarImage
-            className="rounded-full w-10 h-10"
+            className="rounded-full w-7 h-7 m-1"
             src="/noavatar.png"
             alt="avatar"
           />
@@ -62,7 +64,9 @@ const Navbar = () => {
         <div className="flex flex-col justify-end">
           <div className="">{isUserLogged ? 'Aleks N' : 'Gość'}</div>
 
-          {isGameStarted && <div className="text-green-400 font-bold">180</div>}
+          {isGameStarted && (
+            <div className="text-green-400 font-bold">{gamePoints}</div>
+          )}
           {/* <Link href={'/auth/login'}>
             <div className="">Gość</div>
           </Link> */}

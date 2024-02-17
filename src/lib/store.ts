@@ -17,7 +17,7 @@ type GameStore = {
   actualQuestionsNumber: number
 
   setIsGameStarted: (boolean: boolean) => void
-  setQuestionTime: () => void
+  resetQuestionTime: () => void
   setQuestionsNumber: (number: number) => void
   setGamePoints: (points: number) => void
   decrementActualQuestionTime: () => void
@@ -30,14 +30,14 @@ export const useGameStore = create<GameStore>((set) => ({
   gamePoints: 0,
   actualQuestionTime: 0,
   actualQuestionsNumber: 1,
-  setIsGameStarted: (boolean: boolean) => {
-    set({ isGameStarted: boolean })
+  setIsGameStarted: (isGameStarted: boolean) => {
+    set({ isGameStarted })
   },
-  setQuestionTime: () => {
+  resetQuestionTime: () => {
     set({ actualQuestionTime: 100 })
   },
-  setQuestionsNumber: (number: number) => {
-    set({ questionsNumber: number })
+  setQuestionsNumber: (questionsNumber: number) => {
+    set({ questionsNumber })
   },
   setGamePoints: (points: number) => {
     set({ gamePoints: points })
@@ -45,7 +45,7 @@ export const useGameStore = create<GameStore>((set) => ({
   decrementActualQuestionTime: () => {
     set((state) => ({ actualQuestionTime: state.actualQuestionTime - 1 }))
   },
-  setActualQuestionsNumber: (number: number) => {
-    set({ actualQuestionsNumber: number })
+  setActualQuestionsNumber: (actualQuestionsNumber: number) => {
+    set({ actualQuestionsNumber })
   },
 }))

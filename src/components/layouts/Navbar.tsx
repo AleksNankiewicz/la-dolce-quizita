@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
+import { AnimatedNumber } from '../animations/AnimatedNumber'
 
 const Navbar = () => {
   const isGameStarted = useGameStore((state) => state.isGameStarted)
@@ -65,7 +66,9 @@ const Navbar = () => {
           <div className="">{isUserLogged ? 'Aleks N' : 'Gość'}</div>
 
           {isGameStarted && (
-            <div className="text-green-400 font-bold">{gamePoints}</div>
+            <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
+              <AnimatedNumber value={gamePoints} />
+            </div>
           )}
           {/* <Link href={'/auth/login'}>
             <div className="">Gość</div>

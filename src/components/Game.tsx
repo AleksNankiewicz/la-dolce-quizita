@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { useGameStore } from '@/lib/store'
 import { motion } from 'framer-motion'
+import { shuffleArray } from '@/lib/utils'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -14,10 +15,9 @@ const startButtonColors = [
 const Game = (params: any) => {
   //primary
   const quiz = params.data
-  const { questions } = quiz
+  let { questions } = quiz
   const [index, setIndex] = useState<number>(0)
 
-  const initialQuestionTime = questions[index]?.time
   const initialQuestionsNumber = questions.length
 
   //Game store
@@ -48,6 +48,8 @@ const Game = (params: any) => {
 
   const [isGameRunning, setIsGameRunning] = useState(false)
 
+  const [isCorrectAnswear, setIsCorrectAnswear] = useState(false)
+
   //refs
 
   const intervalId = useRef<any>(null)
@@ -57,23 +59,25 @@ const Game = (params: any) => {
 
   const checkAnswear = (isCorrect: boolean, i: number) => {
     if (!isGameRunning) return
-    const newButtonColors = buttonColors.map((button) => 'bg-red-600')
+    const newButtonColors: string[] = []
 
-    //console.log(isCorrect)
     if (isCorrect) {
-      newButtonColors[i] = 'bg-green-600'
-      console.log(gamePoints)
       if (questions[index].points) {
         setGamePoints(gamePoints + questions[index].points)
+        setIsCorrectAnswear(true)
       }
-    } else {
-      const correctIndex = questions[index].answears.findIndex(
-        (answear: any) => answear.isCorrect
-      )
-      newButtonColors[correctIndex] = 'bg-green-600'
     }
+
+    questions[index].answears.forEach((answear: any, i: number) => {
+      if (answear.isCorrect) {
+        newButtonColors[i] = 'bg-green-600'
+      } else {
+        newButtonColors[i] = 'bg-red-600'
+      }
+    })
     setIsGameRunning(false)
     setButtonColors(newButtonColors)
+
     clearInterval(intervalId.current)
     clearInterval(timerIntervalId.current)
   }
@@ -94,6 +98,8 @@ const Game = (params: any) => {
     const init = () => {
       setQuestionsNumber(initialQuestionsNumber)
       setIsGameStarted(true)
+
+      questions = shuffleArray(questions)
     }
     init()
     setIsGameRunning(true)
@@ -104,10 +110,10 @@ const Game = (params: any) => {
     if (isAnimate) return
 
     resetQuestionTime()
+    setIsCorrectAnswear(false)
 
     timerIntervalId.current = setInterval(() => {
       decrementActualQuestionTime()
-      console.log('a')
     }, 1)
     if (index == questions.length - 1) return
 
@@ -129,8 +135,8 @@ const Game = (params: any) => {
   ])
 
   return (
-    <main className=" w-full p-4 grid grid-cols-2 gap-3 ">
-      <div className=" text-3xl text-black  col-span-2 w-2/3 md:w-2/5  min-h-[150px]  rounded-2xl flex justify-center items-center  relative mx-auto">
+    <main className=" w-full p-4 grid grid-cols-2 gap-3 select-none">
+      <div className=" text-3xl text-black  col-span-2 w-[40vh]  min-h-[30vh]  rounded-2xl flex justify-center items-center  relative mx-auto">
         <Image
           src={questions[index]?.img}
           fill
@@ -148,10 +154,9 @@ const Game = (params: any) => {
             setIsAnimate(true)
           }}
           key={answear.title}
-          className={` text-2xl text-white p4 col-span-1 w-full  min-h-[100px] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer `}
+          className={` text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer `}
           animate={
             isAnimate === true && {
-              // backgroundColor: ['#0f172a'],
               border: ['3px solid white', '3px solid black', '3px solid white'],
             }
           }
@@ -163,6 +168,16 @@ const Game = (params: any) => {
           <p>{answear.title}</p>
         </motion.div>
       ))}
+
+      {isCorrectAnswear === true && (
+        <motion.div
+          className="w-5 h-5 bg-green-400 rounded-full absolute "
+          initial={{ y: '60vh', x: '10vw' }}
+          animate={{ y: '-5vh', x: '78vw', opacity: 0 }}
+          transition={{ duration: 0.75 }}
+        ></motion.div>
+      )}
+
       {!isGameRunning && (
         <Button
           onClick={nextQuestion}

@@ -128,15 +128,20 @@ const Game = (params: any) => {
   }, [])
 
   useEffect(() => {
-    if (!isGameRunning) return
-    if (isAnimate) return
+    if (!isGameRunning || isAnimate) return
 
     resetQuestionTime()
     setIsCorrectAnswear(false)
 
-    timerIntervalId.current = setInterval(() => {
-      decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
-    }, 1)
+    const animate = () => {
+      decrementActualQuestionTime(1.75 / questions[index].time)
+      timerIntervalId.current = requestAnimationFrame(animate)
+    }
+
+    timerIntervalId.current = requestAnimationFrame(animate)
+    // timerIntervalId.current = setInterval(() => {
+    //   decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
+    // }, 1)
     if (index == questions.length) return endGame()
 
     intervalId.current = setInterval(() => {
@@ -145,7 +150,8 @@ const Game = (params: any) => {
 
     return () => {
       clearInterval(intervalId.current)
-      clearInterval(timerIntervalId.current)
+      //   clearInterval(timerIntervalId.current)
+      cancelAnimationFrame(timerIntervalId.current)
     }
   }, [
     isGameRunning,

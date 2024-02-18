@@ -132,16 +132,24 @@ const Game = (params: any) => {
 
     resetQuestionTime()
     setIsCorrectAnswear(false)
+    let tampstamp = 0
 
     const animate = () => {
       decrementActualQuestionTime(1 / questions[index].time)
+      tampstamp++
+      // console.log(tampstamp)
+
+      if (tampstamp >= questions[index].time * 100) {
+        tampstamp = 0
+        nextQuestion()
+      }
       timerIntervalId.current = requestAnimationFrame(animate)
     }
     if (index == questions.length) return endGame()
 
-    intervalId.current = setInterval(() => {
-      nextQuestion()
-    }, questions[index].time * 1000)
+    // intervalId.current = setInterval(() => {
+    //   nextQuestion()
+    // }, questions[index].time * 1000)
 
     timerIntervalId.current = requestAnimationFrame(animate)
     // timerIntervalId.current = setInterval(() => {
@@ -202,8 +210,8 @@ const Game = (params: any) => {
         <motion.div
           className="w-5 h-5 bg-green-400 rounded-full absolute "
           initial={{ y: '60vh', x: '10vw' }}
-          animate={{ y: '-5vh', x: '78vw', opacity: 0 }}
-          transition={{ duration: 0.75 }}
+          animate={{ y: '-5vh', x: ['40vw', '78vw'], opacity: [1, 1, 1, 0] }}
+          transition={{ duration: 0.75, ease: 'easeInOut' }}
         ></motion.div>
       )}
 

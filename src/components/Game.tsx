@@ -103,7 +103,7 @@ const Game = (params: any) => {
       setButtonColors(startButtonColors)
       setActualQuestionsNumber(index + 2)
       setIsAnimate(false)
-    }, 400)
+    }, 450)
   }
 
   const endGame = () => {
@@ -134,19 +134,19 @@ const Game = (params: any) => {
     setIsCorrectAnswear(false)
 
     const animate = () => {
-      decrementActualQuestionTime(1.75 / questions[index].time)
+      decrementActualQuestionTime(1 / questions[index].time)
       timerIntervalId.current = requestAnimationFrame(animate)
     }
-
-    timerIntervalId.current = requestAnimationFrame(animate)
-    // timerIntervalId.current = setInterval(() => {
-    //   decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
-    // }, 1)
     if (index == questions.length) return endGame()
 
     intervalId.current = setInterval(() => {
       nextQuestion()
     }, questions[index].time * 1000)
+
+    timerIntervalId.current = requestAnimationFrame(animate)
+    // timerIntervalId.current = setInterval(() => {
+    //   decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
+    // }, 1)
 
     return () => {
       clearInterval(intervalId.current)

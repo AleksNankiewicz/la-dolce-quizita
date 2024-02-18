@@ -58,8 +58,7 @@ const records = [
 ]
 
 export default async function Home() {
-  const quizesFromDb = await getQuizes()
-  console.log(quizesFromDb)
+  const quizes = await getQuizes()
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
@@ -89,18 +88,18 @@ export default async function Home() {
       {quizes.map((quiz) => (
         <Link
           key={quiz.label}
-          href={'/quizes/12323'}
+          href={`/quizes/${quiz.slug}`}
           className="block text-2xl text-white p4 col-span-1 w-full  h-[150px] sm:h-[200px] md:h-[300px] lg:h-[500px]  text-center gap-2 rounded-xl relative group overflow-hidden"
         >
           {' '}
           <Image
             src={quiz.img}
             fill
-            alt={quiz.label}
+            alt={quiz.title}
             className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
           />
           <p className="absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white">
-            {quiz.label}
+            {quiz.title}
           </p>
         </Link>
       ))}

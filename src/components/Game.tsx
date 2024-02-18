@@ -5,6 +5,7 @@ import { Button } from './ui/button'
 import { useGameStore } from '@/lib/store'
 import { motion } from 'framer-motion'
 import { shuffleArray } from '@/lib/utils'
+import GameSummary from './GameSummary'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -50,6 +51,10 @@ const Game = (params: any) => {
 
   const [isCorrectAnswear, setIsCorrectAnswear] = useState(false)
 
+  const [isEndGame, setIsEndGame] = useState(false)
+
+  const [clickedButton, setClickedButton] = useState<any>()
+
   //refs
 
   const intervalId = useRef<any>(null)
@@ -57,14 +62,18 @@ const Game = (params: any) => {
 
   //functions
 
-  const checkAnswear = (isCorrect: boolean, i: number) => {
+  const checkAnswear = () => {
     if (!isGameRunning) return
+    resetQuestionTime()
+    clearInterval(intervalId.current)
+    clearInterval(timerIntervalId.current)
     const newButtonColors: string[] = []
 
-    if (isCorrect) {
+    if (clickedButton.isCorrect) {
       if (questions[index].points) {
         setGamePoints(gamePoints + questions[index].points)
         setIsCorrectAnswear(true)
+        questions[index].correctAnswear = true
       }
     }
 
@@ -77,19 +86,32 @@ const Game = (params: any) => {
     })
     setIsGameRunning(false)
     setButtonColors(newButtonColors)
-
-    clearInterval(intervalId.current)
-    clearInterval(timerIntervalId.current)
+    setClickedButton('')
   }
 
   const nextQuestion = () => {
-    if (index == questions.length - 1) return console.log('koniec gry')
-    setIndex((prev) => prev + 1)
+    clearInterval(intervalId.current)
+    clearInterval(timerIntervalId.current)
     resetQuestionTime()
-    setIsGameRunning(true)
-    setButtonColors(startButtonColors)
-    setActualQuestionsNumber(index + 2)
-    setIsAnimate(false)
+
+    if (isEndGame) return
+    if (index == questions.length - 1) return endGame()
+
+    setTimeout(() => {
+      setIsGameRunning(true)
+      setIndex((prev) => prev + 1)
+      setButtonColors(startButtonColors)
+      setActualQuestionsNumber(index + 2)
+      setIsAnimate(false)
+    }, 400)
+  }
+
+  const endGame = () => {
+    setIsGameStarted(false)
+    setIsGameRunning(false)
+    setIsEndGame(true)
+    clearInterval(intervalId.current)
+    clearInterval(timerIntervalId.current)
   }
 
   //Use Effects
@@ -113,13 +135,13 @@ const Game = (params: any) => {
     setIsCorrectAnswear(false)
 
     timerIntervalId.current = setInterval(() => {
-      decrementActualQuestionTime()
+      decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
     }, 1)
-    if (index == questions.length - 1) return
+    if (index == questions.length) return endGame()
 
     intervalId.current = setInterval(() => {
       nextQuestion()
-    }, 10000)
+    }, questions[index].time * 1000)
 
     return () => {
       clearInterval(intervalId.current)
@@ -152,6 +174,7 @@ const Game = (params: any) => {
         <motion.div
           onClick={() => {
             setIsAnimate(true)
+            setClickedButton(answear)
           }}
           key={answear.title}
           className={` text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer `}
@@ -162,7 +185,7 @@ const Game = (params: any) => {
           }
           transition={{ repeat: 3, duration: 1 }}
           onAnimationComplete={() => {
-            checkAnswear(answear.isCorrect, i)
+            checkAnswear()
           }}
         >
           <p>{answear.title}</p>
@@ -186,6 +209,8 @@ const Game = (params: any) => {
           Dalej
         </Button>
       )}
+
+      {isEndGame && <GameSummary questions={questions} />}
     </main>
   )
 }

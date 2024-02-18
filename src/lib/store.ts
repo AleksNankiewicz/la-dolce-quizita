@@ -20,7 +20,7 @@ type GameStore = {
   resetQuestionTime: () => void
   setQuestionsNumber: (number: number) => void
   setGamePoints: (points: number) => void
-  decrementActualQuestionTime: () => void
+  decrementActualQuestionTime: (value: number) => void
   setActualQuestionsNumber: (number: number) => void
 }
 export const useGameStore = create<GameStore>((set) => ({
@@ -42,8 +42,8 @@ export const useGameStore = create<GameStore>((set) => ({
   setGamePoints: (points: number) => {
     set({ gamePoints: points })
   },
-  decrementActualQuestionTime: () => {
-    set((state) => ({ actualQuestionTime: state.actualQuestionTime - 1 }))
+  decrementActualQuestionTime: (value: number) => {
+    set((state) => ({ actualQuestionTime: state.actualQuestionTime - value }))
   },
   setActualQuestionsNumber: (actualQuestionsNumber: number) => {
     set({ actualQuestionsNumber })

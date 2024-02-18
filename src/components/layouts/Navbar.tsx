@@ -1,14 +1,20 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { Timer } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { AnimatedNumber } from '../animations/AnimatedNumber'
+import { motion } from 'framer-motion'
+// import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 
 const Navbar = () => {
+  //Store
   const isGameStarted = useGameStore((state) => state.isGameStarted)
+
+  const setIsGameStarted = useGameStore((state) => state.setIsGameStarted)
 
   const actualQuestionTime = useGameStore((state) => state.actualQuestionTime)
 
@@ -22,9 +28,19 @@ const Navbar = () => {
 
   const [isUserLogged, setIsUserLogged] = useState(false)
 
+  //if user is not on game page
+
+  // useEffect(() => {
+  //   // Update isGameStarted state only when the router is mounted
+  //   if (router.pathname !== '/game') {
+  //     setIsGameStarted(false)
+  //     console.log(router.pathname)
+  //   }
+  // }, [router.pathname, setIsGameStarted])
+
   return (
     <div
-      className={`w-full   text-white flex bg-purple-700 p-1 ${
+      className={`w-full   text-white flex bg-purple-700 p-1 z-50 sticky left-0 top-0 ${
         isGameStarted ? 'justify-center' : 'justify-end'
       }  items-center rounded-b-xl`}
     >
@@ -48,10 +64,26 @@ const Navbar = () => {
       <div
         className={`${
           isGameStarted ? 'flex' : 'hidden'
-        } w-1/3 flex flex-col items-center justify-center gap-2`}
+        } w-1/3 flex flex-col items-center justify-center gap-2 `}
       >
-        <Timer />
-        <Progress value={actualQuestionTime / 22 + 100} className="h-2 " />
+        {actualQuestionTime < 20 ? (
+          <motion.div
+            className="text-red-400"
+            animate={{ rotateZ: [20, -20, 20] }}
+            transition={{ duration: 1, ease: 'linear', repeat: Infinity }}
+          >
+            <Timer />
+          </motion.div>
+        ) : (
+          <Timer />
+        )}
+        <Progress
+          value={actualQuestionTime}
+          indicatorColor={
+            actualQuestionTime < 20 ? 'bg-red-400' : 'bg-green-400'
+          }
+          className="h-2 "
+        />
       </div>
       <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
         <Avatar>

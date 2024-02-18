@@ -6,39 +6,28 @@ import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getQuizBySlug } from '@/lib/actions'
 import Link from 'next/link'
-
-// const records = [
-//   {
-//     img: '/noavatar.png',
-//     username: 'Aleks Nankiewicz',
-//     points: 400,
-//   },
-//   {
-//     img: '/noavatar.png',
-//     username: 'Aleks Nankiewicz',
-//     points: 400,
-//   },
-//   {
-//     img: '/noavatar.png',
-//     username: 'Aleks Nankiewicz',
-//     points: 400,
-//   },
-//   {
-//     img: '/noavatar.png',
-//     username: 'Aleks Nankiewicz',
-//     points: 400,
-//   },
-//   {
-//     img: '/noavatar.png',
-//     username: 'Aleks Nankiewicz',
-//     points: 400,
-//   },
-// ]
+import { questionsProps } from '@/types/data'
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
   const quiz = await getQuizBySlug(slug)
   // console.log(quiz)
+  const { questions } = quiz
+
+  const quizDuration = {
+    time: 0,
+    minutes: 0,
+    seconds: 0,
+  }
+  let quizMaxPoints = 0
+  questions.forEach((question: questionsProps) => {
+    quizDuration.time += question.time
+
+    quizMaxPoints += question.points
+  })
+
+  quizDuration.minutes = Math.floor(quizDuration.time / 60)
+  quizDuration.seconds = quizDuration.time - quizDuration.minutes * 60
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
@@ -67,7 +56,10 @@ const SingleQuizPage = async (params: any) => {
         <div className="flex flex-col  justify-center items-center">
           <Timer size={30} />
           <p className=" border-b-[2px] border-white">Czas trwania</p>
-          <p>6min</p>
+          <p>
+            {/* {quizDuration}s */}
+            {quizDuration.minutes}m {quizDuration.seconds}s
+          </p>
         </div>
         <div className="flex flex-col  justify-center items-center">
           <Gamepad2 size={30} />
@@ -81,7 +73,7 @@ const SingleQuizPage = async (params: any) => {
             className="
           "
           >
-            800
+            {quizMaxPoints}
           </p>
         </div>
       </div>
@@ -89,34 +81,39 @@ const SingleQuizPage = async (params: any) => {
       <div className="text-white   p4 col-span-2  r min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
         <p>{quiz.desc}</p>
       </div>
-      <div className=" text-2xl text-white p4 col-span-2 w-full ">
-        <h1 className="">Rekordy</h1>
-      </div>
-      <div className="text-white  bg-slate-800  col-span-2 w-full text-center  rounded-xl flex-col justify-center items-center p-4  ">
-        {quiz.records.map((record: any, i: number) => (
-          <div
-            key={i}
-            className="flex text-sm  justify-between items-center py-1"
-          >
-            <div className="flex items-center gap-2">
-              {' '}
-              <Image
-                className="rounded-full w-10 h-10"
-                src={record.img ? record.img : '/noavatar.png'}
-                alt="avatar"
-                width={25}
-                height={25}
-              />
-              <p>{record.username}</p>
-            </div>
 
-            <div className="flex flex-col-reverse">
-              <p>{record.score}</p>
-              <Coins size={25} />
-            </div>
+      {quiz.records && (
+        <>
+          <div className=" text-2xl text-white p4 col-span-2 w-full ">
+            <h1 className="">Rekordy</h1>
           </div>
-        ))}
-      </div>
+          <div className="text-white  bg-slate-800  col-span-2 w-full text-center  rounded-xl flex-col justify-center items-center p-4  ">
+            {quiz.records.map((record: any, i: number) => (
+              <div
+                key={i}
+                className="flex text-sm  justify-between items-center py-1"
+              >
+                <div className="flex items-center gap-2">
+                  {' '}
+                  <Image
+                    className="rounded-full w-10 h-10"
+                    src={record.img ? record.img : '/noavatar.png'}
+                    alt="avatar"
+                    width={25}
+                    height={25}
+                  />
+                  <p>{record.username}</p>
+                </div>
+
+                <div className="flex flex-col-reverse">
+                  <p>{record.score}</p>
+                  <Coins size={25} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </main>
   )
 }

@@ -50,9 +50,9 @@ const RegisterForm = () => {
     <CardWrapper
       headerTitle="Rejestracja"
       headerLabel="Stwórz konto"
-      backButtonLabel="Masz już konto?"
+      backButtonLabel="Masz już konto? Zaloguj się"
       backButtonHref="/auth/login"
-      showSocial
+      // showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -66,6 +66,7 @@ const RegisterForm = () => {
                   <FormControl>
                     <Input
                       {...field}
+                      className="bg-white"
                       placeholder="Pąjączek Bezrączek"
                       disabled={isPending}
                     />
@@ -82,6 +83,7 @@ const RegisterForm = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
+                      className="bg-white"
                       {...field}
                       placeholder="pączek@example.pl"
                       disabled={isPending}
@@ -100,6 +102,7 @@ const RegisterForm = () => {
                   <FormLabel>Hasło</FormLabel>
                   <FormControl>
                     <Input
+                      className="bg-white"
                       {...field}
                       placeholder="******"
                       disabled={isPending}
@@ -116,7 +119,7 @@ const RegisterForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full bg-pink-500  hover:bg-pink-400"
+            className="w-full bg-green-600  hover:bg-green-500"
           >
             Zarejestrój się
           </Button>

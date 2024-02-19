@@ -19,7 +19,9 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import FormError from '../atoms/FormError'
 import FormSuccess from '../atoms/FormSuccess'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import { login } from '@/actions/login'
+import { useRouter } from 'next/navigation'
 const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('')
   const [success, setSuccess] = useState<string | undefined>('')
@@ -33,24 +35,31 @@ const LoginForm = () => {
       password: '',
     },
   })
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setError('')
     setSuccess('')
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error)
-        setSuccess(data.success)
+        setError(data?.error)
+        setSuccess(data?.success)
       })
     })
   }
+
+  // const router = useRouter()
+
+  // if (success) {
+  //   router.push('/')
+  // }
 
   return (
     <CardWrapper
       headerTitle="Logowanie"
       headerLabel="Witaj ponownie"
-      backButtonLabel="Masz konto? Zarejestrój się"
+      backButtonLabel="Nie masz konta? Zarejestrój się"
       backButtonHref="/auth/register"
-      showSocial
+      // showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -63,6 +72,7 @@ const LoginForm = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
+                      className="bg-white"
                       {...field}
                       placeholder="pączek@example.pl"
                       disabled={isPending}
@@ -81,6 +91,7 @@ const LoginForm = () => {
                   <FormLabel>Hasło</FormLabel>
                   <FormControl>
                     <Input
+                      className="bg-white"
                       {...field}
                       placeholder="******"
                       disabled={isPending}

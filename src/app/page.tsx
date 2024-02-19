@@ -1,5 +1,7 @@
 import CardWrapper from '@/components/auth/CardWrapper'
 import LoginForm from '@/components/auth/LoginForm'
+import RecordsBlock from '@/components/layouts/RecordsBlock'
+import StatsBlock from '@/components/layouts/StatsBlock'
 import { getQuizes } from '@/lib/actions'
 import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
 
@@ -107,56 +109,11 @@ export default async function Home() {
       <div className=" text-2xl text-white p4 col-span-2 w-full">
         <h1 className="">Statysktyki</h1>
       </div>
-      <div className="text-white text-sm bg-purple-600 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center ">
-        <div className="flex flex-col  justify-center items-center">
-          <Award size={30} />
-          <p className=" border-b-[2px] border-white">Wygrane</p>
-          <p>3</p>
-        </div>
-        <div className="flex flex-col  justify-center items-center">
-          <Gamepad2 size={30} />
-          <p className=" border-b-[2px] border-white">Rozegrane quizy</p>
-          <p>14</p>
-        </div>
-        <div className="flex flex-col  justify-center items-center">
-          <Coins size={30} />
-          <p className=" border-b-[2px] border-white">Ilość punktów</p>
-          <p
-            className="
-          "
-          >
-            800
-          </p>
-        </div>
-      </div>
+      <StatsBlock />
       <div className=" text-2xl text-white p4 col-span-2 w-full">
         <h1 className="">Najlepsi użytkownicy</h1>
       </div>
-      <div className="text-white  bg-slate-800  col-span-2 w-full text-center min-h-[150px] rounded-xl flex-col justify-center items-center p-4  ">
-        {records.map((record, i) => (
-          <div
-            key={i}
-            className="flex text-sm  justify-between items-center py-1"
-          >
-            <div className="flex items-center gap-2">
-              {' '}
-              <Image
-                className="rounded-full w-10 h-10"
-                src={record.img}
-                alt="avatar"
-                width={25}
-                height={25}
-              />
-              <p>{record.username}</p>
-            </div>
-
-            <div className="flex flex-col-reverse">
-              <p>{record.points}</p>
-              <Coins size={25} />
-            </div>
-          </div>
-        ))}
-      </div>
+      <RecordsBlock />
     </main>
   )
 }

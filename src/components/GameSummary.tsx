@@ -1,15 +1,21 @@
-import { useGameStore } from '@/lib/store'
-import { questionsProps } from '@/types/data'
+'use client'
+
+import { getUserByEmail, updateUserAfterGame } from '@/lib/actions'
+import { questionsProps, sessionUserProps } from '@/types/data'
 import { CheckCircle2, XCircle } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { title } from 'process'
-import React, { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+// import { useGameStore } from '@/lib/store'
+// import React, { useEffect } from 'react'
 
-const GameSummary = ({ questions }: { questions: questionsProps[] }) => {
-  const setIsGameStarted = useGameStore((state) => state.setIsGameStarted)
-  useEffect(() => {
-    setIsGameStarted(false)
-  }, [])
-
+const GameSummary = ({
+  questions,
+  userEmail,
+}: {
+  questions: questionsProps[]
+  userEmail: string
+}) => {
   let correctAnswearsNumber = 0
   const scoredPoints = questions.reduce((acc, question) => {
     if (question.correctAnswear) {
@@ -18,8 +24,30 @@ const GameSummary = ({ questions }: { questions: questionsProps[] }) => {
     }
     return acc
   }, 0)
-
   const allQuestionsNumber = questions.length
+
+  const allCorrect = correctAnswearsNumber == allQuestionsNumber
+
+  const [email, setEmail] = useState('')
+  const [emailSet, setEmailSet] = useState(false)
+  const session = useSession()
+
+  useEffect(() => {
+    if (!emailSet && session.status === 'authenticated') {
+      const user = session.data?.user as sessionUserProps
+      setEmail(user.email ?? '')
+      setEmailSet(true)
+    }
+  }, [session, emailSet])
+
+  useEffect(() => {
+    if (email) {
+      const update = async () => {
+        await updateUserAfterGame(email, scoredPoints, allCorrect)
+      }
+      update()
+    }
+  }, [email])
 
   // console.log(scoredPoints)
 

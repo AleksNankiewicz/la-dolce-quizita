@@ -9,3 +9,12 @@ export type questionsProps = {
   answears: answearProps[]
   time: number
 }
+
+export type sessionUserProps = {
+  name?: string | null | undefined
+  email?: string | null | undefined
+  image?: string | null | undefined
+  gameWon: number // Define the property 'gameWon'
+  gamePlayed: number // Define the property 'gamePlayed'
+  points: number // Define the property 'points'
+}

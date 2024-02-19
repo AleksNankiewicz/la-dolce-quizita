@@ -9,8 +9,23 @@ import { AnimatedNumber } from '../animations/AnimatedNumber'
 import { motion } from 'framer-motion'
 // import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import { signOut, useSession } from 'next-auth/react'
+import { Button } from '../ui/button'
 
 const Navbar = () => {
+  //session
+
+  const session = useSession()
+  // console.log(session)
+
+  const [isUserLogged, setIsUserLogged] = useState(false)
+
+  useEffect(() => {
+    if (session.status == 'authenticated') {
+      setIsUserLogged(true)
+    }
+  }, [session?.data, session?.status])
+
   //Store
   const isGameStarted = useGameStore((state) => state.isGameStarted)
 
@@ -25,18 +40,6 @@ const Navbar = () => {
   )
 
   const gamePoints = useGameStore((state) => state.gamePoints)
-
-  const [isUserLogged, setIsUserLogged] = useState(false)
-
-  //if user is not on game page
-
-  // useEffect(() => {
-  //   // Update isGameStarted state only when the router is mounted
-  //   if (router.pathname !== '/game') {
-  //     setIsGameStarted(false)
-  //     console.log(router.pathname)
-  //   }
-  // }, [router.pathname, setIsGameStarted])
 
   return (
     <div
@@ -95,7 +98,13 @@ const Navbar = () => {
         </Avatar>
 
         <div className="flex flex-col justify-end">
-          <div className="">{isUserLogged ? 'Aleks N' : 'Gość'}</div>
+          <div className="">
+            {isUserLogged ? (
+              <Button onClick={() => signOut()}>wyloguj</Button>
+            ) : (
+              <Link href={'/auth/login'}>Zaloguj się</Link>
+            )}
+          </div>
 
           {isGameStarted && (
             <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">

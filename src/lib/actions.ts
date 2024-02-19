@@ -17,6 +17,41 @@ export const getQuizes = async () => {
   }
 }
 
+export const getUsers = async () => {
+  noStore()
+  try {
+    connectToDb()
+    const users = await User.find()
+    return users
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const updateUserAfterGame = async (
+  email: string,
+  points: number,
+  isAllCorrect: boolean
+) => {
+  try {
+    connectToDb()
+    const user = await getUserByEmail(email)
+
+    user.points = user.points + points
+    user.gamePlayed = user.gamePlayed + 1
+    if (isAllCorrect) {
+      user.GameWon = user.GameWon + 1
+    }
+
+    await user.save()
+    console.log('user updated')
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
 export const addQuestion = async () => {
   try {
     connectToDb()
@@ -64,6 +99,7 @@ export const addQuestion = async () => {
 }
 
 export const getUserByEmail = async (email: string) => {
+  'use server'
   try {
     connectToDb()
     const user = await User.findOne({ email: email })

@@ -6,6 +6,8 @@ import { useGameStore } from '@/lib/store'
 import { motion } from 'framer-motion'
 import { shuffleArray } from '@/lib/utils'
 import GameSummary from './GameSummary'
+import { useSession } from 'next-auth/react'
+import { sessionUserProps } from '@/types/data'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -20,6 +22,30 @@ const Game = (params: any) => {
   const [index, setIndex] = useState<number>(0)
 
   const initialQuestionsNumber = questions.length
+
+  //user
+
+  const session = useSession()
+  const [email, setEmail] = useState('')
+  const [isEmailSet, setIsEmailSet] = useState(false)
+  // useEffect(() => {
+  //   if (isEmailSet) return // If email is already set, return early
+  //   if (session.status === 'authenticated') {
+  //     const user = session.data?.user as sessionUserProps
+  //     setEmail(user.email ?? '')
+  //     setIsEmailSet(true) // Set the flag to true to indicate that email is set
+  //   }
+  // }, [session, isEmailSet]) // Include isEmailSet in the dependency array
+
+  // // After email is set, remove the useEffect by setting isEmailSet to true
+  // useEffect(() => {
+  //   if (email) {
+  //     setIsEmailSet(true)
+  //   }
+  // }, [email])
+
+  // console.log(email)
+  // console.log('asas')
 
   //Game store
 
@@ -110,6 +136,7 @@ const Game = (params: any) => {
     setIsGameStarted(false)
     setIsGameRunning(false)
     setIsEndGame(true)
+
     clearInterval(intervalId.current)
     clearInterval(timerIntervalId.current)
   }
@@ -128,7 +155,7 @@ const Game = (params: any) => {
   }, [])
 
   useEffect(() => {
-    if (!isGameRunning || isAnimate) return
+    if (!isGameRunning || isAnimate || isEndGame) return
 
     resetQuestionTime()
     setIsCorrectAnswear(false)
@@ -224,7 +251,7 @@ const Game = (params: any) => {
         </Button>
       )}
 
-      {isEndGame && <GameSummary questions={questions} />}
+      {isEndGame && <GameSummary questions={questions} userEmail={email} />}
     </main>
   )
 }

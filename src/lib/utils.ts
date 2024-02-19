@@ -24,3 +24,15 @@ export function shuffleArray(array: []) {
 
   return array
 }
+
+export function formatNumber(number: number) {
+  const units = ['', 'tys', 'mln', 'mld'] // Możesz rozszerzyć w zależności od potrzeb
+  let unitIndex = 0
+
+  while (number >= 1000 && unitIndex < units.length - 1) {
+    number /= 1000
+    unitIndex++
+  }
+
+  return `${Math.round(number * 10) / 10}${units[unitIndex]}`
+}

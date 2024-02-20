@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { getQuizBySlug } from '@/lib/actions'
 import Link from 'next/link'
 import { questionsProps } from '@/types/data'
+import EditQuizButton from '@/components/layouts/EditQuizButton'
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
@@ -43,6 +44,7 @@ const SingleQuizPage = async (params: any) => {
             className="overflow-hidden rounded-2xl opacity-40   duration-300 "
           />
         </div>
+        <EditQuizButton slug={quiz.slug} />
       </div>
       <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">
         {/* <div className="">Test z wiedzy o Włoskich krajobrazach</div> */}

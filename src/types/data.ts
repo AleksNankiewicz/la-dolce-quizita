@@ -14,6 +14,8 @@ export type sessionUserProps = {
   name?: string | null | undefined
   email?: string | null | undefined
   image?: string | null | undefined
+  isAdmin: boolean
+  username: string
   gameWon: number // Define the property 'gameWon'
   gamePlayed: number // Define the property 'gamePlayed'
   points: number // Define the property 'points'

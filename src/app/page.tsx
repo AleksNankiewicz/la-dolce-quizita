@@ -1,5 +1,6 @@
 import CardWrapper from '@/components/auth/CardWrapper'
 import LoginForm from '@/components/auth/LoginForm'
+import EditQuizButton from '@/components/layouts/EditQuizButton'
 import RecordsBlock from '@/components/layouts/RecordsBlock'
 import StatsBlock from '@/components/layouts/StatsBlock'
 import { getQuizes } from '@/lib/actions'
@@ -7,57 +8,6 @@ import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
-
-const quizes = [
-  {
-    label: 'Jedzenie',
-    img: '/pizza.webp',
-    path: '#',
-  },
-  {
-    label: 'Gramatyka',
-    img: '/italian-grammar.jpg',
-    path: '#',
-  },
-  {
-    label: 'Słówka',
-    img: '/italian-words.jpg',
-    path: '#',
-  },
-  {
-    label: 'Kultura',
-    img: '/italian-culture.jpg',
-    path: '#',
-  },
-]
-
-const records = [
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-  {
-    img: '/noavatar.png',
-    username: 'Aleks Nankiewicz',
-    points: 400,
-  },
-]
 
 export default async function Home() {
   const quizes = await getQuizes()
@@ -103,8 +53,14 @@ export default async function Home() {
           <p className="absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white">
             {quiz.title}
           </p>
+          <EditQuizButton slug={quiz.slug} />
         </Link>
       ))}
+      <div className=" text-xl text-white p4 col-span-2 w-full flex justify-center">
+        <Link href={'/quizes'} className="underline">
+          Zobacz wszystkie
+        </Link>
+      </div>
 
       <div className=" text-2xl text-white p4 col-span-2 w-full">
         <h1 className="">Statysktyki</h1>

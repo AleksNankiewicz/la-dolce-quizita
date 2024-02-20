@@ -74,3 +74,11 @@
     @apply bg-background text-foreground;
   }
 }
+[contenteditable='true'] {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+[contenteditable='true']:focus {
+  outline: 2px slateblue solid;
+}

@@ -11,6 +11,7 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { signOut, useSession } from 'next-auth/react'
 import { Button } from '../ui/button'
+import { sessionUserProps } from '@/types/data'
 
 const Navbar = () => {
   //session
@@ -19,10 +20,13 @@ const Navbar = () => {
   // console.log(session)
 
   const [isUserLogged, setIsUserLogged] = useState(false)
-
+  const [username, setUsername] = useState('')
   useEffect(() => {
     if (session.status == 'authenticated') {
       setIsUserLogged(true)
+      const user = session.data.user as sessionUserProps
+
+      setUsername(user.username)
     }
   }, [session?.data, session?.status])
 
@@ -100,7 +104,7 @@ const Navbar = () => {
         <div className="flex flex-col justify-end">
           <div className="">
             {isUserLogged ? (
-              <Button onClick={() => signOut()}>wyloguj</Button>
+              <Link href={'/profile'}>{username}</Link>
             ) : (
               <Link href={'/auth/login'}>Zaloguj się</Link>
             )}

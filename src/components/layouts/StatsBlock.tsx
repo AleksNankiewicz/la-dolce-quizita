@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { sessionUserProps } from '@/types/data'
+import { formatNumber } from '@/lib/utils'
 
 const StatsBlock = () => {
   const session = useSession()
@@ -47,7 +48,7 @@ const StatsBlock = () => {
           className="
           "
         >
-          {points}
+          {formatNumber(points)}
         </p>
       </div>
     </div>

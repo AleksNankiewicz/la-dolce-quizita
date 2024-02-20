@@ -24,7 +24,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const editableDesc = React.useRef<HTMLParagraphElement>(null)
 
   const editableQuestions = useRef(
-    Array.from({ length: questions.length }, () => React.createRef())
+    Array.from({ length: questions.length }, () =>
+      React.createRef<HTMLDivElement>()
+    )
   )
 
   const saveQuiz = () => {

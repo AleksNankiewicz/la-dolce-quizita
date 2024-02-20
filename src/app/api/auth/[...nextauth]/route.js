@@ -50,6 +50,9 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
+    // async redirect(url, baseUrl) {
+    //   return url.startsWith(baseUrl) ? url : baseUrl
+    // },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id

@@ -4,10 +4,11 @@ export type answearProps = {
 }
 export type questionsProps = {
   title: string
-  correctAnswear: boolean
+  correctAnswear?: boolean
   points: number
   answears: answearProps[]
   time: number
+  img: string
 }
 
 export type sessionUserProps = {

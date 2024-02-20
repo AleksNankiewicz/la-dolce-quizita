@@ -20,6 +20,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       callbackUrl: '/', // Optional, if you don't want automatic redirection
     })
 
+    console.log(result)
+
     if (result?.error) {
       // Handle authentication error
       return { error: 'Niepoprawne dane logowania' }

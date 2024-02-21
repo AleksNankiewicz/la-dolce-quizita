@@ -11,6 +11,23 @@ export type questionsProps = {
   img: string
 }
 
+export type quizProps = {
+  title: string
+  desc: string
+  level: string
+  img: string
+  slug: string
+  records: recordProps[]
+  questions: any[]
+}
+
+export type recordProps = {
+  username: string
+  img: string
+  score: number
+  time?: number
+}
+
 export type sessionUserProps = {
   name?: string | null | undefined
   email?: string | null | undefined

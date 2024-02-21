@@ -36,3 +36,9 @@ export function formatNumber(number: number) {
 
   return `${Math.round(number * 10) / 10}${units[unitIndex]}`
 }
+
+export function removeSpaces(string: string) {
+  const sanitizedString = string.replace(/[^\w\s-]/gi, '')
+  // Replace spaces with hyphens
+  return sanitizedString.replace(/\s+/g, '-')
+}

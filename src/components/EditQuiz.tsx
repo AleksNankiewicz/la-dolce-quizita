@@ -16,15 +16,21 @@ import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getQuizBySlug } from '@/lib/actions'
 import Link from 'next/link'
-import { questionsProps } from '@/types/data'
+import { questionsProps, quizProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
+import { removeSpaces } from '@/lib/utils'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   const { questions: initialQuestions } = quiz
 
-  const [questions, setQuestions] = useState(initialQuestions)
+  const questionsWithIds = initialQuestions.map((question: any) => ({
+    ...question,
+    id: uuidv4(), // Generate a unique ID for each question
+  }))
+  console.log(questionsWithIds)
+  const [questions, setQuestions] = useState(questionsWithIds)
   const quizDuration = {
     time: 0,
     minutes: 0,
@@ -67,25 +73,52 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     console.log(questions)
   }
 
-  const deleteQuestion = (id: string) => {
+  const deleteQuestion = (id: string, refId: number) => {
+    //console.log(refId)
     const updatedQuestions = questions.filter((question: any) => {
-      if (question.id) return question.id !== id
-      else return question.title !== id
+      if (question.id) {
+        console.log('Question id:', question.id)
+        return question.id !== id
+      } else {
+        console.log('Question title:', question.title)
+        return question.title !== id
+      }
     })
+
+    console.log(updatedQuestions)
+
+    const updatedQuestionRefs = editableQuestionsRef.filter(
+      (_, index) => index !== refId
+    )
+    // console.log(updatedQuestionRefs)
+
+    // Update the state with the filtered questions and questionRefs
+    setQuestions(updatedQuestions)
+    setEditableQuestionsRef(updatedQuestionRefs)
     setQuestions(updatedQuestions)
   }
 
   const saveQuiz = () => {
     console.log(editableTitle.current?.textContent)
-    console.log(editableLevel.current?.textContent)
     console.log(editableDesc.current?.textContent)
+    console.log(editableLevel.current?.textContent)
+
+    const title = editableTitle.current?.textContent
+      ? editableTitle.current.textContent
+      : ''
+    const level = editableLevel.current?.textContent
+      ? editableLevel.current.textContent
+      : ''
+    const desc = editableDesc.current?.textContent
+      ? editableDesc.current.textContent
+      : ''
 
     const editableQuestionValues: {
       title: string | null
       time: number | null
       points: number | null
-      image: string | null
-      answers: { title: any; isCorrect: any }[]
+      img: '' | File
+      answears: { title: any; isCorrect: any }[]
     }[] = []
 
     editableQuestionsRef.forEach(
@@ -103,15 +136,16 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           const pointsElement = questionElement.querySelector(
             'p#editableQuestionPoints'
           )
-          const imageElement = questionElement.querySelector(
-            `#imgInput-${questionElement.id}`
+          const imageElement = questionElement.querySelector<HTMLInputElement>(
+            `#imgInput${questionElement.id}`
           )
           // console.log(imageElement)
           const title = titleElement ? titleElement.textContent : ''
           const time = timeElement ? Number(timeElement.textContent) : 20
           const points = pointsElement ? Number(pointsElement.textContent) : 20
 
-          //const image = imageElement ? imageElement.value : ''
+          const image: '' | File =
+            imageElement && imageElement.files ? imageElement.files[0] : ''
 
           const answers = Array.from(
             questionElement.querySelectorAll('.editableAnswears')
@@ -123,14 +157,24 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             title: title,
             time: time,
             points: points,
-            answers: answers,
-            image: '',
+            answears: answers,
+            img: image,
           })
         }
       }
     )
 
-    console.log(editableQuestionValues)
+    const savedQuiz: quizProps = {
+      title: title,
+      desc: desc,
+      level: level,
+      slug: '',
+      img: '',
+      records: [],
+      questions: editableQuestionValues,
+    }
+
+    console.log(savedQuiz)
   }
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
@@ -214,9 +258,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         <EditableQuestion
           question={question}
           refId={index}
-          index={question.id || question.title}
+          index={question.id || removeSpaces(question.title)}
           reference={editableQuestionsRef}
-          key={question.id || question.title}
+          key={question.id || removeSpaces(question.title)}
           onDelete={deleteQuestion}
         />
       ))}

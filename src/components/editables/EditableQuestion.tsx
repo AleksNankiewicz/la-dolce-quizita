@@ -18,7 +18,7 @@ const EditableQuestion = ({
   index: string
   reference: React.RefObject<HTMLDivElement>[]
   refId: number
-  onDelete: (index: string) => void
+  onDelete: (index: string, refId: number) => void
 }) => {
   const ref = reference[refId]
 
@@ -48,7 +48,7 @@ const EditableQuestion = ({
     >
       <Button
         className="absolute right-0 top-0 bg-transparent hover:bg-transparent text-red-500 hover:text-red-400"
-        onClick={() => onDelete(index)}
+        onClick={() => onDelete(index, refId)}
       >
         <X />
       </Button>
@@ -86,11 +86,11 @@ const EditableQuestion = ({
             <Input
               type="file"
               name={`file-${index}`}
-              id={`imgInput-${index}`}
+              id={`imgInput${index}`}
               className="hidden "
               onChange={(e) => showImage(e)}
             />
-            <label htmlFor={`imgInput-${index}`} className="cursor-pointer">
+            <label htmlFor={`imgInput${index}`} className="cursor-pointer">
               <Pen size={20} />{' '}
             </label>
           </div>

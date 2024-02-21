@@ -1,5 +1,6 @@
 'use server'
 
+import { quizProps } from '@/types/data'
 import { connectToDb } from './connectToDb'
 import { Question, Quiz, User } from './models'
 
@@ -136,4 +137,53 @@ export const getQuizBySlug = async (slug: string) => {
     console.log(err)
     throw new Error('Failed to fetch user by email!')
   }
+}
+
+export const deleteQuiz = async (slug: string) => {}
+
+export const addQuiz = async (quiz: quizProps) => {
+  console.log(quiz)
+  try {
+    connectToDb()
+
+    const existingQuiz = await Quiz.findOne({ slug: quiz.slug })
+
+    if (!existingQuiz) {
+      const newQuiz = new Quiz(quiz)
+      const savedQuiz = await newQuiz.save()
+      return console.log('hurra')
+    }
+
+    if (existingQuiz) {
+      const updatedQuiz = await Quiz.findOneAndUpdate(
+        { slug: quiz.slug },
+        { $set: quiz },
+        { new: true }
+      )
+
+      return console.log('quiz updated')
+    }
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const uploadImages = async (formData: any) => {
+  // Array to store files
+  const files: (File | string)[] = []
+
+  // Iterate over FormData entries
+  for (const [key, value] of formData.entries()) {
+    // Check if the value is a File object
+    if (value instanceof File) {
+      // Add the File object to the files array
+      files.push(value)
+    } else {
+      files.push('')
+    }
+  }
+
+  // Log all files
+  console.log('Files:', files)
 }

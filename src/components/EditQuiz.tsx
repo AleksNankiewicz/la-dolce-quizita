@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import Image from 'next/image'
 import {
   Award,
@@ -14,13 +14,14 @@ import {
 
 import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { getQuizBySlug } from '@/lib/actions'
+import { addQuiz, getQuizBySlug, uploadImages } from '@/lib/actions'
 import Link from 'next/link'
 import { questionsProps, quizProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
 import { removeSpaces } from '@/lib/utils'
+import { Input } from './ui/input'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   const { questions: initialQuestions } = quiz
@@ -29,7 +30,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     ...question,
     id: uuidv4(), // Generate a unique ID for each question
   }))
-  console.log(questionsWithIds)
+
   const [questions, setQuestions] = useState(questionsWithIds)
   const quizDuration = {
     time: 0,
@@ -49,10 +50,18 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const editableTitle = React.useRef<HTMLHeadingElement>(null)
   const editableLevel = React.useRef<HTMLParagraphElement>(null)
   const editableDesc = React.useRef<HTMLParagraphElement>(null)
-
+  const editableImage = React.useRef<HTMLInputElement>(null)
   const [editableQuestionsRef, setEditableQuestionsRef] = useState<
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
+
+  const [image, setImage] = useState(quiz.img)
+
+  const showImage = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setImage(URL.createObjectURL(event.target.files[0]))
+    }
+  }
 
   const addNewQuestion = () => {
     const newQuestion = {
@@ -90,15 +99,12 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     const updatedQuestionRefs = editableQuestionsRef.filter(
       (_, index) => index !== refId
     )
-    // console.log(updatedQuestionRefs)
 
-    // Update the state with the filtered questions and questionRefs
     setQuestions(updatedQuestions)
     setEditableQuestionsRef(updatedQuestionRefs)
-    setQuestions(updatedQuestions)
   }
 
-  const saveQuiz = () => {
+  const saveQuiz = async () => {
     console.log(editableTitle.current?.textContent)
     console.log(editableDesc.current?.textContent)
     console.log(editableLevel.current?.textContent)
@@ -112,6 +118,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     const desc = editableDesc.current?.textContent
       ? editableDesc.current.textContent
       : ''
+    const img = editableImage.current?.files
+      ? editableImage.current?.files[0]
+      : ''
+
+    console.log(img)
 
     const editableQuestionValues: {
       title: string | null
@@ -121,6 +132,8 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       answears: { title: any; isCorrect: any }[]
     }[] = []
 
+    const formData = new FormData()
+    formData.append('imgMain', img)
     editableQuestionsRef.forEach(
       (questionRef: React.RefObject<HTMLDivElement>, index: number) => {
         const questionElement = questionRef.current
@@ -147,6 +160,8 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           const image: '' | File =
             imageElement && imageElement.files ? imageElement.files[0] : ''
 
+          formData.append(`img-${index}`, image)
+
           const answers = Array.from(
             questionElement.querySelectorAll('.editableAnswears')
           ).map((answear: any) => {
@@ -158,20 +173,33 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             time: time,
             points: points,
             answears: answers,
-            img: image,
+            img: '',
           })
         }
       }
     )
 
+    try {
+      await uploadImages(formData)
+    } catch {
+      console.log('err')
+    }
+
     const savedQuiz: quizProps = {
       title: title,
       desc: desc,
       level: level,
-      slug: '',
+      slug: quiz.slug || Math.floor(Math.random() * 999923) + '',
       img: '',
       records: [],
       questions: editableQuestionValues,
+    }
+    // return console.log(savedQuiz)
+    try {
+      await addQuiz(savedQuiz)
+    } catch (err: any) {
+      console.log(err)
+      throw new Error(err)
     }
 
     console.log(savedQuiz)
@@ -190,12 +218,32 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       </div>
       <div className="text-black text-2xl  p4 col-span-2 text-center min-h-[150px] rounded-xl relative  overflow-hidden flex justify-center">
         <div className="relative w-52 h-full">
-          <Image
-            src={quiz.img}
-            fill
-            alt="background"
-            className="overflow-hidden rounded-2xl opacity-40   duration-300 "
-          />
+          {image ? (
+            <Image
+              alt="quizphoto"
+              src={image}
+              width={100}
+              height={100}
+              className=""
+            />
+          ) : (
+            <div className="w-full bg-slate-950 col-span-2  border  text-white h-full flex justify-center items-center rounded-xl">
+              <p>Zdjęcie</p>
+            </div>
+          )}
+          <div className="absolute bg-red-500 flex p-1   right-0 top-0 text-white rounded-tr-xl">
+            <Input
+              type="file"
+              name={`file-main`}
+              id={`imgInputmain`}
+              className="hidden "
+              onChange={(e) => showImage(e)}
+              ref={editableImage}
+            />
+            <label htmlFor={`imgInputmain`} className="cursor-pointer ">
+              <Pen size={20} />{' '}
+            </label>
+          </div>
         </div>
       </div>
       <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">
@@ -245,7 +293,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
       <div className="text-white   p4 col-span-2  r min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
         <p
-          className="break-words max-w-full"
+          className="break-words max-w-full min-h-full w-full"
           contentEditable
           suppressContentEditableWarning={true}
           ref={editableDesc}

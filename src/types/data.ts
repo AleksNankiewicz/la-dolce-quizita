@@ -15,7 +15,7 @@ export type quizProps = {
   title: string
   desc: string
   level: string
-  img: string
+  img: string | File
   slug: string
   records: recordProps[]
   questions: any[]

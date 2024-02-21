@@ -3,8 +3,14 @@ import React from 'react'
 
 const AddNewQuizPage = () => {
   const emptyQuiz = {
+    title: 'tytuł',
+    desc: 'opis',
+    level: 'Łatwy',
     questions: [
       {
+        title: 'tytuł',
+        time: 20,
+        points: 20,
         answears: [],
       },
     ],

@@ -12,19 +12,15 @@ const EditableQuestion = ({
   index,
   reference,
   onDelete,
+  refId,
 }: {
   question: questionsProps
-  index: number
+  index: string
   reference: React.RefObject<HTMLDivElement>[]
-  onDelete: (index: number) => void
+  refId: number
+  onDelete: (index: string) => void
 }) => {
-  const ref = reference[index]
-  useEffect(() => {
-    if (ref && ref.current) {
-      // Example: log the current element's text content
-      console.log(ref.current.textContent)
-    }
-  }, [ref])
+  const ref = reference[refId]
 
   const [answears, setAnswears] = useState<answearProps[]>(question.answears)
 
@@ -32,11 +28,9 @@ const EditableQuestion = ({
 
   const showImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      console.log(event.target.files)
       setImage(URL.createObjectURL(event.target.files[0]))
     }
   }
-  console.log(reference)
 
   const addNewAnswear = () => {
     const newAnswear = {
@@ -47,7 +41,9 @@ const EditableQuestion = ({
   }
   return (
     <div
+      key={index}
       ref={ref}
+      id={index}
       className={`w-full bg-slate-950 col-span-2  p-4 flex justify-evenly items-center text-center flex-col rounded-xl gap-3 border-2 relative`}
     >
       <Button
@@ -59,7 +55,18 @@ const EditableQuestion = ({
       <div className="flex">
         <div className="flex flex-col items-center justify-center px-8">
           <Timer />
-          {question.time}s
+
+          <div className="flex items-center">
+            <p
+              id="editableQuestionTime"
+              contentEditable
+              suppressContentEditableWarning={true}
+              className=" max-w-14 ml-2"
+            >
+              {question.time}
+            </p>
+            s
+          </div>
         </div>
         <div className="relative">
           {image ? (
@@ -80,7 +87,7 @@ const EditableQuestion = ({
               type="file"
               name={`file-${index}`}
               id={`imgInput-${index}`}
-              className="hidden"
+              className="hidden "
               onChange={(e) => showImage(e)}
             />
             <label htmlFor={`imgInput-${index}`} className="cursor-pointer">
@@ -90,7 +97,14 @@ const EditableQuestion = ({
         </div>
         <div className="flex flex-col items-center justify-center px-8">
           <Coins />
-          {question.points}
+          <p
+            id="editableQuestionPoints"
+            contentEditable
+            suppressContentEditableWarning={true}
+            className=" max-w-14"
+          >
+            {question.points}
+          </p>
         </div>
       </div>
       <p

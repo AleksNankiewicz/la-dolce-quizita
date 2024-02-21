@@ -22,7 +22,7 @@ const EditQuizButton = ({ slug }: { slug: string }) => {
 
   if (!isAdmin) return
   return (
-    <div className="absolute bg-red-500 flex p-1 rounded-bl-xl rounded-tr-xl right-0 -translate-x-full">
+    <div className="absolute bg-red-500 flex p-1 rounded-bl-xl rounded-tr-xl right-0 ">
       <Link
         href={`/editQuiz/${slug} `}
         className="flex items-center gap-2 text-sm"

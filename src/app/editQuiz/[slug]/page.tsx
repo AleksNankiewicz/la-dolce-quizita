@@ -39,7 +39,9 @@ const EditQuizPage = async (params: any) => {
   quizDuration.minutes = Math.floor(quizDuration.time / 60)
   quizDuration.seconds = quizDuration.time - quizDuration.minutes * 60
 
-  return <EditQuiz quiz={quiz} />
+  console.log(JSON.parse(JSON.stringify(quiz)))
+
+  return <EditQuiz quiz={JSON.parse(JSON.stringify(quiz))} />
 }
 
 export default EditQuizPage

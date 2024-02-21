@@ -44,11 +44,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const editableLevel = React.useRef<HTMLParagraphElement>(null)
   const editableDesc = React.useRef<HTMLParagraphElement>(null)
 
-  const editableQuestionsRef = useRef<Array<React.RefObject<HTMLDivElement>>>(
-    Array.from({ length: questions.length }, () =>
-      React.createRef<HTMLDivElement>()
-    )
-  )
+  const [editableQuestionsRef, setEditableQuestionsRef] = useState<
+    Array<React.RefObject<HTMLDivElement>>
+  >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
 
   const addNewQuestion = () => {
     const newQuestion = {
@@ -60,10 +58,16 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       time: 20,
       img: '',
     }
+    const newQuestionRef = React.createRef<HTMLDivElement>()
+
+    // Update refs array with the new ref
+    setEditableQuestionsRef([...editableQuestionsRef, newQuestionRef])
     setQuestions([...questions, newQuestion])
+
+    console.log(questions)
   }
 
-  const deleteQuestion = (id: number) => {
+  const deleteQuestion = (id: string) => {
     const updatedQuestions = questions.filter((question: any) => {
       if (question.id) return question.id !== id
       else return question.title !== id
@@ -77,16 +81,38 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     console.log(editableDesc.current?.textContent)
 
     const editableQuestionValues: {
-      title: Element | null
+      title: string | null
+      time: number | null
+      points: number | null
+      image: string | null
       answers: { title: any; isCorrect: any }[]
     }[] = []
 
-    editableQuestionsRef.current?.forEach(
+    editableQuestionsRef.forEach(
       (questionRef: React.RefObject<HTMLDivElement>, index: number) => {
         const questionElement = questionRef.current
-        console.log(questionElement)
-        // Ensure questionElement is not null before accessing its properties
+
         if (questionElement) {
+          const titleElement = questionElement.querySelector(
+            'p#editableQuestionTitle'
+          )
+
+          const timeElement = questionElement.querySelector(
+            'p#editableQuestionTime'
+          )
+          const pointsElement = questionElement.querySelector(
+            'p#editableQuestionPoints'
+          )
+          const imageElement = questionElement.querySelector(
+            `#imgInput-${questionElement.id}`
+          )
+          // console.log(imageElement)
+          const title = titleElement ? titleElement.textContent : ''
+          const time = timeElement ? Number(timeElement.textContent) : 20
+          const points = pointsElement ? Number(pointsElement.textContent) : 20
+
+          //const image = imageElement ? imageElement.value : ''
+
           const answers = Array.from(
             questionElement.querySelectorAll('.editableAnswears')
           ).map((answear: any) => {
@@ -94,8 +120,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             return { title: answear.textContent, isCorrect: isCorrect }
           })
           editableQuestionValues.push({
-            title: questionElement.querySelector('#editableQuestionTitle'),
+            title: title,
+            time: time,
+            points: points,
             answers: answers,
+            image: '',
           })
         }
       }
@@ -184,8 +213,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       {questions.map((question: any, index: number) => (
         <EditableQuestion
           question={question}
+          refId={index}
           index={question.id || question.title}
-          reference={editableQuestionsRef.current}
+          reference={editableQuestionsRef}
           key={question.id || question.title}
           onDelete={deleteQuestion}
         />

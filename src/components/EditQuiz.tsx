@@ -78,12 +78,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     // Update refs array with the new ref
     setEditableQuestionsRef([...editableQuestionsRef, newQuestionRef])
     setQuestions([...questions, newQuestion])
-
-    console.log(questions)
   }
 
   const deleteQuestion = (id: string, refId: number) => {
-    //console.log(refId)
     const updatedQuestions = questions.filter((question: any) => {
       if (question.id) {
         console.log('Question id:', question.id)
@@ -105,10 +102,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   }
 
   const saveQuiz = async () => {
-    console.log(editableTitle.current?.textContent)
-    console.log(editableDesc.current?.textContent)
-    console.log(editableLevel.current?.textContent)
-
     const title = editableTitle.current?.textContent
       ? editableTitle.current.textContent
       : ''
@@ -118,11 +111,12 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     const desc = editableDesc.current?.textContent
       ? editableDesc.current.textContent
       : ''
-    const img = editableImage.current?.files
-      ? editableImage.current?.files[0]
-      : ''
+    const img =
+      editableImage.current?.files && editableImage.current?.files.length > 0
+        ? editableImage.current?.files[0]
+        : quiz.img
 
-    console.log(img)
+    console.log(quiz.img)
 
     const editableQuestionValues: {
       title: string | null
@@ -130,6 +124,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       points: number | null
       img: '' | File
       answears: { title: any; isCorrect: any }[]
+      id: string
     }[] = []
 
     const formData = new FormData()
@@ -157,19 +152,32 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           const time = timeElement ? Number(timeElement.textContent) : 20
           const points = pointsElement ? Number(pointsElement.textContent) : 20
 
-          const image: '' | File =
-            imageElement && imageElement.files ? imageElement.files[0] : ''
+          // console.log(questions[index].img)
+
+          const image: string | File =
+            imageElement && imageElement.files && imageElement.files.length > 0
+              ? imageElement.files[0]
+              : questions[index].img
+
+          //const image = questions[index].img
 
           formData.append(`img-${index}`, image)
+
+          //console.log(formData)
 
           const answers = Array.from(
             questionElement.querySelectorAll('.editableAnswears')
           ).map((answear: any) => {
             const isCorrect = answear.classList.contains('correct')
-            return { title: answear.textContent, isCorrect: isCorrect }
+            return {
+              title: answear.textContent,
+              isCorrect: isCorrect,
+              id: uuidv4(),
+            }
           })
           editableQuestionValues.push({
             title: title,
+            id: uuidv4(),
             time: time,
             points: points,
             answears: answers,
@@ -179,20 +187,37 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       }
     )
 
+    let imageRefs: any[] = []
     try {
-      await uploadImages(formData)
+      imageRefs = await uploadImages(formData)
+      console.log(imageRefs)
     } catch {
       console.log('err')
     }
+
+    const updatedEditableQuestionValues = editableQuestionValues.map(
+      (question, index) => {
+        const imageRefIndex = index > 0 ? index - 1 : index
+
+        const imageRef = imageRefs.slice(1, imageRefs.length)[index]
+        // console.log({ ...question })
+        return {
+          ...question,
+          img: imageRef,
+        }
+      }
+    )
+
+    // return console.log(updatedEditableQuestionValues)
 
     const savedQuiz: quizProps = {
       title: title,
       desc: desc,
       level: level,
       slug: quiz.slug || Math.floor(Math.random() * 999923) + '',
-      img: '',
+      img: imageRefs[0],
       records: [],
-      questions: editableQuestionValues,
+      questions: updatedEditableQuestionValues,
     }
     // return console.log(savedQuiz)
     try {
@@ -222,9 +247,9 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             <Image
               alt="quizphoto"
               src={image}
-              width={100}
-              height={100}
-              className=""
+              width={2000}
+              height={2000}
+              className="rounded-tr-xl"
             />
           ) : (
             <div className="w-full bg-slate-950 col-span-2  border  text-white h-full flex justify-center items-center rounded-xl">

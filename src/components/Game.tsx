@@ -217,7 +217,7 @@ const Game = (params: any) => {
             setIsAnimate(true)
             setClickedButton(answear)
           }}
-          key={answear.title}
+          key={answear.id || answear.title}
           className={` text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer `}
           animate={
             isAnimate === true && {

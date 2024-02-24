@@ -4,7 +4,7 @@ import { Timer } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
-import { useGameStore } from '@/lib/store'
+import { resetStore, useGameStore } from '@/lib/store'
 import { AnimatedNumber } from '../animations/AnimatedNumber'
 import { motion } from 'framer-motion'
 // import { useRouter } from 'next/router'
@@ -12,21 +12,28 @@ import dynamic from 'next/dynamic'
 import { signOut, useSession } from 'next-auth/react'
 import { Button } from '../ui/button'
 import { sessionUserProps } from '@/types/data'
-
+import UserImage from '../misc/UserImage'
+import { useRouter } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 const Navbar = () => {
   //session
+
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const session = useSession()
   // console.log(session)
 
   const [isUserLogged, setIsUserLogged] = useState(false)
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   useEffect(() => {
     if (session.status == 'authenticated') {
       setIsUserLogged(true)
       const user = session.data.user as sessionUserProps
 
       setUsername(user.username)
+      setEmail(user.email)
     }
   }, [session?.data, session?.status])
 
@@ -44,6 +51,15 @@ const Navbar = () => {
   )
 
   const gamePoints = useGameStore((state) => state.gamePoints)
+
+  useEffect(() => {
+    // Do something here...
+    console.log(pathname)
+    console.log(isGameStarted)
+    if (!pathname.includes('/game/')) {
+      resetStore()
+    }
+  }, [pathname, searchParams])
 
   return (
     <div
@@ -93,13 +109,7 @@ const Navbar = () => {
         />
       </div>
       <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
-        <Avatar>
-          <AvatarImage
-            className="rounded-full w-7 h-7 m-1"
-            src="/noavatar.png"
-            alt="avatar"
-          />
-        </Avatar>
+        <UserImage email={email} />
 
         <div className="flex flex-col justify-end">
           <div className="">

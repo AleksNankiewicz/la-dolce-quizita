@@ -49,3 +49,15 @@ export const useGameStore = create<GameStore>((set) => ({
     set({ actualQuestionsNumber })
   },
 }))
+
+export const resetStore = () => {
+  useGameStore.setState({
+    // Reset state in useGameStore
+    isGameStarted: false,
+    questionTime: 0,
+    questionsNumber: 0,
+    gamePoints: 0,
+    actualQuestionTime: 0,
+    actualQuestionsNumber: 1,
+  })
+}

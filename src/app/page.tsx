@@ -55,7 +55,7 @@ export default async function Home() {
             />
           )}
           <p className="absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white">
-            {quiz.title}
+            {quiz?.title}
           </p>
           <EditQuizButton slug={quiz.slug} />
         </Link>

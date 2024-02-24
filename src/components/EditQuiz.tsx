@@ -9,12 +9,13 @@ import {
   Gamepad2,
   Pen,
   Plus,
+  X,
   XCircle,
 } from 'lucide-react'
 
 import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { addQuiz, getQuizBySlug, uploadImages } from '@/lib/actions'
+import { addQuiz, deleteQuiz, getQuizBySlug, uploadImages } from '@/lib/actions'
 import Link from 'next/link'
 import { questionsProps, quizProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
@@ -22,8 +23,11 @@ import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
 import { removeSpaces } from '@/lib/utils'
 import { Input } from './ui/input'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
+  const router = useRouter()
   const { questions: initialQuestions } = quiz
 
   const questionsWithIds = initialQuestions.map((question: any) => ({
@@ -99,6 +103,23 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
     setQuestions(updatedQuestions)
     setEditableQuestionsRef(updatedQuestionRefs)
+  }
+
+  const handleDeleteQuiz = async () => {
+    try {
+      await deleteQuiz(quiz.slug)
+
+      toast.success('Quiz usunięty!', {
+        duration: 3000,
+      })
+    } catch (err: any) {
+      console.log(err)
+      throw new Error(err)
+    }
+    setTimeout(() => {
+      // router.push('/')
+      window.location.href = '/'
+    }, 2000)
   }
 
   const saveQuiz = async () => {
@@ -197,18 +218,14 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
     const updatedEditableQuestionValues = editableQuestionValues.map(
       (question, index) => {
-        const imageRefIndex = index > 0 ? index - 1 : index
-
         const imageRef = imageRefs.slice(1, imageRefs.length)[index]
-        // console.log({ ...question })
+
         return {
           ...question,
           img: imageRef,
         }
       }
     )
-
-    // return console.log(updatedEditableQuestionValues)
 
     const savedQuiz: quizProps = {
       title: title,
@@ -222,7 +239,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     // return console.log(savedQuiz)
     try {
       await addQuiz(savedQuiz)
+      toast('Quiz Zapisany!', {
+        icon: '😊',
+      })
     } catch (err: any) {
+      toast('Nie udało się zapisać quizu!', {
+        icon: '😢',
+      })
       console.log(err)
       throw new Error(err)
     }
@@ -344,10 +367,44 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         <Plus />
       </Button>
       <Button
-        className="w-full bg-red-500 col-span-2 hover:bg-red-400"
+        className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-2xl py-8"
         onClick={() => saveQuiz()}
       >
         Zapisz
+      </Button>
+      <Button
+        className="w-full bg-slate-800 col-span-2 hover:bg-slate-700 text-red-500"
+        onClick={() =>
+          toast(
+            (t) => (
+              <div className="flex flex-col items-center gap-2 ">
+                <p className="font-bold">Czy chcesz napewno usunąć quiz?</p>
+                <div className="flex gap-2">
+                  <Button
+                    className="bg-green-400 col-span-2 hover:bg-green-300 text-2xl "
+                    onClick={() => {
+                      toast.dismiss(t.id)
+                      handleDeleteQuiz()
+                    }}
+                  >
+                    Tak
+                  </Button>
+                  <Button
+                    className="bg-red-500 col-span-2 hover:bg-red-400 text-2xl "
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Nie
+                  </Button>
+                </div>
+              </div>
+            ),
+            {
+              duration: Infinity,
+            }
+          )
+        }
+      >
+        Usuń Quiz
       </Button>
     </main>
   )

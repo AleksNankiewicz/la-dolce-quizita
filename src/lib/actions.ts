@@ -45,7 +45,7 @@ export const updateUserAfterGame = async (
     user.points = user.points + points
     user.gamePlayed = user.gamePlayed + 1
     if (isAllCorrect) {
-      user.GameWon = user.GameWon + 1
+      user.gameWon = user.gameWon + 1
     }
 
     await user.save()
@@ -142,7 +142,18 @@ export const getQuizBySlug = async (slug: string) => {
   }
 }
 
-export const deleteQuiz = async (slug: string) => {}
+export const deleteQuiz = async (slug: string) => {
+  try {
+    connectToDb()
+
+    await Quiz.findOneAndDelete({ slug: slug })
+
+    console.log('quiz deleted')
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
 
 export const addQuiz = async (quiz: quizProps) => {
   // console.log(quiz)
@@ -172,6 +183,23 @@ export const addQuiz = async (quiz: quizProps) => {
   }
 }
 
+export const updateUser = async (userData: any) => {
+  try {
+    connectToDb()
+
+    const user = await User.findOneAndUpdate(
+      { email: userData.email },
+      { $set: userData },
+      { new: true }
+    )
+
+    console.log('user updatated')
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
 export const uploadFilesToFirebase = async (files: File[] | string[]) => {
   const storage = getStorage(app)
   const uploadedImageRefs: string[] = []
@@ -179,6 +207,7 @@ export const uploadFilesToFirebase = async (files: File[] | string[]) => {
   await Promise.allSettled(
     files.map(async (file: File | string, index: number) => {
       try {
+        if (file == 'undefined') return ''
         if (typeof file === 'string') {
           uploadedImageRefs[index] = file
           return

@@ -37,14 +37,16 @@ const SingleQuizPage = async (params: any) => {
       </div>
       <div className="text-black text-2xl  p4 col-span-2 text-center min-h-[150px] rounded-xl relative  overflow-hidden flex justify-center">
         <div className="relative w-52 h-full">
-          <Image
-            src={quiz.img}
-            fill
-            alt="background"
-            className="overflow-hidden rounded-2xl opacity-40   duration-300 "
-          />
+          {quiz.img && (
+            <Image
+              src={quiz.img}
+              fill
+              alt="background"
+              className="overflow-hidden rounded-2xl opacity-40   duration-300 "
+            />
+          )}
+          <EditQuizButton slug={quiz.slug} />
         </div>
-        <EditQuizButton slug={quiz.slug} />
       </div>
       <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">
         {/* <div className="">Test z wiedzy o Włoskich krajobrazach</div> */}

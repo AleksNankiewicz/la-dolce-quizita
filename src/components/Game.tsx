@@ -13,6 +13,9 @@ const startButtonColors = [
   'bg-blue-600',
   'bg-green-600',
   'bg-red-600',
+  'bg-yellow-600',
+  'bg-brown-600',
+  'bg-purple-600',
 ]
 
 const Game = (params: any) => {
@@ -25,27 +28,7 @@ const Game = (params: any) => {
 
   //user
 
-  const session = useSession()
   const [email, setEmail] = useState('')
-  const [isEmailSet, setIsEmailSet] = useState(false)
-  // useEffect(() => {
-  //   if (isEmailSet) return // If email is already set, return early
-  //   if (session.status === 'authenticated') {
-  //     const user = session.data?.user as sessionUserProps
-  //     setEmail(user.email ?? '')
-  //     setIsEmailSet(true) // Set the flag to true to indicate that email is set
-  //   }
-  // }, [session, isEmailSet]) // Include isEmailSet in the dependency array
-
-  // // After email is set, remove the useEffect by setting isEmailSet to true
-  // useEffect(() => {
-  //   if (email) {
-  //     setIsEmailSet(true)
-  //   }
-  // }, [email])
-
-  // console.log(email)
-  // console.log('asas')
 
   //Game store
 

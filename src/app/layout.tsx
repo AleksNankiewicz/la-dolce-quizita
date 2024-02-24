@@ -4,7 +4,9 @@ import './globals.css'
 import Navbar from '@/components/layouts/Navbar'
 import Footer from '@/components/layouts/Footer'
 import { AppProvider } from '@/components/Appcontext'
+import { ToastContainer } from 'react-toastify'
 
+import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ export default function RootLayout({
             <Navbar />
             <div className="min-h-screen">{children}</div>
             {/* <Footer /> */}
+            <Toaster />
           </div>
         </AppProvider>
       </body>

@@ -17,15 +17,19 @@ const QuizesPage = async () => {
         <Link
           key={quiz.label}
           href={`/quizes/${quiz.slug}`}
-          className="block text-2xl text-white p4 col-span-1 w-full  h-[150px] sm:h-[200px] md:h-[300px] lg:h-[500px]  text-center gap-2 rounded-xl relative group overflow-hidden"
+          className={`block text-2xl text-white p4 col-span-1 w-full  h-[150px] sm:h-[200px] md:h-[300px] lg:h-[500px]  text-center gap-2 rounded-xl relative group overflow-hidden ${
+            !quiz.img && 'bg-slate-800'
+          }`}
         >
           {' '}
-          <Image
-            src={quiz.img}
-            fill
-            alt={quiz.title}
-            className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
-          />
+          {quiz.img && (
+            <Image
+              src={quiz.img}
+              fill
+              alt={quiz.title}
+              className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
+            />
+          )}
           <p className="absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white">
             {quiz.title}
           </p>

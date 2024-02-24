@@ -30,8 +30,8 @@ export type recordProps = {
 
 export type sessionUserProps = {
   name?: string | null | undefined
-  email?: string | null | undefined
-  image?: string | null | undefined
+  email: string
+  img?: string | null | undefined
   isAdmin: boolean
   username: string
   gameWon: number // Define the property 'gameWon'

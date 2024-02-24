@@ -28,6 +28,8 @@ const GameSummary = ({
 
   const allCorrect = correctAnswearsNumber == allQuestionsNumber
 
+  console.log(allCorrect)
+
   const [email, setEmail] = useState('')
   const [emailSet, setEmailSet] = useState(false)
   const session = useSession()

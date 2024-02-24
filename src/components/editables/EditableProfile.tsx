@@ -1,0 +1,117 @@
+'use client'
+import StatsBlock from '@/components/layouts/StatsBlock'
+import { Button } from '@/components/ui/button'
+import { sessionUserProps } from '@/types/data'
+import { Pen } from 'lucide-react'
+import { signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { Input } from '@/components/ui/input'
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { updateUser, uploadImages } from '@/lib/actions'
+import toast from 'react-hot-toast'
+
+const EditableProfile = (user: any) => {
+  //console.log(user.user)
+
+  const loggedUser = user.user
+
+  const editableImage = React.useRef<HTMLInputElement>(null)
+
+  const [image, setImage] = useState(loggedUser.img)
+  const [isAbleToSave, setIsAbleToSave] = useState(false)
+  const [isEffectEnabled, setIsEffectEnabled] = useState(true)
+  const [imageChangeCount, setImageChangeCount] = useState(0)
+
+  useEffect(() => {
+    if (imageChangeCount > 0) {
+      setIsAbleToSave(true)
+    }
+  }, [imageChangeCount])
+
+  useEffect(() => {
+    setImageChangeCount((prevCount) => prevCount + 1)
+  }, [image])
+
+  useEffect(() => {
+    setImageChangeCount(0)
+  }, [loggedUser.img])
+
+  const showImage = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setImage(URL.createObjectURL(event.target.files[0]))
+    }
+  }
+
+  const saveProfile = async () => {
+    const img =
+      editableImage.current?.files && editableImage.current?.files.length > 0
+        ? editableImage.current?.files[0]
+        : loggedUser.img
+
+    const formData = new FormData()
+    formData.append('imgMain', img)
+
+    let imageRefs: any[] = []
+    try {
+      imageRefs = await uploadImages(formData)
+      console.log(imageRefs)
+    } catch {
+      console.log('err')
+    }
+
+    const updatedUser = {
+      ...loggedUser,
+      img: imageRefs[0],
+    }
+
+    try {
+      await updateUser(updatedUser)
+
+      toast.success('Profil zapisany')
+    } catch (err: any) {
+      console.log(err)
+    }
+  }
+  return (
+    <div className="w-full flex-col items-center text-center space-y-4 px-3">
+      <div className="relative w-full flex justify-center p-5">
+        <Image
+          src={image}
+          width={200}
+          height={200}
+          alt="profile"
+          className="rounded-full"
+        />
+        <Input
+          type="file"
+          name={`file-main`}
+          id={`imgInputmain`}
+          className="hidden "
+          onChange={(e) => showImage(e)}
+          ref={editableImage}
+        />
+        <label htmlFor={`imgInputmain`} className="cursor-pointer ">
+          <Pen size={20} />{' '}
+        </label>
+      </div>
+
+      <div className="text-2xl">{loggedUser.username}</div>
+
+      {isAbleToSave && (
+        <Button
+          className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-xl py-6"
+          onClick={() => saveProfile()}
+        >
+          Zapisz
+        </Button>
+      )}
+      <StatsBlock />
+
+      <Button onClick={() => signOut()} className="w-full text-2xl py-7">
+        Wyloguj się
+      </Button>
+    </div>
+  )
+}
+
+export default EditableProfile

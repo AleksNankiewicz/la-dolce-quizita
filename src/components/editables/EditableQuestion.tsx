@@ -69,7 +69,7 @@ const EditableQuestion = ({
           </div>
         </div>
         <div className="relative">
-          {image ? (
+          {image && image !== 'undefined' ? (
             <Image
               alt="quizphoto"
               src={image}

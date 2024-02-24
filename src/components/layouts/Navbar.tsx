@@ -19,7 +19,6 @@ const Navbar = () => {
   //session
 
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   const session = useSession()
   // console.log(session)
@@ -59,7 +58,7 @@ const Navbar = () => {
     if (!pathname.includes('/game/')) {
       resetStore()
     }
-  }, [pathname, searchParams])
+  }, [pathname])
 
   return (
     <div

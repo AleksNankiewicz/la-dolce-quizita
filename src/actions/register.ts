@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 import { connectToDb } from '@/lib/connectToDb'
 import { User } from 'lucide-react'
 import { addUser, getUserByEmail } from '@/lib/actions'
-
+import { signIn } from 'next-auth/react'
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values)
   if (!validatedFields.success) {

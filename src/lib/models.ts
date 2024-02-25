@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -41,7 +40,6 @@ const userSchema = new mongoose.Schema(
     },
     lastGameDate: {
       type: Date,
-      default: new Date(0),
     },
   },
   { timestamps: true }

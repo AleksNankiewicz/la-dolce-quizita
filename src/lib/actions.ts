@@ -9,11 +9,11 @@ import firebase from 'firebase/app'
 import 'firebase/storage'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import app from './firebase'
-export const getQuizes = async () => {
+export const getQuizes = async (amount = Infinity) => {
   noStore()
   try {
     connectToDb()
-    const quizes = await Quiz.find()
+    const quizes = await Quiz.find().sort({ updatedAt: -1 }).limit(amount)
     return quizes
   } catch (err: any) {
     console.log(err)

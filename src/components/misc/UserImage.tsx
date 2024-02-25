@@ -18,16 +18,22 @@ const UserImage = ({ email }: { email: string }) => {
   }, [email])
 
   // console.log(user)
-  return (
-    user && (
-      <Image
-        src={user.img}
-        alt="profilepic"
-        width={30}
-        height={30}
-        className="rounded-full w-10 h-10"
-      />
-    )
+  return user?.img ? (
+    <Image
+      src={user.img}
+      alt="profilepic"
+      width={30}
+      height={30}
+      className="rounded-full w-10 h-10"
+    />
+  ) : (
+    <Image
+      src={'/noavatar.png'}
+      alt="profilepic"
+      width={30}
+      height={30}
+      className="rounded-full w-10 h-10"
+    />
   )
 }
 

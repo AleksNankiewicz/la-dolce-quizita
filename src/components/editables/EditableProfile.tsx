@@ -88,7 +88,7 @@ const EditableProfile = (user: any) => {
     <div className="w-full flex-col items-center text-center space-y-4 px-3">
       <div className="relative w-full flex justify-center p-5">
         <Image
-          src={image}
+          src={image ? image : '/noavatar.png'}
           width={200}
           height={200}
           alt="profile"

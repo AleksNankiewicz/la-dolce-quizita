@@ -1,5 +1,5 @@
 'use client'
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import {
   Award,
@@ -17,7 +17,7 @@ import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { addQuiz, deleteQuiz, getQuizBySlug, uploadImages } from '@/lib/actions'
 import Link from 'next/link'
-import { questionsProps, quizProps } from '@/types/data'
+import { questionsProps, quizProps, sessionUserProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
@@ -25,9 +25,21 @@ import { formatNumber, formatTime, removeSpaces } from '@/lib/utils'
 import { Input } from './ui/input'
 import toast, { useToaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
+  const session = useSession()
   const router = useRouter()
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      const user = session.data.user as sessionUserProps
+
+      if (!user.isAdmin) {
+        router.push('/')
+      }
+    }
+  }, [session?.data, session?.status])
+
   const { questions: initialQuestions } = quiz
 
   const questionsWithIds = initialQuestions.map((question: any) => ({

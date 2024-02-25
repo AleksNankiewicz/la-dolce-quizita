@@ -87,7 +87,7 @@ const SingleQuizPage = async (params: any) => {
         <p>{quiz.desc}</p>
       </div>
 
-      {quiz.records && (
+      {quiz.records.length !== 0 && (
         <>
           <div className=" text-2xl text-white p4 col-span-2 w-full ">
             <h1 className="">Rekordy</h1>

@@ -20,6 +20,7 @@ import { Button } from '../ui/button'
 import FormError from '../atoms/FormError'
 import FormSuccess from '../atoms/FormSuccess'
 import { register } from '@/actions/register'
+import Link from 'next/link'
 
 const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>('')
@@ -116,13 +117,26 @@ const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button
-            disabled={isPending}
-            type="submit"
-            className="w-full bg-green-600  hover:bg-green-500"
-          >
-            Zarejestrój się
-          </Button>
+
+          {!success ? (
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="w-full bg-green-600  hover:bg-green-500"
+            >
+              Zarejestrój się
+            </Button>
+          ) : (
+            <Link href={'/auth/login'} className="block">
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="w-full bg-blue-600  hover:bg-blue-500"
+              >
+                Zaloguj się
+              </Button>
+            </Link>
+          )}
         </form>
       </Form>
     </CardWrapper>

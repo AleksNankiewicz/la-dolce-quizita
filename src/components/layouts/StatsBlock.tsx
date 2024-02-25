@@ -36,7 +36,7 @@ const StatsBlock = () => {
   }, [email])
 
   return (
-    <div className="text-white text-sm bg-purple-600 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center relative">
+    <div className="text-white text-sm bg-purple-600 p4 col-span-2 md:col-span-4 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center relative">
       {!isUserLogged && (
         <div className="absolute w-full h-full bg-black/90 left-0 top-0 flex justify-center items-center">
           Zaloguj się aby zobaczyć statystyki
@@ -54,7 +54,7 @@ const StatsBlock = () => {
       </div>
       <div className="flex flex-col  justify-center items-center">
         <Coins size={30} />
-        <p className=" border-b-[2px] border-white">Ilość punktów</p>
+        <p className=" border-b-[2px] border-white">Punkty</p>
         <p
           className="
           "

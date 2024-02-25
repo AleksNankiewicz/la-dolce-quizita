@@ -8,10 +8,11 @@ const RecordsBlock = async () => {
   const users = await getUsers()
 
   users.sort((a, b) => b.points - a.points)
+  const noNewUsers = users.filter((user) => user.points)
 
   return (
-    <div className="text-white  bg-slate-800  col-span-2 w-full text-center min-h-[150px] rounded-xl flex-col justify-center items-center p-4  ">
-      {users.map((user, i) => (
+    <div className="text-white  bg-slate-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center p-4  ">
+      {noNewUsers.map((user, i) => (
         <div
           key={i}
           className="flex text-sm  justify-between items-center py-1"

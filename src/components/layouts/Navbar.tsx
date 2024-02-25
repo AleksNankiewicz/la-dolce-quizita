@@ -15,6 +15,7 @@ import { sessionUserProps } from '@/types/data'
 import UserImage from '../misc/UserImage'
 import { useRouter } from 'next/navigation'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { ThreeDots } from 'react-loader-spinner'
 const Navbar = () => {
   //session
 
@@ -24,10 +25,21 @@ const Navbar = () => {
   // console.log(session)
 
   const [isUserLogged, setIsUserLogged] = useState(false)
+
+  const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   useEffect(() => {
+    if (session.status == 'loading') {
+      setIsLoading(true)
+    }
+    if (session.status == 'unauthenticated') {
+      setIsLoading(false)
+    }
+
     if (session.status == 'authenticated') {
+      setIsLoading(false)
+
       setIsUserLogged(true)
       const user = session.data.user as sessionUserProps
 
@@ -107,28 +119,44 @@ const Navbar = () => {
           className="h-2 "
         />
       </div>
-      <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
-        <UserImage email={email} />
 
-        <div className="flex flex-col justify-end">
-          <div className="">
-            {isUserLogged ? (
-              <Link href={'/profile'}>{username}</Link>
-            ) : (
-              <Link href={'/auth/login'}>Zaloguj się</Link>
-            )}
-          </div>
+      {!isLoading ? (
+        <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
+          <UserImage email={email} />
 
-          {isGameStarted && (
-            <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
-              <AnimatedNumber value={gamePoints} />
+          <div className="flex flex-col justify-end">
+            <div className="">
+              {isUserLogged ? (
+                <Link href={'/profile'}>{username}</Link>
+              ) : (
+                <Link href={'/auth/login'}>Zaloguj się</Link>
+              )}
             </div>
-          )}
-          {/* <Link href={'/auth/login'}>
+
+            {isGameStarted && (
+              <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
+                <AnimatedNumber value={gamePoints} />
+              </div>
+            )}
+            {/* <Link href={'/auth/login'}>
             <div className="">Gość</div>
           </Link> */}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
+          <ThreeDots
+            visible={true}
+            height="40"
+            width="40"
+            color="#4fa94d"
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      )}
     </div>
   )
 }

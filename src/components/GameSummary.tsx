@@ -1,6 +1,6 @@
 'use client'
 
-import { getUserByEmail, updateUserAfterGame } from '@/lib/actions'
+import { updateAfterGame } from '@/lib/actions'
 import { questionsProps, sessionUserProps } from '@/types/data'
 import { CheckCircle2, XCircle } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -11,10 +11,10 @@ import { useEffect, useState } from 'react'
 
 const GameSummary = ({
   questions,
-  userEmail,
+  quizSlug,
 }: {
   questions: questionsProps[]
-  userEmail: string
+  quizSlug: string
 }) => {
   let correctAnswearsNumber = 0
   const scoredPoints = questions.reduce((acc, question) => {
@@ -45,7 +45,13 @@ const GameSummary = ({
   useEffect(() => {
     if (email) {
       const update = async () => {
-        await updateUserAfterGame(email, scoredPoints, allCorrect)
+        try {
+          await updateAfterGame(email, scoredPoints, allCorrect, quizSlug)
+          console.log('user after game updated!')
+        } catch (err: any) {
+          console.log(err)
+          throw new Error(err)
+        }
       }
       update()
     }
@@ -74,7 +80,7 @@ const GameSummary = ({
       </div>
       {questions.map((question) => (
         <div
-          key={question.title}
+          key={question.id || question.title}
           className={`w-full bg-slate-950 col-span-2  p-4 flex justify-evenly items-center text-center flex-col rounded-xl gap-3 border-2 ${
             question.correctAnswear ? 'border-green-400' : 'border-red-600'
           }`}
@@ -93,7 +99,7 @@ const GameSummary = ({
           <div className=" flex flex-wrap gap-3 justify-center">
             {question.answears.map((answear) => (
               <div
-                key={answear.title}
+                key={answear.id || answear.title}
                 className={`w-1/3 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8 ${
                   !answear.isCorrect ? 'border-red-600' : 'border-green-400'
                 } `}

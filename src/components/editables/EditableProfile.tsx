@@ -9,9 +9,12 @@ import { Input } from '@/components/ui/input'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { updateUser, uploadImages } from '@/lib/actions'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 const EditableProfile = (user: any) => {
   //console.log(user.user)
+
+  const router = useRouter()
 
   const loggedUser = user.user
 
@@ -19,7 +22,7 @@ const EditableProfile = (user: any) => {
 
   const [image, setImage] = useState(loggedUser.img)
   const [isAbleToSave, setIsAbleToSave] = useState(false)
-  const [isEffectEnabled, setIsEffectEnabled] = useState(true)
+
   const [imageChangeCount, setImageChangeCount] = useState(0)
 
   useEffect(() => {
@@ -43,6 +46,7 @@ const EditableProfile = (user: any) => {
   }
 
   const saveProfile = async () => {
+    toast.loading('Zapisywanie profilu...')
     const img =
       editableImage.current?.files && editableImage.current?.files.length > 0
         ? editableImage.current?.files[0]
@@ -66,12 +70,20 @@ const EditableProfile = (user: any) => {
 
     try {
       await updateUser(updatedUser)
-
+      toast.dismiss()
       toast.success('Profil zapisany')
     } catch (err: any) {
+      toast.dismiss()
+      toast.success('Nie udało się zapisać profilu')
       console.log(err)
     }
   }
+
+  const handleSignOut = async () => {
+    // Redirect to the homepage or any other page
+    await signOut()
+  }
+
   return (
     <div className="w-full flex-col items-center text-center space-y-4 px-3">
       <div className="relative w-full flex justify-center p-5">
@@ -80,7 +92,7 @@ const EditableProfile = (user: any) => {
           width={200}
           height={200}
           alt="profile"
-          className="rounded-full"
+          className="rounded-full w-[170px] h-[170px]"
         />
         <Input
           type="file"
@@ -107,7 +119,7 @@ const EditableProfile = (user: any) => {
       )}
       <StatsBlock />
 
-      <Button onClick={() => signOut()} className="w-full text-2xl py-7">
+      <Button onClick={() => handleSignOut()} className="w-full text-2xl py-7">
         Wyloguj się
       </Button>
     </div>

@@ -6,8 +6,9 @@ import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getQuizBySlug } from '@/lib/actions'
 import Link from 'next/link'
-import { questionsProps } from '@/types/data'
+import { questionsProps, recordProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
+import GameRecordsBlock from '@/components/layouts/GameRecordsBlock'
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
@@ -92,28 +93,8 @@ const SingleQuizPage = async (params: any) => {
             <h1 className="">Rekordy</h1>
           </div>
           <div className="text-white  bg-slate-800  col-span-2 w-full text-center  rounded-xl flex-col justify-center items-center p-4  ">
-            {quiz.records.map((record: any, i: number) => (
-              <div
-                key={i}
-                className="flex text-sm  justify-between items-center py-1"
-              >
-                <div className="flex items-center gap-2">
-                  {' '}
-                  <Image
-                    className="rounded-full w-10 h-10"
-                    src={record.img ? record.img : '/noavatar.png'}
-                    alt="avatar"
-                    width={25}
-                    height={25}
-                  />
-                  <p>{record.username}</p>
-                </div>
-
-                <div className="flex flex-col-reverse">
-                  <p>{record.score}</p>
-                  <Coins size={25} />
-                </div>
-              </div>
+            {quiz.records.map((record: recordProps, index: number) => (
+              <GameRecordsBlock record={record} key={index} />
             ))}
           </div>
         </>

@@ -1,8 +1,10 @@
 export type answearProps = {
+  id: string
   title: string
   isCorrect: boolean
 }
 export type questionsProps = {
+  id: string
   title: string
   correctAnswear?: boolean
   points: number
@@ -22,10 +24,8 @@ export type quizProps = {
 }
 
 export type recordProps = {
-  username: string
-  img: string
+  email: string
   score: number
-  time?: number
 }
 
 export type sessionUserProps = {

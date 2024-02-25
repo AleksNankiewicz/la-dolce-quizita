@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    lastGameDate: {
+      type: Date,
+      default: new Date(0),
+    },
   },
   { timestamps: true }
 )

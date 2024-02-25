@@ -21,9 +21,9 @@ import { questionsProps, quizProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
-import { removeSpaces } from '@/lib/utils'
+import { formatNumber, formatTime, removeSpaces } from '@/lib/utils'
 import { Input } from './ui/input'
-import toast from 'react-hot-toast'
+import toast, { useToaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
@@ -41,12 +41,14 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     minutes: 0,
     seconds: 0,
   }
-  let quizMaxPoints = 0
+  let startQuizMaxPoints = 0
   questions.forEach((question: questionsProps) => {
     quizDuration.time += question.time
 
-    quizMaxPoints += question.points
+    startQuizMaxPoints += question.points
   })
+
+  const quizMaxPoints = startQuizMaxPoints
 
   quizDuration.minutes = Math.floor(quizDuration.time / 60)
   quizDuration.seconds = quizDuration.time - quizDuration.minutes * 60
@@ -77,6 +79,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       time: 20,
       img: '',
     }
+
     const newQuestionRef = React.createRef<HTMLDivElement>()
 
     // Update refs array with the new ref
@@ -84,13 +87,20 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     setQuestions([...questions, newQuestion])
   }
 
-  const deleteQuestion = (id: string, refId: number) => {
+  const deleteQuestion = (
+    id: string,
+    refId: number,
+    questionPoints: number
+  ) => {
     const updatedQuestions = questions.filter((question: any) => {
       if (question.id) {
         console.log('Question id:', question.id)
+        console.log('punkty ' + questionPoints)
+
         return question.id !== id
       } else {
         console.log('Question title:', question.title)
+
         return question.title !== id
       }
     })
@@ -103,6 +113,23 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
     setQuestions(updatedQuestions)
     setEditableQuestionsRef(updatedQuestionRefs)
+  }
+
+  const updateQuizOnInput = (
+    index: number,
+    newTime: number,
+    newPoints: number
+  ) => {
+    const updatedQuestions = [...questions]
+
+    // Access the question with the specified index and update its properties
+    if (updatedQuestions[index]) {
+      updatedQuestions[index].time = newTime
+      updatedQuestions[index].points = newPoints
+    }
+
+    // Set the state with the updated array of questions
+    setQuestions(updatedQuestions)
   }
 
   const handleDeleteQuiz = async () => {
@@ -123,6 +150,10 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   }
 
   const saveQuiz = async () => {
+    // Initialize useToaster to get the toast function
+
+    toast.loading('Zapisywanie quizu...')
+
     const title = editableTitle.current?.textContent
       ? editableTitle.current.textContent
       : ''
@@ -227,11 +258,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       }
     )
 
+    const randomSlug = Math.floor(Math.random() * 999923) + ''
+
     const savedQuiz: quizProps = {
       title: title,
       desc: desc,
       level: level,
-      slug: quiz.slug || Math.floor(Math.random() * 999923) + '',
+      slug: quiz.slug || randomSlug,
       img: imageRefs[0],
       records: [],
       questions: updatedEditableQuestionValues,
@@ -239,10 +272,19 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     // return console.log(savedQuiz)
     try {
       await addQuiz(savedQuiz)
+      toast.dismiss()
       toast('Quiz Zapisany!', {
         icon: '😊',
       })
+
+      if (!quiz.slug) {
+        setTimeout(() => {
+          // router.push('/')
+          window.location.href = `/editQuiz/${randomSlug}`
+        }, 2000)
+      }
     } catch (err: any) {
+      toast.dismiss()
       toast('Nie udało się zapisać quizu!', {
         icon: '😢',
       })
@@ -311,9 +353,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         <div className="flex flex-col  justify-center items-center">
           <Timer size={30} />
           <p className=" border-b-[2px] border-white">Czas trwania</p>
-          <p>
-            {quizDuration.minutes}m {quizDuration.seconds}s
-          </p>
+          <p>{formatTime(quizDuration.time)}</p>
         </div>
         <div className="flex flex-col  justify-center items-center">
           <Gamepad2 size={30} />
@@ -334,7 +374,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             className="
       "
           >
-            {quizMaxPoints}
+            {formatNumber(quizMaxPoints)}
           </p>
         </div>
       </div>
@@ -358,6 +398,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           reference={editableQuestionsRef}
           key={question.id || removeSpaces(question.title)}
           onDelete={deleteQuestion}
+          onInput={updateQuizOnInput}
         />
       ))}
       <Button

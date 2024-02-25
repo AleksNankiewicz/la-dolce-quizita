@@ -17,7 +17,7 @@ const UserImage = ({ email }: { email: string }) => {
     fetchUser()
   }, [email])
 
- // console.log(user)
+  // console.log(user)
   return (
     user && (
       <Image
@@ -25,7 +25,7 @@ const UserImage = ({ email }: { email: string }) => {
         alt="profilepic"
         width={30}
         height={30}
-        className="rounded-full"
+        className="rounded-full w-10 h-10"
       />
     )
   )

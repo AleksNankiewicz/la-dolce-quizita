@@ -6,25 +6,31 @@ import { answearProps, questionsProps } from '@/types/data'
 import { Button } from '../ui/button'
 import { number } from 'zod'
 import { Input } from '../ui/input'
+import { disableTextInInput } from '@/lib/utils'
 
 const EditableQuestion = ({
   question,
   index,
   reference,
   onDelete,
+  onInput,
   refId,
 }: {
   question: questionsProps
   index: string
   reference: React.RefObject<HTMLDivElement>[]
   refId: number
-  onDelete: (index: string, refId: number) => void
+  onDelete: (index: string, refId: number, questionPoints: number) => void
+  onInput: (index: number, time: number, points: number) => void
 }) => {
   const ref = reference[refId]
 
   const [answears, setAnswears] = useState<answearProps[]>(question.answears)
 
   const [image, setImage] = useState<string | null>(question.img)
+
+  const [questionPoints, setQuestionPoints] = useState(question.points)
+  const [questionTime, setQuestionTime] = useState(question.time)
 
   const showImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -34,11 +40,13 @@ const EditableQuestion = ({
 
   const addNewAnswear = () => {
     const newAnswear = {
-      title: 'Pytanie',
+      title: 'Odpowiedź',
       isCorrect: false,
+      id: '',
     }
     setAnswears([...answears, newAnswear])
   }
+
   return (
     <div
       key={index}
@@ -48,7 +56,7 @@ const EditableQuestion = ({
     >
       <Button
         className="absolute right-0 top-0 bg-transparent hover:bg-transparent text-red-500 hover:text-red-400"
-        onClick={() => onDelete(index, refId)}
+        onClick={() => onDelete(index, refId, questionPoints)}
       >
         <X />
       </Button>
@@ -62,6 +70,12 @@ const EditableQuestion = ({
               contentEditable
               suppressContentEditableWarning={true}
               className=" max-w-14 ml-2"
+              onInput={(e) => {
+                disableTextInInput(e)
+                const newTime = parseInt(e.currentTarget.innerText)
+                setQuestionTime(newTime)
+                onInput(refId, newTime, questionPoints)
+              }}
             >
               {question.time}
             </p>
@@ -102,6 +116,12 @@ const EditableQuestion = ({
             contentEditable
             suppressContentEditableWarning={true}
             className=" max-w-14"
+            onInput={(e) => {
+              disableTextInInput(e)
+              const newPoints = parseInt(e.currentTarget.innerText)
+              setQuestionPoints(newPoints)
+              onInput(refId, questionTime, newPoints)
+            }}
           >
             {question.points}
           </p>

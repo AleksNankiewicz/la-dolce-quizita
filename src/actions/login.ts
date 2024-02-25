@@ -17,21 +17,23 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     const result = await signIn('credentials', {
       email,
       password,
-      callbackUrl: '/', // Optional, if you don't want automatic redirection
+      redirect: false, // Optional, if you don't want automatic redirection
     })
 
     console.log(result)
 
+    // Handle authentication error
+
     if (result?.error) {
-      // Handle authentication error
       return { error: 'Niepoprawne dane logowania' }
     }
+    window.location.href = '/'
+    return { success: 'Jesteś zalogowany' }
 
     // Handle successful authentication
-
-    return { success: 'Jesteś zalogowany' }
   } catch (error: any) {
-    console.error('Error occurred during sign-in:', error)
-    return { error: 'An error occurred during sign-in' }
+    return { error: 'Niepoprawne dane logowania' }
+    // console.error('Error occurred during sign-in:', error)
+    // return { error: 'An error occurred during sign-in' }
   }
 }

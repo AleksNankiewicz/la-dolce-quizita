@@ -53,8 +53,8 @@ const Navbar = () => {
 
   useEffect(() => {
     // Do something here...
-    console.log(pathname)
-    console.log(isGameStarted)
+
+    if (!isGameStarted) return
     if (!pathname.includes('/game/')) {
       resetStore()
     }
@@ -72,7 +72,7 @@ const Navbar = () => {
         }  w-2/3 justify-start font-bold text-center`}
       >
         <Link href={'/'} className="pl-3 text-xl">
-          Włoski Quiz
+          La Dolce Quizita
         </Link>
       </div>
       <div

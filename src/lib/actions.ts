@@ -33,10 +33,11 @@ export const getUsers = async () => {
   }
 }
 
-export const updateUserAfterGame = async (
+export const updateAfterGame = async (
   email: string,
   points: number,
-  isAllCorrect: boolean
+  isAllCorrect: boolean,
+  quizSlug: string
 ) => {
   try {
     connectToDb()
@@ -47,9 +48,53 @@ export const updateUserAfterGame = async (
     if (isAllCorrect) {
       user.gameWon = user.gameWon + 1
     }
+    const lastGameDate = user.lastGameDate ?? new Date(0)
+    const now = new Date()
+    const hoursSinceLastGame =
+      (now.getTime() - lastGameDate.getTime()) / (1000 * 3600)
+
+    if (hoursSinceLastGame <= 24) {
+      // Jeśli ostatnia gra była mniej niż 24 godziny temu, zwiększ streak o 1
+      user.streak = (user.streak ?? 0) + 1
+    } else {
+      // W przeciwnym razie, ustaw streak na 1
+      user.streak = 1
+    }
+
+    // Zaktualizuj datę ostatniej gry
+    user.lastGameDate = now
 
     await user.save()
     console.log('user updated')
+
+    const quiz = await getQuizBySlug(quizSlug)
+
+    const existingRecordIndex = quiz.records.findIndex(
+      (record: { email: any }) => record.email === user.email
+    )
+
+    if (existingRecordIndex !== -1) {
+      // If a record exists, update it
+
+      if (quiz.records[existingRecordIndex].score > points) return
+
+      // Update the score
+      await Quiz.updateOne(
+        { _id: quiz._id, 'records.email': user.email },
+        { $set: { 'records.$.score': points } }
+      )
+      console.log('Quiz updated successfully.')
+    } else {
+      // If no record exists, push a new record
+      quiz.records.push({
+        email: user.email,
+        score: points,
+      })
+    }
+
+    await quiz.save()
+
+    console.log('quiz updated')
   } catch (err: any) {
     console.log(err)
     throw new Error(err)
@@ -138,7 +183,7 @@ export const getQuizBySlug = async (slug: string) => {
     return quiz
   } catch (err) {
     console.log(err)
-    throw new Error('Failed to fetch user by email!')
+    throw new Error('Failed to fetch quiz by email!')
   }
 }
 

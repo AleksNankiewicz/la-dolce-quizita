@@ -183,12 +183,14 @@ const Game = (params: any) => {
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 select-none">
       <div className=" text-3xl text-black  col-span-2 w-[40vh]  min-h-[30vh]  rounded-2xl flex justify-center items-center  relative mx-auto">
-        <Image
-          src={questions[index]?.img}
-          fill
-          alt="background"
-          className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300"
-        />
+        {questions[index]?.img && (
+          <Image
+            src={questions[index]?.img}
+            fill
+            alt="background"
+            className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300"
+          />
+        )}
       </div>
       <div className=" text-2xl text-white p4 col-span-2 w-full text-center py-5">
         <p>{questions[index].title}</p>
@@ -234,7 +236,7 @@ const Game = (params: any) => {
         </Button>
       )}
 
-      {isEndGame && <GameSummary questions={questions} userEmail={email} />}
+      {isEndGame && <GameSummary questions={questions} quizSlug={quiz.slug} />}
     </main>
   )
 }

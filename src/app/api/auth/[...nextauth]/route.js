@@ -26,7 +26,7 @@ const handler = NextAuth({
 
           if (!user) {
             // User not found
-            return null
+            return { error: 'my custom error' }
           }
 
           const isPasswordCorrect = await bcrypt.compare(
@@ -53,6 +53,12 @@ const handler = NextAuth({
     // async redirect(url, baseUrl) {
     //   return url.startsWith(baseUrl) ? url : baseUrl
     // },
+    async signIn({ user, account, profile, email, credentials }) {
+      if (user?.error === 'my custom error') {
+        throw new Error('custom error to the client')
+      }
+      return true
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id

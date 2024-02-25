@@ -1,6 +1,7 @@
 import React from 'react'
 import { getUserByEmail } from '@/lib/actions'
 import EditableProfile from '../editables/EditableProfile'
+import Loading from '@/app/loading'
 
 const FindUser = ({ email }: { email: string }) => {
   const [user, setUser] = React.useState<any>(null)
@@ -17,7 +18,7 @@ const FindUser = ({ email }: { email: string }) => {
     fetchUser()
   }, [email])
 
-  return user ? <EditableProfile user={user} /> : <div>Loading...</div>
+  return user ? <EditableProfile user={user} /> : <Loading />
 }
 
 export default FindUser

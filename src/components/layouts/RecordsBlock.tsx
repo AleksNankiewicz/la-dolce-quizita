@@ -29,8 +29,8 @@ const RecordsBlock = async () => {
           </div>
           <div className="flex  gap-3">
             {user.streak > 0 && (
-              <div className="flex flex-col-reverse text-orange-500 w-14">
-                <p>{user?.streak}</p>
+              <div className="flex flex-col-reverse text-orange-500 w-14 items-center">
+                <p> {user?.streak}x</p>
                 <Flame size={25} />
               </div>
             )}

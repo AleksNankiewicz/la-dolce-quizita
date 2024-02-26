@@ -10,9 +10,9 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'La Dolce Quizita',
+  title: 'QuizyMania',
   description:
-    'Przygotuj się na wirtualną podróż po Włoszech! Odkryj niezwykłe tajemnice tego urokliwego kraju w naszym fascynującym quizie.',
+    'QuizyMania to platforma, która zapewnia entuzjastom quizów możliwość eksplorowania różnorodnych tematów i testowania swojej wiedzy w przyjaznej i interaktywnej atmosferze.',
 }
 
 export default function RootLayout({

@@ -84,7 +84,7 @@ const Navbar = () => {
         }  w-2/3 justify-start font-bold text-center`}
       >
         <Link href={'/'} className="pl-3 text-xl">
-          La Dolce Quizita
+          QuizyMania
         </Link>
       </div>
       <div

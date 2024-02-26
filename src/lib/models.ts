@@ -41,6 +41,9 @@ const userSchema = new mongoose.Schema(
     lastGameDate: {
       type: Date,
     },
+    permissions: {
+      type: Array,
+    },
   },
   { timestamps: true }
 )
@@ -68,6 +71,9 @@ const quizSchema = new mongoose.Schema(
     },
     records: {
       type: Array,
+    },
+    categorySlug: {
+      type: String,
     },
   },
   { timestamps: true }
@@ -106,8 +112,30 @@ const answearSchema = new mongoose.Schema({
   },
 })
 
+const categorySchema = new mongoose.Schema({
+  parentCategory: {
+    type: String,
+  },
+  title: {
+    type: String,
+  },
+  desc: {
+    type: String,
+  },
+  img: {
+    type: String,
+  },
+  slug: {
+    type: String,
+  },
+})
+
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
 export const Quiz = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema)
+
+export const Category =
+  mongoose.models.Category || mongoose.model('Category', categorySchema)
+
 export const Question =
   mongoose.models.Question || mongoose.model('Question', questionSchema)
 export const Answear =

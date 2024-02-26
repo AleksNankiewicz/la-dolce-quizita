@@ -2,7 +2,7 @@
 
 import { quizProps } from '@/types/data'
 import { connectToDb } from './connectToDb'
-import { Question, Quiz, User } from './models'
+import { Category, Question, Quiz, User } from './models'
 
 import { unstable_noStore as noStore } from 'next/cache'
 import firebase from 'firebase/app'
@@ -17,6 +17,35 @@ export const getQuizes = async (amount = Infinity) => {
     return quizes
   } catch (err: any) {
     console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const getSubCategories = async (amount = Infinity) => {
+  noStore()
+  try {
+    connectToDb()
+    const subCategory = await Category.find()
+      .sort({ updatedAt: -1 })
+      .limit(amount)
+    return subCategory
+  } catch (err: any) {
+    console.error(err)
+    throw new Error(err)
+  }
+}
+
+export const getQuizesByCategories = async (slug: string) => {
+  noStore()
+  try {
+    connectToDb()
+    const subCategory = await Quiz.find({ categorySlug: slug }).sort({
+      updatedAt: -1,
+    })
+
+    return subCategory
+  } catch (err: any) {
+    console.error(err)
     throw new Error(err)
   }
 }

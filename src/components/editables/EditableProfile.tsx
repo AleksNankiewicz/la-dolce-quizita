@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation'
 const EditableProfile = (user: any) => {
   //console.log(user.user)
 
-  const router = useRouter()
+  console.log(user.permissions)
 
   const loggedUser = user.user
 
@@ -118,6 +118,14 @@ const EditableProfile = (user: any) => {
         </Button>
       )}
       <StatsBlock />
+      {loggedUser.permissions[0] == 'Any' && (
+        <Button
+          className="w-full text-2xl py-7 text-purple-400"
+          onClick={() => (window.location.href = '/admin')}
+        >
+          Zarządzaj Stroną
+        </Button>
+      )}
 
       <Button onClick={() => handleSignOut()} className="w-full text-2xl py-7">
         Wyloguj się

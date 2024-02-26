@@ -26,6 +26,7 @@ import { Input } from './ui/input'
 import toast, { useToaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import EditableModal from './editables/EditableModal'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   const session = useSession()
@@ -72,6 +73,15 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const [editableQuestionsRef, setEditableQuestionsRef] = useState<
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalData, setModalData] = useState()
+
+  const handleModal = (value: any) => {
+    console.log(value)
+    setIsModalOpen(false)
+    setModalData(value)
+  }
 
   const [image, setImage] = useState(quiz.img)
 
@@ -391,6 +401,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         </div>
       </div>
 
+      <Button
+        className="w-full bg-slate-800 col-span-2 hover:bg-slate-900 text-xl py-6"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Więcej opcji
+      </Button>
+
       <div className="text-white   p4 col-span-2  r min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
         <p
           className="break-words max-w-full min-h-full w-full"
@@ -459,6 +476,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       >
         Usuń Quiz
       </Button>
+      {isModalOpen && <EditableModal onClose={handleModal} />}
     </main>
   )
 }

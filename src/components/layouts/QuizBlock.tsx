@@ -23,15 +23,7 @@ const QuizBlock = ({
         !img && 'bg-slate-800'
       }`}
     >
-      {' '}
-      {/* {img && (
-        <Image
-          src={img}
-          fill
-          alt={title}
-          className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
-        />
-      )} */}
+      {/*   
       <p
         className={`absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white ${
           title.length > 28 && 'top-1/3'
@@ -39,7 +31,7 @@ const QuizBlock = ({
       >
         {title}
       </p>
-      <EditQuizButton slug={slug ? slug : title} />
+      <EditQuizButton slug={slug ? slug : title} categorySlug={quiz.categorySlug} /> */}
     </Link>
   )
 }

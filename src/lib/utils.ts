@@ -139,3 +139,15 @@ export const disableTextInInput = (e: any) => {
     }
   }
 }
+
+export function formatDate(date: Date) {
+  const day = String(date.getDate()).padStart(2, '0') // Pobierz dzień miesiąca i dodaj zero z przodu, jeśli jest jednocyfrowy
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Pobierz miesiąc (od 0 do 11) i dodaj zero z przodu, jeśli jest jednocyfrowy
+  const year = date.getFullYear() // Pobierz rok (czterocyfrowy)
+
+  return `${day}-${month}-${year}` // Zwróć sformatowaną datę jako string w formacie "DD-MM-RRRR"
+}
+
+const userCreatedAt = new Date() // Załóżmy, że to jest data utworzenia użytkownika
+const formattedDate = formatDate(userCreatedAt) // Użyj funkcji formatDate() do sformatowania daty
+console.log(formattedDate) // Wyświetli sformatowaną datę w formacie "DD-MM-RRRR"

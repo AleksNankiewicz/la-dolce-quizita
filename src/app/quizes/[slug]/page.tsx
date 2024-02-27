@@ -46,7 +46,7 @@ const SingleQuizPage = async (params: any) => {
               className="overflow-hidden rounded-2xl opacity-40   duration-300 "
             />
           )}
-          <EditQuizButton slug={quiz.slug} />
+          <EditQuizButton slug={quiz.slug} categorySlug={quiz.categorySlug} />
         </div>
       </div>
       <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">

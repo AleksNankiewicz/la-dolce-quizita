@@ -1,18 +1,34 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
-import { getSubCategories } from '@/lib/actions'
+import { getSubCategories, setUserPermisson } from '@/lib/actions'
 import { X } from 'lucide-react'
 
-const EditablePermissions = ({ userPermission }: { userPermission: any }) => {
+const EditablePermissions = ({
+  userPermission,
+  userEmail,
+}: {
+  userPermission: any
+  userEmail: string
+}) => {
   const [allPermisions, setAllPermisions] = useState<any>()
   const [permissions, setPermisssions] = useState(userPermission)
   const [isPermissionsModal, setPermissionsModal] = useState(false)
   const [isAbleToSave, setIsAbleToSave] = useState(false)
+  console.log(userEmail)
+  const savePerms = async () => {
+    const selectedPerm = allPermisions.find((perm: any) => perm.isSelected)
+
+    console.log(selectedPerm)
+
+    await setUserPermisson(userEmail, selectedPerm.title, selectedPerm.slug)
+
+    window.location.reload()
+  }
+
   const fetchCategories = async () => {
     try {
       const cats = await getSubCategories()
 
-      console.log(permissions)
       const updatedCategories = cats.map((cat) => {
         return {
           ...cat,
@@ -49,10 +65,6 @@ const EditablePermissions = ({ userPermission }: { userPermission: any }) => {
   return (
     <>
       <div>
-        {/* {permissions.map((perm: any) => (
-          <div className="">{perm.categoryName}</div>
-        ))} */}
-
         {permissions[0] !== 'Any' && (
           <Button onClick={editPermissions}>Zmień zezwolenia</Button>
         )}
@@ -62,13 +74,13 @@ const EditablePermissions = ({ userPermission }: { userPermission: any }) => {
       {isPermissionsModal && (
         <div className="fixed left-0 top-0 py-16 w-full h-screen z-50 bg-black/85 flex flex-col items-center gap-2">
           <X
-            className="absolute right-4 text-red-400 hover:text-red-300 cursor-pointer"
+            className="absolute right-4 top-4 text-red-400 hover:text-red-300 cursor-pointer"
             onClick={() => {
               setPermissionsModal(false)
               setIsAbleToSave(false)
             }}
           />
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-2 flex-wrap">
             {allPermisions &&
               allPermisions.map((perm: any, index: number) => (
                 <Button
@@ -83,7 +95,10 @@ const EditablePermissions = ({ userPermission }: { userPermission: any }) => {
               ))}
           </div>
           {isAbleToSave && (
-            <Button className="bg-red-500 hover:bg-red-400 w-1/2">
+            <Button
+              className="bg-red-500 hover:bg-red-400 w-1/2"
+              onClick={() => savePerms()}
+            >
               Zapisz
             </Button>
           )}

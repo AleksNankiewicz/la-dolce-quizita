@@ -1,22 +1,47 @@
 'use client'
+import { getUserByEmail } from '@/lib/actions'
 import { sessionUserProps } from '@/types/data'
 import { Pen } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
-const EditQuizButton = ({ slug }: { slug: string }) => {
+const EditQuizButton = ({
+  slug,
+  categorySlug,
+}: {
+  slug: string
+  categorySlug: string
+}) => {
   const session = useSession()
   const [isAdmin, setIsAdmin] = useState(false)
+  const [email, setEmail] = useState('')
+  const [isAbleToEdit, setIsAbleToEdit] = useState(false)
+
+  const fetchUser = async (email: string) => {
+    const user = await getUserByEmail(email)
+
+    const hasPermission = user.permissions.some(
+      (perm: any) => perm.categorySlug === categorySlug
+    )
+
+    if (hasPermission || user.permissions[0] === 'Any') {
+      setIsAdmin(true)
+    }
+    console.log(user.permissions)
+    console.log(hasPermission)
+  }
 
   useEffect(() => {
     if (session.status == 'authenticated') {
       const user = session.data.user as sessionUserProps
       // console.log(user.isAdmin)
 
-      if (user.isAdmin == true) {
-        setIsAdmin(true)
-      }
+      fetchUser(user.email)
+
+      // if (user.isAdmin == true) {
+      //   setIsAdmin(true)
+      // }
     }
   }, [session])
 

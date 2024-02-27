@@ -82,7 +82,10 @@ const AdminUsersPage = () => {
                 <X />
               </div>
               {user?.permissions && (
-                <EditablePermissions userPermission={user?.permissions} />
+                <EditablePermissions
+                  userPermission={user?.permissions}
+                  userEmail={user?.email}
+                />
               )}
             </div>
           ))}

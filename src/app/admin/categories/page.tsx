@@ -1,22 +1,37 @@
 'use client'
+import EditableCategoryModal from '@/components/editables/EditableCategory'
 import EditablePermissions from '@/components/editables/EditablePermissions'
 import SearchBar from '@/components/layouts/SearchBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { getSubCategories } from '@/lib/actions'
+import { deleteCategory, getSubCategories } from '@/lib/actions'
 import { formatDate } from '@/lib/utils'
-import { X } from 'lucide-react'
+import { Pen, Plus, X } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+const emptyCategory = {
+  title: 'tytuł',
+  desc: 'opis',
+  slug: Math.floor(Math.random() * 9999) + '',
+}
+
 const AdminCategoryPage = () => {
-  const [Categories, setCategories] = useState<any>()
+  const [categories, setCategories] = useState<any>()
+
+  const [selectedCategory, setSelectedCategory] = useState<any>()
 
   const fetchCategories = async () => {
-    const Categories = await getSubCategories()
+    const categories = await getSubCategories()
 
-    setCategories(Categories)
+    setCategories(categories)
+  }
+
+  const handleDeleteCategory = async (slug: string) => {
+    await deleteCategory(slug)
+    console.log('category deleted')
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -27,9 +42,9 @@ const AdminCategoryPage = () => {
       <div className="w-full pl-2 pt-2">
         <SearchBar />
       </div>
-      <div className=" grid grid-cols-1 md:grid-cols-3 w-full h-screen py-2 gap-3 px-2 ">
-        {Categories &&
-          Categories.map((category: any) => (
+      <div className=" grid grid-cols-1 md:grid-cols-3 w-full  py-2 gap-3 px-2 ">
+        {categories &&
+          categories.map((category: any) => (
             <div
               className="bg-purple-600 md:col-span-1  flex flex-col justify-center items-center py-6 px-3  rounded-xl relative"
               key={category._id}
@@ -56,6 +71,7 @@ const AdminCategoryPage = () => {
                             onClick={() => {
                               toast.dismiss(t.id)
 
+                              handleDeleteCategory(category.slug)
                               //Jeśli tak
                             }}
                           >
@@ -79,8 +95,28 @@ const AdminCategoryPage = () => {
               >
                 <X />
               </div>
+              <div
+                onClick={() => setSelectedCategory(category)}
+                className="absolute left-[10px] top-[10px] cursor-pointer text-purple-900 hover:text-red-600 -rotate-90"
+              >
+                <Pen />
+              </div>
             </div>
           ))}
+        {selectedCategory && (
+          <EditableCategoryModal
+            category={selectedCategory}
+            setIsModalOpen={() => setSelectedCategory(false)}
+          />
+        )}
+        <div className="block text-2xl bg-slate-900 col-span-1 w-full  text-center gap-2 rounded-xl relative group overflow-hidden hover:bg-slate-800 duration-200 cursor-pointer">
+          <div
+            className="flex justify-center items-center w-full h-full"
+            onClick={() => setSelectedCategory(emptyCategory)}
+          >
+            <Plus size={34} />
+          </div>
+        </div>
       </div>
     </div>
   )

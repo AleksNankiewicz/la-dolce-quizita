@@ -21,7 +21,6 @@ export default async function Home() {
 
   const subCategories = await getSubCategories(4)
 
-  console.log(quizes[0])
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
       <HomeQuizSectionLabel title={'Najnowsze wyzwanie'} />
@@ -65,7 +64,10 @@ export default async function Home() {
           </p>
         </div>
         <div className="w-full h-full text-white">{quizes[0].desc}</div>
-        <EditQuizButton slug={quizes[0].slug} />
+        <EditQuizButton
+          slug={quizes[0].slug}
+          categorySlug={quizes[0].categorySlug}
+        />
       </Link>
       <HomeQuizSectionLabel title={'Wybrane Quizy'} />
 
@@ -93,7 +95,7 @@ export default async function Home() {
           >
             {quiz?.title}
           </p>
-          <EditQuizButton slug={quiz.slug} />
+          <EditQuizButton slug={quiz.slug} categorySlug={quiz.categorySlug} />
         </Link>
       ))}
       <AddQuizButton />

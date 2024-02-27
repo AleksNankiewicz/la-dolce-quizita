@@ -50,12 +50,84 @@ export const getQuizesByCategories = async (slug: string) => {
   }
 }
 
+export const setCategory = async (
+  title: string,
+  desc: string,
+  img: string,
+  slug: string
+) => {
+  try {
+    connectToDb()
+    const existingCategory = await Category.findOne({ slug: slug })
+
+    if (existingCategory) {
+      // If the category exists, update its fields
+      existingCategory.title = title
+      existingCategory.desc = desc
+      existingCategory.img = img
+      await existingCategory.save()
+      console.log('Category updated')
+    } else {
+      // If the category does not exist, create a new one
+      const newCategory = new Category({
+        title,
+        img,
+        desc,
+        slug,
+      })
+      await newCategory.save()
+      console.log('New category created')
+    }
+  } catch (err: any) {
+    console.error(err)
+    throw new Error(err)
+  }
+}
+
 export const getUsers = async () => {
   noStore()
   try {
     connectToDb()
     const users = await User.find()
     return users
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const deleteCategory = async (slug: string) => {
+  console.log(slug)
+  try {
+    connectToDb()
+    const category = await Category.findOneAndDelete({ slug: slug })
+    return category
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const setUserPermisson = async (
+  email: string,
+  categoryName: string,
+  categorySlug: string
+) => {
+  try {
+    connectToDb()
+    const user = await User.findOne({ email: email })
+
+    user.permissions = [
+      {
+        categoryName,
+        categorySlug,
+      },
+    ]
+
+    user.save()
+
+    console.log('user updated')
+    return null
   } catch (err: any) {
     console.log(err)
     throw new Error(err)
@@ -302,6 +374,8 @@ export const uploadFilesToFirebase = async (files: File[] | string[]) => {
 
   return uploadedImageRefs
 }
+
+///nie weim c o to
 
 export const uploadImages = async (formData: any) => {
   // Array to store files

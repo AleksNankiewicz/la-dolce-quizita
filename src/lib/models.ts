@@ -75,6 +75,17 @@ const quizSchema = new mongoose.Schema(
     categorySlug: {
       type: String,
     },
+    categoryName: {
+      type: String,
+    },
+    access: {
+      type: String,
+      default: 'All',
+    },
+    questionsPercent: {
+      type: Number,
+      default: 100,
+    },
   },
   { timestamps: true }
 )

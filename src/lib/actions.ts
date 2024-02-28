@@ -249,8 +249,8 @@ export const addQuestion = async () => {
 }
 
 export const getUserByEmail = async (email: string) => {
-  noStore()
   try {
+    noStore()
     connectToDb()
     const user = await User.findOne({ email: email })
 

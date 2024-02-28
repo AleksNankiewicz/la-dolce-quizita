@@ -15,7 +15,13 @@ import {
 
 import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { addQuiz, deleteQuiz, getQuizBySlug, uploadImages } from '@/lib/actions'
+import {
+  addQuiz,
+  deleteQuiz,
+  getQuizBySlug,
+  getUserByEmail,
+  uploadImages,
+} from '@/lib/actions'
 import Link from 'next/link'
 import { questionsProps, quizProps, sessionUserProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
@@ -29,17 +35,38 @@ import { useSession } from 'next-auth/react'
 import EditableModal from './editables/EditableModal'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
+  //auth
   const session = useSession()
   const router = useRouter()
-  useEffect(() => {
-    if (session.status === 'authenticated') {
-      const user = session.data.user as sessionUserProps
+  const [permissions, setPermissions] = useState()
+  const [isAdmin, setIsAdmin] = useState(false)
 
-      if (!user.isAdmin) {
-        router.push('/')
-      }
+  const fetchUser = async (email: string) => {
+    const user = await getUserByEmail(email)
+
+    const hasPermission = user.permissions.some(
+      (perm: any) => perm.categorySlug === quiz.categorySlug
+    )
+
+    if (hasPermission || user.permissions[0] === 'Any') {
+      setIsAdmin(true)
+      setPermissions(user.permissions)
     }
-  }, [session?.data, session?.status])
+    console.log(user.permissions)
+    if (!isAdmin) return console.log('user no perms')
+  }
+
+  useEffect(() => {}, [isAdmin])
+  console.log(isAdmin)
+
+  useEffect(() => {
+    if (session.status == 'authenticated') {
+      const user = session.data.user as sessionUserProps
+      fetchUser(user.email)
+    }
+  }, [session])
+
+  //content
 
   const { questions: initialQuestions } = quiz
 

@@ -15,8 +15,6 @@ const EditQuizButton = ({
 }) => {
   const session = useSession()
   const [isAdmin, setIsAdmin] = useState(false)
-  const [email, setEmail] = useState('')
-  const [isAbleToEdit, setIsAbleToEdit] = useState(false)
 
   const fetchUser = async (email: string) => {
     const user = await getUserByEmail(email)
@@ -28,20 +26,12 @@ const EditQuizButton = ({
     if (hasPermission || user.permissions[0] === 'Any') {
       setIsAdmin(true)
     }
-    console.log(user.permissions)
-    console.log(hasPermission)
   }
 
   useEffect(() => {
     if (session.status == 'authenticated') {
       const user = session.data.user as sessionUserProps
-      // console.log(user.isAdmin)
-
       fetchUser(user.email)
-
-      // if (user.isAdmin == true) {
-      //   setIsAdmin(true)
-      // }
     }
   }, [session])
 

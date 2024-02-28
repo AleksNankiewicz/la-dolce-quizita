@@ -99,8 +99,6 @@ export const disableTextInInput = (e: any) => {
   const newText = e.currentTarget.textContent
   const regex = /^[0-9]*$/ // Regular expression to match only numbers
 
-  console.log(newText)
-
   if (
     !newText ||
     (newText.length === 1 && newText === '0') ||
@@ -115,7 +113,6 @@ export const disableTextInInput = (e: any) => {
   }
 
   if (!newText || (newText.length === 1 && newText === '0')) {
-    console.log('hello')
     e.currentTarget.textContent = '0'
   }
   // If the entered text does not match the regex, prevent it from being added
@@ -150,4 +147,4 @@ export function formatDate(date: Date) {
 
 const userCreatedAt = new Date() // Załóżmy, że to jest data utworzenia użytkownika
 const formattedDate = formatDate(userCreatedAt) // Użyj funkcji formatDate() do sformatowania daty
-console.log(formattedDate) // Wyświetli sformatowaną datę w formacie "DD-MM-RRRR"
+// Wyświetli sformatowaną datę w formacie "DD-MM-RRRR"

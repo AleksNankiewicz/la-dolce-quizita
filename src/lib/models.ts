@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema(
     permissions: {
       type: Array,
     },
+    slug: {
+      type: Number,
+      default: Math.floor(Math.random() * 99999999),
+    },
   },
   { timestamps: true }
 )

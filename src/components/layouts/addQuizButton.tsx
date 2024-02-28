@@ -1,4 +1,5 @@
 'use client'
+import { getUserByEmail } from '@/lib/actions'
 import { sessionUserProps } from '@/types/data'
 import { Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -9,17 +10,24 @@ export const AddQuizButton = () => {
   const session = useSession()
   const [isAdmin, setIsAdmin] = useState(false)
 
-  useEffect(() => {
-    if (session.status === 'authenticated') {
-      const user = session.data.user as sessionUserProps
+  const fetchUser = async (email: string) => {
+    const user = await getUserByEmail(email)
 
-      if (user.isAdmin) {
-        setIsAdmin(true)
-      }
+    const hasPermission = user.permissions
 
-      console.log(isAdmin)
+    if (hasPermission || user.permissions[0] === 'Any') {
+      setIsAdmin(true)
     }
-  }, [session?.data, session?.status])
+  }
+
+  useEffect(() => {
+    if (session.status == 'authenticated') {
+      const user = session.data.user as sessionUserProps
+      fetchUser(user.email)
+    }
+  }, [session])
+
+  if (!isAdmin) return
 
   return (
     isAdmin && (

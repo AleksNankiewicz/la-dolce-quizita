@@ -28,11 +28,11 @@ const AdminUsersPage = () => {
       <div className="w-full pl-2 pt-2">
         <SearchBar />
       </div>
-      <div className=" grid grid-cols-1 md:grid-cols-3 w-full h-screen py-2 gap-3 px-2">
+      <div className=" grid grid-cols-1 md:grid-cols-3 w-full  py-2 gap-3 px-2">
         {users &&
           users.map((user: any) => (
             <div
-              className="bg-purple-600 md:col-span-1  flex flex-col justify-center items-center py-6 px-3 md:h-1/3 rounded-xl relative"
+              className="bg-purple-600 md:col-span-1  flex flex-col justify-center items-center py-6 px-3  rounded-xl relative"
               key={user._id}
             >
               <Image

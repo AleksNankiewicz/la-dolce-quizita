@@ -14,6 +14,7 @@ const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
   const quiz = await getQuizBySlug(slug)
   // console.log(quiz)
+  quiz.records.sort((a: recordProps, b: recordProps) => b.score - a.score)
   const { questions } = quiz
 
   const quizDuration = {
@@ -36,6 +37,11 @@ const SingleQuizPage = async (params: any) => {
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
         <h1 className="">{quiz.title}</h1>
       </div>
+      {quiz.categoryName && (
+        <div className=" md:text-xl  text-white p4 col-span-2 w-full -mt-3">
+          <h1 className="text-purple-500">{quiz.categoryName}</h1>
+        </div>
+      )}
       <div className="text-black text-2xl  p4 col-span-2 text-center min-h-[150px] rounded-xl relative  overflow-hidden flex justify-center">
         <div className="relative w-52 h-full">
           {quiz.img && (

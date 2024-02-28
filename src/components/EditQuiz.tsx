@@ -33,31 +33,23 @@ import toast, { useToaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import EditableModal from './editables/EditableModal'
+import {
+  startedLevels,
+  startedModes,
+  startedQuestionsAmount,
+} from '@/lib/starters'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   //auth
   const session = useSession()
-  const router = useRouter()
-  const [permissions, setPermissions] = useState()
-  const [isAdmin, setIsAdmin] = useState(false)
 
+  const [fetchedUser, setFetchedUser] = useState<any>()
   const fetchUser = async (email: string) => {
     const user = await getUserByEmail(email)
+    setFetchedUser(user)
 
-    const hasPermission = user.permissions.some(
-      (perm: any) => perm.categorySlug === quiz.categorySlug
-    )
-
-    if (hasPermission || user.permissions[0] === 'Any') {
-      setIsAdmin(true)
-      setPermissions(user.permissions)
-    }
-    console.log(user.permissions)
-    if (!isAdmin) return console.log('user no perms')
+    //  console.log(hasPermission)
   }
-
-  useEffect(() => {}, [isAdmin])
-  console.log(isAdmin)
 
   useEffect(() => {
     if (session.status == 'authenticated') {
@@ -66,13 +58,15 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     }
   }, [session])
 
+  //  console.log(fetchedUser?.permissions)
+
   //content
 
   const { questions: initialQuestions } = quiz
 
   const questionsWithIds = initialQuestions.map((question: any) => ({
     ...question,
-    id: uuidv4(), // Generate a unique ID for each question
+    //id: uuidv4(), // Generate a unique ID for each question
   }))
 
   const [questions, setQuestions] = useState(questionsWithIds)
@@ -101,14 +95,35 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
 
+  //modal
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalData, setModalData] = useState()
+
+  // console.log(fetchedUser?.permissions)
+  const [modalData, setModalData] = useState({
+    level: quiz.level || 'Łatwy',
+    access: quiz.access || 'All',
+    categoryName: quiz.categoryName,
+    categorySlug: quiz.categorySlug,
+    questionsAmount: quiz.amount || 100,
+  })
+
+  const actualLevel = startedLevels.find((level) => level.isSelected === true)
+
+  const [levels, setGlobalLevels] = useState<any>(actualLevel || startedLevels)
+
+  const [modes, setGlobalModes] = useState<any>(startedModes)
+  const [categories, setGlobalCategories] = useState<any>()
+  const [questionsAmount, setGlobalQuestionsAmount] = useState<any>(
+    startedQuestionsAmount
+  )
 
   const handleModal = (value: any) => {
     console.log(value)
     setIsModalOpen(false)
     setModalData(value)
   }
+
+  //image
 
   const [image, setImage] = useState(quiz.img)
 
@@ -143,18 +158,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   ) => {
     const updatedQuestions = questions.filter((question: any) => {
       if (question.id) {
-        console.log('Question id:', question.id)
-        console.log('punkty ' + questionPoints)
-
         return question.id !== id
       } else {
-        console.log('Question title:', question.title)
-
         return question.title !== id
       }
     })
-
-    console.log(updatedQuestions)
 
     const updatedQuestionRefs = editableQuestionsRef.filter(
       (_, index) => index !== refId
@@ -193,14 +201,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       throw new Error(err)
     }
     setTimeout(() => {
-      // router.push('/')
       window.location.href = '/'
     }, 2000)
   }
 
   const saveQuiz = async () => {
-    // Initialize useToaster to get the toast function
-
     toast.loading('Zapisywanie quizu...')
 
     const title = editableTitle.current?.textContent
@@ -248,23 +253,17 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           const imageElement = questionElement.querySelector<HTMLInputElement>(
             `#imgInput${questionElement.id}`
           )
-          // console.log(imageElement)
+
           const title = titleElement ? titleElement.textContent : ''
           const time = timeElement ? Number(timeElement.textContent) : 20
           const points = pointsElement ? Number(pointsElement.textContent) : 20
-
-          // console.log(questions[index].img)
 
           const image: string | File =
             imageElement && imageElement.files && imageElement.files.length > 0
               ? imageElement.files[0]
               : questions[index].img
 
-          //const image = questions[index].img
-
           formData.append(`img-${index}`, image)
-
-          //console.log(formData)
 
           const answers = Array.from(
             questionElement.querySelectorAll('.editableAnswears')
@@ -312,13 +311,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     const savedQuiz: quizProps = {
       title: title,
       desc: desc,
-      level: level,
       slug: quiz.slug || randomSlug,
       img: imageRefs[0],
       records: [],
       questions: updatedEditableQuestionValues,
+      ...modalData,
     }
-    // return console.log(savedQuiz)
+
     try {
       await addQuiz(savedQuiz)
       toast.dismiss()
@@ -328,7 +327,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
       if (!quiz.slug) {
         setTimeout(() => {
-          // router.push('/')
           window.location.href = `/editQuiz/${randomSlug}`
         }, 2000)
       }
@@ -430,7 +428,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
       <Button
         className="w-full bg-slate-800 col-span-2 hover:bg-slate-900 text-xl py-6"
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          if (fetchedUser?.permissions) {
+            setIsModalOpen(true)
+          }
+        }}
       >
         Więcej opcji
       </Button>
@@ -503,7 +505,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       >
         Usuń Quiz
       </Button>
-      {isModalOpen && <EditableModal onClose={handleModal} />}
+      {isModalOpen && (
+        <EditableModal
+          onClose={handleModal}
+          permissions={fetchedUser?.permissions}
+          data={modalData}
+        />
+      )}
     </main>
   )
 }

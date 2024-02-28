@@ -121,28 +121,40 @@ const Navbar = () => {
       </div>
 
       {!isLoading ? (
-        <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
-          <UserImage email={email} />
+        <Link
+          href={isUserLogged ? '/profile' : '/auth/login'}
+          className="block w-1/3 ml-6 "
+        >
+          <div className="flex justify-center items-center gap-3 ">
+            <UserImage email={email} />
 
-          <div className="flex flex-col justify-end">
-            <div className="">
-              {isUserLogged ? (
-                <Link href={'/profile'}>{username}</Link>
-              ) : (
-                <Link href={'/auth/login'}>Zaloguj się</Link>
+            <div className="flex flex-col justify-end">
+              <div className="">
+                {isUserLogged ? (
+                  <>
+                    <p className="hidden md:block">{username}</p>
+                    {username.length > 5 ? (
+                      <p className="md:hidden">
+                        {username.slice(0, 5)}
+                        <span>...</span>
+                      </p>
+                    ) : (
+                      <p className="md:hidden">{username}</p>
+                    )}
+                  </>
+                ) : (
+                  <>Zaloguj się</>
+                )}
+              </div>
+
+              {isGameStarted && (
+                <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
+                  <AnimatedNumber value={gamePoints} />
+                </div>
               )}
             </div>
-
-            {isGameStarted && (
-              <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
-                <AnimatedNumber value={gamePoints} />
-              </div>
-            )}
-            {/* <Link href={'/auth/login'}>
-            <div className="">Gość</div>
-          </Link> */}
           </div>
-        </div>
+        </Link>
       ) : (
         <div className="flex justify-center items-center gap-3 w-1/3 ml-6">
           <ThreeDots

@@ -46,3 +46,11 @@ export type categoryProps = {
   img: string
   slug: string
 }
+
+export type QuizCategoryProps = {
+  level: string
+  access: string
+  categorySlug: string
+  categoryName: string
+  questionsAmount: number
+}

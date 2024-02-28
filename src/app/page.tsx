@@ -47,11 +47,16 @@ export default async function Home() {
           </div>
 
           <div className="hidden md:flex text-white w-1/2  flex-col items-start">
-            <div className="text-4xl">{quizes[0].title}</div>
-            <div className="text-2xl">
-              Kategoria:
-              <span className="text-purple-400">{quizes[0].category}</span>
-            </div>
+            <div className="text-4xl text-left">{quizes[0].title}</div>
+
+            {quizes[0].categoryName && (
+              <div className="text-2xl">
+                Kategoria:
+                <span className="text-purple-400">
+                  {quizes[0].categoryName}
+                </span>
+              </div>
+            )}
             <div className="text-sm text-left mt-5">{quizes[0].desc}</div>
           </div>
 

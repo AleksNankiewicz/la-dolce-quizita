@@ -3,91 +3,81 @@ import { Button } from '../ui/button'
 import { Tooltip } from 'react-tooltip'
 import { getSubCategories } from '@/lib/actions'
 import { X } from 'lucide-react'
-const EditableModal = ({ onClose }: { onClose: (values: any) => void }) => {
-  const startedLevels = [
-    {
-      title: 'Łatwy',
-      color: 'border-green-400',
-      isSelected: true,
-    },
-    {
-      title: 'Średni',
-      color: 'border-blue-400',
-      isSelected: false,
-    },
-    {
-      title: 'Trudny',
-      color: 'border-red-400',
-      isSelected: false,
-    },
-    {
-      title: 'Ekspert',
-      color: 'border-purple-400',
-      isSelected: false,
-    },
-  ]
-  const startedModes = [
-    {
-      title: 'Wszyscy gracze',
-      access: 'All',
-      color: 'border-green-400',
-      isSelected: true,
-    },
-    {
-      title: 'Tylko zalogowani',
-      access: 'Logged',
-      color: 'border-blue-400',
-      isSelected: false,
-    },
-    {
-      title: 'Konkurs',
-      access: 'Competetive',
-      color: 'border-red-400',
-      isSelected: false,
-    },
-    {
-      title: 'Konkurs dla zalogowanych',
-      access: 'Competetive logged',
-      color: 'border-purple-400',
-      isSelected: false,
-    },
-  ]
+import {
+  startedLevels,
+  startedModes,
+  startedQuestionsAmount,
+} from '@/lib/starters'
+const EditableModal = ({
+  onClose,
+  data,
+  permissions,
+}: {
+  onClose: (values: any) => void
+  data: any
+  permissions: any
+}) => {
+  console.log(data)
 
-  const startedQuestionsAmount = [
-    {
-      title: '20%',
-      amount: 25,
-      isSelected: false,
-    },
-    {
-      title: '50%',
-      amount: 50,
-      isSelected: false,
-    },
-    {
-      title: '75%',
-      amount: 75,
-      isSelected: false,
-    },
-    {
-      title: '100%',
-      amount: 100,
-      isSelected: true,
-    },
-  ]
+  const mappedLevels = startedLevels.map((level) => {
+    // Reset isSelected to false for all levels
+    const updatedLevel = { ...level, isSelected: false }
 
-  const [levels, setLevels] = useState<any>(startedLevels)
-  const [modes, setModes] = useState<any>(startedModes)
+    if (level.title === data.level) {
+      updatedLevel.isSelected = true
+    }
+
+    return updatedLevel
+  })
+
+  const mappedModes = startedModes.map((mode) => {
+    // Reset isSelected to false for all modes
+    const updatedMode = { ...mode, isSelected: false }
+
+    if (data.access === mode.access) {
+      updatedMode.isSelected = true
+    }
+
+    return updatedMode
+  })
+
+  const mappedAmounts = startedQuestionsAmount.map((amount) => {
+    // Reset isSelected to false for all amounts
+    const updatedAmount = { ...amount, isSelected: false }
+
+    if (data.questionsAmount === amount.amount) {
+      updatedAmount.isSelected = true
+    }
+
+    return updatedAmount
+  })
+
+  const [levels, setLevels] = useState<any>(mappedLevels)
+
+  console.log(levels)
+  const [modes, setModes] = useState<any>(mappedModes)
   const [categories, setCategories] = useState<any>()
-  const [questionsAmount, setQuestionsAmount] = useState<any>(
-    startedQuestionsAmount
-  )
+  const [questionsAmount, setQuestionsAmount] = useState<any>(mappedAmounts)
 
   const getCategories = async () => {
+    console.log(permissions)
     try {
       const cats = await getSubCategories()
       if (cats) {
-        const startedCats = cats.map((cat) => ({ ...cat, isSelected: false }))
+        const startedCats = cats.map((cat) => {
+          const updatedCat = { ...cat, isSelected: false }
+
+          if (data.categorySlug === cat.slug) {
+            updatedCat.isSelected = true
+          }
+          return updatedCat
+        })
+        // const matchedCats = startedCats.filter((startedCat) =>
+        //   permissions.some(
+        //     (perm: any) => perm.categorySlug === startedCat.categorySlug
+        //   )
+        // )
+
         setCategories(startedCats)
       } else {
         console.error('Error: No categories fetched')
@@ -98,8 +88,39 @@ const EditableModal = ({ onClose }: { onClose: (values: any) => void }) => {
   }
 
   useEffect(() => {
-    getCategories()
-  }, [])
+    console.log(permissions[0])
+
+    if (!permissions) return
+    if (permissions[0] !== 'Any') {
+      let startedCats = permissions.map((cat: any) => ({
+        ...cat,
+        isSelected: false,
+      }))
+
+      console.log(permissions.length)
+      if (permissions.length == 1) {
+        startedCats = permissions.map((cat: any) => ({
+          ...cat,
+          isSelected: true,
+        }))
+      }
+      const matchedCats = startedCats.filter((startedCat: any) =>
+        permissions.some(
+          (perm: any) => perm.categorySlug === startedCat.categorySlug
+        )
+      )
+      //clg
+
+      if (permissions.length == 1) {
+        const selectedPermission = permissions[0]
+        setCategories
+      }
+      setCategories(matchedCats)
+    } else {
+      getCategories()
+    }
+  }, [permissions])
+  console.log(categories)
 
   const handleLevels = (index: number) => {
     const resetedLevels = levels.map((level: any) => (level.isSelected = false))
@@ -143,15 +164,22 @@ const EditableModal = ({ onClose }: { onClose: (values: any) => void }) => {
   const handleClose = () => {
     const selectedLevel = levels.find((level: any) => level.isSelected)?.title
     const selectedMode = modes.find((mode: any) => mode.isSelected)?.access
-    const selectedCat = categories.find((cat: any) => cat.isSelected)?.slug
-    const selectedAmount = questionsAmount.find(
-      (amount: any) => amount.isSelected
-    )?.amount
+    const selectedCat = categories.find((cat: any) => cat.isSelected)
+    const selectedCatSlug = selectedCat
+      ? selectedCat.slug || selectedCat.categorySlug
+      : undefined
+    const selectedCatName = selectedCat
+      ? selectedCat.title || selectedCat.categoryName
+      : undefined
+    const selectedAmount = parseFloat(
+      questionsAmount.find((amount: any) => amount.isSelected)?.amount
+    )
 
     onClose({
       level: selectedLevel,
       access: selectedMode,
-      categorySlug: selectedCat,
+      categorySlug: selectedCatSlug,
+      categoryName: selectedCatName,
       questionsAmount: selectedAmount,
     })
   }
@@ -206,12 +234,13 @@ const EditableModal = ({ onClose }: { onClose: (values: any) => void }) => {
             categories.map((cat: any, index: number) => (
               <Button
                 onClick={() => handleCats(index)}
-                key={cat.title}
+                key={cat.title || cat.categoryName}
                 className={`border ${cat.color} ${
                   cat.isSelected && 'border-4'
                 }`}
+                disabled={categories.length == 1}
               >
-                {cat.title}
+                {cat.title || cat.categoryName}
               </Button>
             ))}
         </div>

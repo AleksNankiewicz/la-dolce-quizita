@@ -249,7 +249,7 @@ export const addQuestion = async () => {
 }
 
 export const getUserByEmail = async (email: string) => {
-  'use server'
+  noStore()
   try {
     connectToDb()
     const user = await User.findOne({ email: email })

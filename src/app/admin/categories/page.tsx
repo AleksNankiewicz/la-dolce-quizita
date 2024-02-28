@@ -11,6 +11,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import { unstable_noStore as noStore } from 'next/cache'
 const emptyCategory = {
   title: 'tytuł',
   desc: 'opis',
@@ -23,6 +24,7 @@ const AdminCategoryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<any>()
 
   const fetchCategories = async () => {
+    noStore()
     const categories = await getSubCategories()
 
     setCategories(categories)

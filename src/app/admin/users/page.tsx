@@ -9,11 +9,12 @@ import { X } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-
+import { unstable_noStore as noStore } from 'next/cache'
 const AdminUsersPage = () => {
   const [users, setUsers] = useState<any>()
 
   const fetchUsers = async () => {
+    noStore()
     const users = await getUsers()
 
     setUsers(users)

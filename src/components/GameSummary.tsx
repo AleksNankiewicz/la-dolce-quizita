@@ -4,6 +4,7 @@ import { updateAfterGame } from '@/lib/actions'
 import { questionsProps, sessionUserProps } from '@/types/data'
 import { CheckCircle2, XCircle } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { title } from 'process'
 import { useEffect, useState } from 'react'
 // import { useGameStore } from '@/lib/store'
@@ -95,7 +96,19 @@ const GameSummary = ({
             </p>
           )}
 
-          <p className="text-xl">{question.title}</p>
+          {question.title ? (
+            <p className="text-xl">{question.title}</p>
+          ) : (
+            question.img && (
+              <Image
+                src={question.img}
+                width={50}
+                height={50}
+                alt="questionPhoto"
+              />
+            )
+          )}
+
           <div className=" flex flex-wrap gap-3 justify-center">
             {question.answears.map((answear) => (
               <div

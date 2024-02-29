@@ -8,7 +8,11 @@ import RecordsBlock from '@/components/layouts/RecordsBlock'
 import StatsBlock from '@/components/layouts/StatsBlock'
 import { AddQuizButton } from '@/components/layouts/addQuizButton'
 import { Button } from '@/components/ui/button'
-import { getQuizes, getSubCategories } from '@/lib/actions'
+import {
+  getQuizes,
+  getRandomSubCategories,
+  getSubCategories,
+} from '@/lib/actions'
 import { recordProps } from '@/types/data'
 import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
 
@@ -19,7 +23,7 @@ import { Suspense } from 'react'
 export default async function Home() {
   const quizes = await getQuizes(9)
 
-  const subCategories = await getSubCategories(4)
+  const subCategories = await getRandomSubCategories(4)
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -72,6 +76,7 @@ export default async function Home() {
         <EditQuizButton
           slug={quizes[0].slug}
           categorySlug={quizes[0].categorySlug}
+          quizAuthor={quizes[0].author}
         />
       </Link>
       <HomeQuizSectionLabel title={'Wybrane Quizy'} />
@@ -100,7 +105,11 @@ export default async function Home() {
           >
             {quiz?.title}
           </p>
-          <EditQuizButton slug={quiz.slug} categorySlug={quiz.categorySlug} />
+          <EditQuizButton
+            slug={quiz.slug}
+            categorySlug={quiz.categorySlug}
+            quizAuthor={quiz.author}
+          />
         </Link>
       ))}
       <AddQuizButton />

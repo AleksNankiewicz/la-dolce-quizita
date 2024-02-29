@@ -22,17 +22,7 @@ const QuizBlock = ({
       className={`block text-2xl text-white p4 col-span-1 w-full  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden ${
         !img && 'bg-slate-800'
       }`}
-    >
-      {/*   
-      <p
-        className={`absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white ${
-          title.length > 28 && 'top-1/3'
-        } `}
-      >
-        {title}
-      </p>
-      <EditQuizButton slug={slug ? slug : title} categorySlug={quiz.categorySlug} /> */}
-    </Link>
+    ></Link>
   )
 }
 

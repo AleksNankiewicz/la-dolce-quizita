@@ -49,7 +49,7 @@ export const startedModes = [
 
 export const startedQuestionsAmount = [
   {
-    title: '20%',
+    title: '25%',
     amount: 25,
     isSelected: false,
   },

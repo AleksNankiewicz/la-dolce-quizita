@@ -4,10 +4,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { useGameStore } from '@/lib/store'
 import { motion } from 'framer-motion'
-import { shuffleArray } from '@/lib/utils'
+import { shuffleArray, sliceArrayByPercentage } from '@/lib/utils'
 import GameSummary from './GameSummary'
 import { useSession } from 'next-auth/react'
-import { sessionUserProps } from '@/types/data'
+import { questionsProps, sessionUserProps } from '@/types/data'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -21,14 +21,13 @@ const startButtonColors = [
 const Game = (params: any) => {
   //primary
   const quiz = params.data
-  let { questions } = quiz
+
+  const [questions, setQuestions] = useState(quiz.questions)
   const [index, setIndex] = useState<number>(0)
 
   const initialQuestionsNumber = questions.length
 
   //user
-
-  const [email, setEmail] = useState('')
 
   //Game store
 
@@ -128,14 +127,29 @@ const Game = (params: any) => {
 
   useEffect(() => {
     const init = () => {
-      setQuestionsNumber(initialQuestionsNumber)
-      setIsGameStarted(true)
+      const shuffledQuestions = questions.map((question: any) => ({
+        ...question,
+        answears: shuffleArray(question.answears),
+      }))
 
-      questions = shuffleArray(questions)
+      console.log(quiz.questionsPercent)
+      setQuestions(
+        sliceArrayByPercentage(
+          shuffleArray(shuffledQuestions),
+          quiz.questionsPercent
+        )
+      )
+      console.log(questions.length)
+      setQuestionsNumber(questions.length)
+      setIsGameStarted(true)
     }
     init()
     setIsGameRunning(true)
   }, [])
+
+  useEffect(() => {
+    setQuestionsNumber(questions.length)
+  }, [questions])
 
   useEffect(() => {
     if (!isGameRunning || isAnimate || isEndGame) return

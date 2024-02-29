@@ -48,6 +48,14 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: Math.floor(Math.random() * 99999999),
     },
+    quizesPlayed: {
+      type: Array,
+      default: [],
+    },
+    records: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 )
@@ -75,6 +83,7 @@ const quizSchema = new mongoose.Schema(
     },
     records: {
       type: Array,
+      default: [],
     },
     categorySlug: {
       type: String,
@@ -89,6 +98,9 @@ const quizSchema = new mongoose.Schema(
     questionsPercent: {
       type: Number,
       default: 100,
+    },
+    author: {
+      type: String,
     },
   },
   { timestamps: true }

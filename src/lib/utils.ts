@@ -25,6 +25,14 @@ export function shuffleArray(array: []) {
   return array
 }
 
+export function sliceArrayByPercentage(array: any[], percentage: number) {
+  // Calculate the number of elements to slice based on the percentage
+  const sliceIndex = Math.ceil((array.length * percentage) / 100)
+
+  // Return the sliced array
+  return array.slice(0, sliceIndex)
+}
+
 export function formatNumber(number: number) {
   const units = [
     '',

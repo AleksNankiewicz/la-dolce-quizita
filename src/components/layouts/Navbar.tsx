@@ -1,6 +1,6 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { Timer } from 'lucide-react'
+import { ArrowLeft, Timer } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const session = useSession()
   // console.log(session)
-
+  const router = useRouter()
   const [isUserLogged, setIsUserLogged] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -62,10 +62,13 @@ const Navbar = () => {
   )
 
   const gamePoints = useGameStore((state) => state.gamePoints)
+  const setActualQuestionsNumber = useGameStore(
+    (state) => state.setActualQuestionsNumber
+  )
 
   useEffect(() => {
     // Do something here...
-
+    setActualQuestionsNumber(1)
     if (!isGameStarted) return
     if (!pathname.includes('/game/')) {
       resetStore()
@@ -90,8 +93,11 @@ const Navbar = () => {
       <div
         className={`${
           isGameStarted ? 'flex' : 'hidden'
-        }  w-1/3 justify-start font-bold text-center`}
+        }  w-1/3 justify-start font-bold text-center pl-3`}
       >
+        <Link href={'/'} className="block">
+          <ArrowLeft strokeWidth={3} />
+        </Link>
         <p className="pl-3">{`${actualQuestionsNumber}/${questionsNumber}`}</p>
       </div>
 

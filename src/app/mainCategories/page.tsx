@@ -14,7 +14,7 @@ const mainCategoriesPage = async () => {
       {mainCategories.map((mainCategory) => (
         <Link
           key={mainCategory.title}
-          href={`/quizes/${mainCategory.slug}`}
+          href={`/mainCategories/${mainCategory.slug}`}
           className={`block text-2xl text-white p4 col-span-1 w-full  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden ${
             !mainCategory.img && 'bg-slate-800'
           }`}

@@ -36,7 +36,11 @@ const QuizesPage = async () => {
           >
             {quiz.title}
           </p>
-          <EditQuizButton slug={quiz.slug} categorySlug={quiz.categorySlug} />
+          <EditQuizButton
+            slug={quiz.slug}
+            categorySlug={quiz.categorySlug}
+            quizAuthor={quiz.author}
+          />
         </Link>
       ))}
       <AddQuizButton />

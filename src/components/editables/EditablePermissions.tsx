@@ -14,7 +14,7 @@ const EditablePermissions = ({
   const [permissions, setPermisssions] = useState(userPermission)
   const [isPermissionsModal, setPermissionsModal] = useState(false)
   const [isAbleToSave, setIsAbleToSave] = useState(false)
-  console.log(userEmail)
+
   const savePerms = async () => {
     const selectedPerm = allPermisions.find((perm: any) => perm.isSelected)
 
@@ -61,7 +61,7 @@ const EditablePermissions = ({
 
     setAllPermisions(updatedCats)
   }
-  console.log(allPermisions)
+
   return (
     <>
       <div>

@@ -3,7 +3,7 @@ import EditablePermissions from '@/components/editables/EditablePermissions'
 import SearchBar from '@/components/layouts/SearchBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { getUsers } from '@/lib/actions'
+import { deleteUserByEmail, getUsers } from '@/lib/actions'
 import { formatDate } from '@/lib/utils'
 import { X } from 'lucide-react'
 import Image from 'next/image'
@@ -23,6 +23,12 @@ const AdminUsersPage = () => {
   useEffect(() => {
     fetchUsers()
   }, [])
+
+  const handleDeleteUser = async (email: string) => {
+    await deleteUserByEmail(email)
+    window.location.reload()
+  }
+
   return (
     <div className="flex flex-col">
       <div className="w-full pl-2 pt-2">
@@ -58,7 +64,7 @@ const AdminUsersPage = () => {
                             className="bg-green-400 col-span-2 hover:bg-green-300 text-2xl "
                             onClick={() => {
                               toast.dismiss(t.id)
-
+                              handleDeleteUser(user.email)
                               //Jeśli tak
                             }}
                           >

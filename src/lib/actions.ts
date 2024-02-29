@@ -35,6 +35,20 @@ export const getSubCategories = async (amount = Infinity) => {
   }
 }
 
+export const getRandomSubCategories = async (amount = Infinity) => {
+  noStore()
+  try {
+    connectToDb()
+    const subCategory = await Category.aggregate([
+      { $sample: { size: amount } }, // Retrieve 'amount' random documents from the collection
+    ])
+    return subCategory
+  } catch (err: any) {
+    console.error(err)
+    throw new Error(err)
+  }
+}
+
 export const getQuizesByCategories = async (slug: string) => {
   noStore()
   try {
@@ -254,6 +268,18 @@ export const getUserByEmail = async (email: string) => {
     connectToDb()
     const user = await User.findOne({ email: email })
 
+    return user
+  } catch (err) {
+    console.log(err)
+    throw new Error('Failed to fetch user by email!')
+  }
+}
+export const deleteUserByEmail = async (email: string) => {
+  try {
+    noStore()
+    connectToDb()
+    const user = await User.findOneAndDelete({ email: email })
+    console.log('user deleted')
     return user
   } catch (err) {
     console.log(err)

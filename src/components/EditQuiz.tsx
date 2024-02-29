@@ -87,6 +87,8 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   quizDuration.minutes = Math.floor(quizDuration.time / 60)
   quizDuration.seconds = quizDuration.time - quizDuration.minutes * 60
 
+  //refs
+
   const editableTitle = React.useRef<HTMLHeadingElement>(null)
   const editableLevel = React.useRef<HTMLParagraphElement>(null)
   const editableDesc = React.useRef<HTMLParagraphElement>(null)
@@ -104,18 +106,8 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     access: quiz.access || 'All',
     categoryName: quiz.categoryName,
     categorySlug: quiz.categorySlug,
-    questionsAmount: quiz.amount || 100,
+    questionsPercent: quiz.questionsPercent || 100,
   })
-
-  const actualLevel = startedLevels.find((level) => level.isSelected === true)
-
-  const [levels, setGlobalLevels] = useState<any>(actualLevel || startedLevels)
-
-  const [modes, setGlobalModes] = useState<any>(startedModes)
-  const [categories, setGlobalCategories] = useState<any>()
-  const [questionsAmount, setGlobalQuestionsAmount] = useState<any>(
-    startedQuestionsAmount
-  )
 
   const handleModal = (value: any) => {
     console.log(value)
@@ -211,9 +203,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     const title = editableTitle.current?.textContent
       ? editableTitle.current.textContent
       : ''
-    const level = editableLevel.current?.textContent
-      ? editableLevel.current.textContent
-      : ''
+
     const desc = editableDesc.current?.textContent
       ? editableDesc.current.textContent
       : ''
@@ -313,11 +303,12 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       desc: desc,
       slug: quiz.slug || randomSlug,
       img: imageRefs[0],
-      records: [],
+      author: quiz.author || fetchedUser.email,
+      records: quiz.records || [],
       questions: updatedEditableQuestionValues,
       ...modalData,
     }
-
+    console.log(savedQuiz)
     try {
       await addQuiz(savedQuiz)
       toast.dismiss()

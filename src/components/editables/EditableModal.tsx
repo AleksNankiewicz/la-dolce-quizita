@@ -45,7 +45,7 @@ const EditableModal = ({
     // Reset isSelected to false for all amounts
     const updatedAmount = { ...amount, isSelected: false }
 
-    if (data.questionsAmount === amount.amount) {
+    if (data.questionsPercent === amount.amount) {
       updatedAmount.isSelected = true
     }
 
@@ -54,13 +54,12 @@ const EditableModal = ({
 
   const [levels, setLevels] = useState<any>(mappedLevels)
 
-  console.log(levels)
+  console.log(mappedLevels)
   const [modes, setModes] = useState<any>(mappedModes)
   const [categories, setCategories] = useState<any>()
   const [questionsAmount, setQuestionsAmount] = useState<any>(mappedAmounts)
 
   const getCategories = async () => {
-    console.log(permissions)
     try {
       const cats = await getSubCategories()
       if (cats) {
@@ -91,34 +90,39 @@ const EditableModal = ({
     console.log(permissions[0])
 
     if (!permissions) return
-    if (permissions[0] !== 'Any') {
-      let startedCats = permissions.map((cat: any) => ({
-        ...cat,
-        isSelected: false,
-      }))
 
-      console.log(permissions.length)
-      if (permissions.length == 1) {
-        startedCats = permissions.map((cat: any) => ({
-          ...cat,
-          isSelected: true,
-        }))
-      }
-      const matchedCats = startedCats.filter((startedCat: any) =>
-        permissions.some(
-          (perm: any) => perm.categorySlug === startedCat.categorySlug
-        )
-      )
-      //clg
+    //To enable perrmissions uncomment
 
-      if (permissions.length == 1) {
-        const selectedPermission = permissions[0]
-        setCategories
-      }
-      setCategories(matchedCats)
-    } else {
-      getCategories()
-    }
+    // if (permissions[0] !== 'Any') {
+    //   let startedCats = permissions.map((cat: any) => ({
+    //     ...cat,
+    //     isSelected: false,
+    //   }))
+
+    //   console.log(permissions.length)
+    //   if (permissions.length == 1) {
+    //     startedCats = permissions.map((cat: any) => ({
+    //       ...cat,
+    //       isSelected: true,
+    //     }))
+    //   }
+    //   const matchedCats = startedCats.filter((startedCat: any) =>
+    //     permissions.some(
+    //       (perm: any) => perm.categorySlug === startedCat.categorySlug
+    //     )
+    //   )
+    //   //clg
+
+    //   if (permissions.length == 1) {
+    //     const selectedPermission = permissions[0]
+    //     setCategories
+    //   }
+    //   setCategories(matchedCats)
+    // } else {
+    //   getCategories()
+    // }
+
+    getCategories()
   }, [permissions])
   console.log(categories)
 
@@ -180,7 +184,7 @@ const EditableModal = ({
       access: selectedMode,
       categorySlug: selectedCatSlug,
       categoryName: selectedCatName,
-      questionsAmount: selectedAmount,
+      questionsPercent: selectedAmount,
     })
   }
 

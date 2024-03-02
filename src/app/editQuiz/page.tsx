@@ -1,8 +1,8 @@
 import EditQuiz from '@/components/EditQuiz'
 import React from 'react'
 
-const AddNewQuizPage = () => {
-  const emptyQuiz = {
+const AddNewQuizPage = async () => {
+  const emptyQuiz = await {
     title: 'tytuł',
     desc: 'opis',
     level: 'Łatwy',

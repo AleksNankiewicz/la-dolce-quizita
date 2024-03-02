@@ -84,7 +84,10 @@ export default async function Home() {
       <HomeQuizSectionLabel title={'Wybrane Quizy'} />
 
       {quizes.slice(1).map((quiz) => (
-        <div className="relative w-full h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]">
+        <div
+          className="relative w-full h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]"
+          key={quiz._id || quiz.slug}
+        >
           <Link
             key={quiz.label}
             href={`/quizes/${quiz.slug}`}

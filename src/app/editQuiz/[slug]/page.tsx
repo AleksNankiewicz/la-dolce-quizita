@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import { getQuizBySlug } from '@/lib/actions'
+import { getBlankQuiz, getQuizBySlug } from '@/lib/actions'
 
 import { questionsProps } from '@/types/data'
 
@@ -9,7 +9,11 @@ import EditQuiz from '@/components/EditQuiz'
 
 const EditQuizPage = async (params: any) => {
   const slug = params.params.slug
-  const quiz = await getQuizBySlug(slug)
+  let quiz = await getQuizBySlug(slug)
+
+  if (!quiz) {
+    quiz = await getBlankQuiz()
+  }
 
   const { questions } = quiz
 

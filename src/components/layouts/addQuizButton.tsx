@@ -32,7 +32,7 @@ export const AddQuizButton = () => {
   return (
     isAdmin && (
       <Link
-        href={'/editQuiz'}
+        href={'/editQuiz/newQuiz'}
         className="block text-2xl bg-slate-900 col-span-1 w-full  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden hover:bg-slate-800 duration-200 "
       >
         <div className="flex justify-center items-center w-full h-full">

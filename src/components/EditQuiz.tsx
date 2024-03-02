@@ -31,14 +31,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { formatNumber, formatTime, removeSpaces } from '@/lib/utils'
 import { Input } from './ui/input'
 import toast, { useToaster } from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
+
 import { useSession } from 'next-auth/react'
-import EditableModal from './editables/EditableModal'
-import {
-  startedLevels,
-  startedModes,
-  startedQuestionsAmount,
-} from '@/lib/starters'
+// import EditableModal from './editables/EditableModal'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   //auth
@@ -488,13 +483,13 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       >
         Usuń Quiz
       </Button>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <EditableModal
           onClose={handleModal}
           permissions={fetchedUser?.permissions}
           data={modalData}
         />
-      )}
+      )} */}
     </main>
   )
 }

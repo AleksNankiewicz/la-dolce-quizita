@@ -304,6 +304,26 @@ export const getUserBySlug = async (slug: string) => {
   }
 }
 
+export const getBlankQuiz = async () => {
+  try {
+    const blankQuiz = {
+      title: 'tytuł',
+      desc: 'opis',
+      level: 'Łatwy',
+      questions: [
+        {
+          title: 'tytuł',
+          time: 20,
+          points: 20,
+          answears: [],
+        },
+      ],
+    }
+
+    return blankQuiz
+  } catch (error) {}
+}
+
 export const deleteUserByEmail = async (email: string) => {
   try {
     noStore()

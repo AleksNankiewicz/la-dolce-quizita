@@ -1,20 +1,9 @@
 import EditQuiz from '@/components/EditQuiz'
+import { getBlankQuiz } from '@/lib/actions'
 import React from 'react'
 
 const AddNewQuizPage = async () => {
-  const emptyQuiz = await {
-    title: 'tytuł',
-    desc: 'opis',
-    level: 'Łatwy',
-    questions: [
-      {
-        title: 'tytuł',
-        time: 20,
-        points: 20,
-        answears: [],
-      },
-    ],
-  }
+  const emptyQuiz = await getBlankQuiz()
   return (
     <div>
       <EditQuiz quiz={emptyQuiz} />

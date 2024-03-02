@@ -45,17 +45,17 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const session = useSession()
 
   const [fetchedUser, setFetchedUser] = useState<any>()
-  const fetchUser = async (email: string) => {
-    const user = await getUserByEmail(email)
-    setFetchedUser(user)
+  // const fetchUser = async (email: string) => {
+  //   const user = await getUserByEmail(email)
+  //   setFetchedUser(user)
 
-    //  console.log(hasPermission)
-  }
+  //   //  console.log(hasPermission)
+  // }
 
   useEffect(() => {
     if (session.status == 'authenticated') {
       const user = session.data.user as sessionUserProps
-      fetchUser(user.email)
+      //  fetchUser(user.email)
     }
   }, [session])
 
@@ -67,7 +67,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
   const questionsWithIds = initialQuestions.map((question: any) => ({
     ...question,
-    //id: uuidv4(), // Generate a unique ID for each question
   }))
 
   const [questions, setQuestions] = useState(questionsWithIds)
@@ -182,21 +181,21 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     setQuestions(updatedQuestions)
   }
 
-  const handleDeleteQuiz = async () => {
-    try {
-      await deleteQuiz(quiz.slug)
+  // const handleDeleteQuiz = async () => {
+  //   try {
+  //     await deleteQuiz(quiz.slug)
 
-      toast.success('Quiz usunięty!', {
-        duration: 3000,
-      })
-    } catch (err: any) {
-      console.log(err)
-      throw new Error(err)
-    }
-    setTimeout(() => {
-      window.location.href = '/'
-    }, 2000)
-  }
+  //     toast.success('Quiz usunięty!', {
+  //       duration: 3000,
+  //     })
+  //   } catch (err: any) {
+  //     console.log(err)
+  //     throw new Error(err)
+  //   }
+  //   setTimeout(() => {
+  //     window.location.href = '/'
+  //   }, 2000)
+  // }
 
   // const saveQuiz = async () => {
   //   toast.loading('Zapisywanie quizu...')
@@ -466,7 +465,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
                     className="bg-green-400 col-span-2 hover:bg-green-300 text-2xl "
                     onClick={() => {
                       toast.dismiss(t.id)
-                      handleDeleteQuiz()
+                      //   handleDeleteQuiz()
                     }}
                   >
                     Tak

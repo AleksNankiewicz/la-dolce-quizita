@@ -152,7 +152,9 @@ const Navbar = () => {
                     )}
                   </>
                 ) : (
-                  <div className="hidden md:block">Zaloguj się</div>
+                  <div className={`${isGameStarted && 'hidden '}  `}>
+                    Zaloguj się
+                  </div>
                 )}
               </div>
 

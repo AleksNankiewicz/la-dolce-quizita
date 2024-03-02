@@ -25,7 +25,6 @@ const EditQuizButton = ({
 
     const isAuthor = user.email == quizAuthor
 
-    console.log(user.permissions)
     const hasPermission = user.permissions.some(
       (perm: any) => perm.slug === categorySlug
     )

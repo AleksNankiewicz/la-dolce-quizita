@@ -189,7 +189,7 @@ const EditableModal = ({
   }
 
   return (
-    <div className=" w-full md:max-w-screen-xl h-full fixed left-0 md:left-1/2 md:-translate-x-1/2 top-0 bg-slate-900  md:py-14 flex flex-col gap-5">
+    <div className=" w-full md:max-w-screen-xl h-full fixed left-0 md:left-1/2 md:-translate-x-1/2 top-0 bg-slate-900  md:py-14  flex flex-col gap-5 overflow-y-scroll  md:pb-16">
       <div className="w-full flex justify-center flex-col items-center gap-4 mt-24">
         <div className="">Poziom Trudności</div>
 
@@ -268,7 +268,7 @@ const EditableModal = ({
       </div>
 
       <div
-        className="absolute right-[20px] text-red-400 hover:text-red-300 cursor-pointer"
+        className="absolute right-[20px] top-[60px] text-red-400 hover:text-red-300 cursor-pointer"
         onClick={handleClose}
       >
         <X />

@@ -10,13 +10,36 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { updateUser, uploadImages } from '@/lib/actions'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import Loading from '@/app/loading'
 
-const EditableProfile = (user: any) => {
-  //console.log(user.user)
+const EditableProfile = ({ user }: { user: any }) => {
+  const loggedUser = user
+  const session = useSession()
 
-  console.log(user.permissions)
+  const [isUserLogged, setIsUserLogged] = useState(false)
 
-  const loggedUser = user.user
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [slug, setSlug] = useState('')
+  useEffect(() => {
+    if (session.status == 'loading') {
+      setIsLoading(true)
+    }
+    if (session.status == 'unauthenticated') {
+      setIsLoading(false)
+      window.location.href = '/'
+    }
+
+    if (session.status == 'authenticated') {
+      setIsLoading(false)
+
+      const user = session.data.user as sessionUserProps
+
+      setSlug(user.slug)
+
+      if (user.slug == loggedUser.slug) setIsUserLogged(true)
+    }
+  }, [session?.data, session?.status])
 
   const editableImage = React.useRef<HTMLInputElement>(null)
 
@@ -83,6 +106,8 @@ const EditableProfile = (user: any) => {
     // Redirect to the homepage or any other page
     await signOut()
   }
+
+  if (!isUserLogged) return <Loading />
 
   return (
     <div className="w-full flex-col items-center text-center space-y-4 px-3">

@@ -69,6 +69,7 @@ const handler = NextAuth({
         token.gamePlayed = user.gamePlayed
         token.gameWon = user.gameWon
         token.img = user.img
+        token.slug = user.slug
       }
       return token
     },
@@ -82,6 +83,7 @@ const handler = NextAuth({
         session.user.gamePlayed = token.gamePlayed
         session.user.gameWon = token.gameWon
         session.user.img = token.img
+        session.user.slug = token.slug
       }
       return session
     },

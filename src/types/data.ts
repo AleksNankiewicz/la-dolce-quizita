@@ -38,6 +38,7 @@ export type sessionUserProps = {
   gameWon: number // Define the property 'gameWon'
   gamePlayed: number // Define the property 'gamePlayed'
   points: number // Define the property 'points'
+  slug: string
 }
 
 export type categoryProps = {

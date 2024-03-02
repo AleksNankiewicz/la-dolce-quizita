@@ -29,6 +29,7 @@ const Navbar = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
+  const [slug, setSlug] = useState('')
   useEffect(() => {
     if (session.status == 'loading') {
       setIsLoading(true)
@@ -45,9 +46,11 @@ const Navbar = () => {
 
       setUsername(user.username)
       setEmail(user.email)
+      setSlug(user.slug)
     }
   }, [session?.data, session?.status])
 
+  console.log(slug)
   //Store
   const isGameStarted = useGameStore((state) => state.isGameStarted)
 
@@ -128,10 +131,10 @@ const Navbar = () => {
 
       {!isLoading ? (
         <Link
-          href={isUserLogged ? '/profile' : '/auth/login'}
+          href={isUserLogged ? `/profile/${slug}` : '/auth/login'}
           className="block w-1/3 ml-6 "
         >
-          <div className="flex justify-center items-center gap-3 ">
+          <div className="flex flex-row-reverse justify-center items-center gap-3 mr-0">
             <UserImage email={email} />
 
             <div className="flex flex-col justify-end">
@@ -149,7 +152,7 @@ const Navbar = () => {
                     )}
                   </>
                 ) : (
-                  <>Zaloguj się</>
+                  <div className="hidden md:block">Zaloguj się</div>
                 )}
               </div>
 

@@ -291,6 +291,19 @@ export const getUserByEmail = async (email: string) => {
     throw new Error('Failed to fetch user by email!')
   }
 }
+export const getUserBySlug = async (slug: string) => {
+  try {
+    noStore()
+    connectToDb()
+    const user = await User.findOne({ slug: slug })
+
+    return user
+  } catch (err) {
+    console.log(err)
+    throw new Error('Failed to fetch user by slug!')
+  }
+}
+
 export const deleteUserByEmail = async (email: string) => {
   try {
     noStore()

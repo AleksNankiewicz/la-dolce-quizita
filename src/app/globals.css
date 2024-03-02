@@ -83,3 +83,28 @@
 [contenteditable='true']:focus {
   outline: 2px slateblue solid;
 }
+
+/* Global custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #151c2c; /* Color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7e22ce; /* Color of the scrollbar thumb */
+  cursor: pointer;
+  border-radius: 6px; /* Rounded corners */
+}
+::-webkit-scrollbar-thumb:focus {
+  background: #7e22ce; /* Color of the scrollbar thumb */
+  cursor: none;
+  border-radius: 6px; /* Rounded corners */
+}
+
+/* Optional: Change scrollbar on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #7e22ce9f; /* Change thumb color on hover */
+}

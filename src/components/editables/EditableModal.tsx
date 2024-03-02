@@ -189,8 +189,8 @@ const EditableModal = ({
   }
 
   return (
-    <div className="w-full h-full fixed left-0 top-0 bg-slate-900  py-14 flex flex-col gap-5">
-      <div className="w-full flex justify-center flex-col items-center gap-4">
+    <div className=" w-full md:max-w-screen-xl h-full fixed left-0 md:left-1/2 md:-translate-x-1/2 top-0 bg-slate-900  py-14 flex flex-col gap-5">
+      <div className="w-full flex justify-center flex-col items-center gap-4 mt-24">
         <div className="">Poziom Trudności</div>
 
         <div className=" flex gap-4 flex-wrap justify-center">

@@ -102,6 +102,10 @@ const quizSchema = new mongoose.Schema(
     author: {
       type: String,
     },
+    playCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 )

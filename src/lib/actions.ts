@@ -9,11 +9,23 @@ import firebase from 'firebase/app'
 import 'firebase/storage'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import app from './firebase'
+// export const getQuizes2 = async (amount = Infinity) => {
+//   noStore()
+//   try {
+//     connectToDb()
+//     const quizes = await Quiz.find().sort({ updatedAt: -1 }).limit(amount)
+//     return quizes
+//   } catch (err: any) {
+//     console.log(err)
+//     throw new Error(err)
+//   }
+// }
+
 export const getQuizes = async (amount = Infinity) => {
   noStore()
   try {
     connectToDb()
-    const quizes = await Quiz.find().sort({ updatedAt: -1 }).limit(amount)
+    const quizes = await Quiz.find().sort({ playCount: -1 }).limit(amount)
     return quizes
   } catch (err: any) {
     console.log(err)
@@ -122,21 +134,12 @@ export const deleteCategory = async (slug: string) => {
   }
 }
 
-export const setUserPermisson = async (
-  email: string,
-  categoryName: string,
-  categorySlug: string
-) => {
+export const setUserPermisson = async (email: string, permissions: any) => {
   try {
     connectToDb()
     const user = await User.findOne({ email: email })
 
-    user.permissions = [
-      {
-        categoryName,
-        categorySlug,
-      },
-    ]
+    user.permissions = permissions
 
     user.save()
 
@@ -160,6 +163,7 @@ export const updateAfterGame = async (
 
     user.points = user.points + points
     user.gamePlayed = user.gamePlayed + 1
+    user.quizesPlayed.push(quizSlug)
     if (isAllCorrect) {
       user.gameWon = user.gameWon + 1
     }
@@ -213,6 +217,19 @@ export const updateAfterGame = async (
   } catch (err: any) {
     console.log(err)
     throw new Error(err)
+  }
+}
+
+export const updateQuizPlayCount = async (slug: string) => {
+  try {
+    connectToDb()
+    const quiz = await Quiz.findOne({ slug: slug })
+    quiz.playCount += 1
+    await quiz.save()
+    return console.log('quiz playCountUpdated')
+  } catch (err) {
+    console.log(err)
+    throw new Error('Failed to fetch quiz by email!')
   }
 }
 

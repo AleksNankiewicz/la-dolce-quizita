@@ -27,10 +27,12 @@ export default async function Home() {
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-      <HomeQuizSectionLabel title={'Najnowsze wyzwanie'} />
+      <HomeQuizSectionLabel title={'Najpopularniejsze wyzwanie'} />
       <Link
         href={`/quizes/${quizes[0].slug}`}
-        className="block text-black text-2xl   p4 col-span-2 md:col-span-4 w-full text-center h-[250px] sm:h-[250px] md:h-[350px] lg:h-[400px] rounded-xl relative group overflow-hidden md:pointer-events-none"
+        className={`block text-black text-2xl   p4 col-span-2 md:col-span-4 w-full text-center h-[250px] sm:h-[250px] md:h-[350px] lg:h-[400px] rounded-xl relative group overflow-hidden md:pointer-events-none ${
+          !quizes[0].img && 'bg-slate-800'
+        }`}
       >
         <div className="w-full h-full md:flex gap-4">
           <div className="relative w-full h-full md:w-[400px] md:h-[300px] flex flex-col gap-6">
@@ -73,44 +75,46 @@ export default async function Home() {
           </p>
         </div>
         <div className="w-full h-full text-white">{quizes[0].desc}</div>
-        <EditQuizButton
+        {/* <EditQuizButton
           slug={quizes[0].slug}
           categorySlug={quizes[0].categorySlug}
           quizAuthor={quizes[0].author}
-        />
+        /> */}
       </Link>
       <HomeQuizSectionLabel title={'Wybrane Quizy'} />
 
       {quizes.slice(1).map((quiz) => (
-        <Link
-          key={quiz.label}
-          href={`/quizes/${quiz.slug}`}
-          className={`block text-2xl text-white p4 col-span-1 w-full  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden ${
-            !quiz.img && 'bg-slate-800'
-          }`}
-        >
-          {' '}
-          {quiz.img && (
-            <Image
-              src={quiz.img}
-              fill
-              alt={quiz.title}
-              className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
-            />
-          )}
-          <p
-            className={`absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white ${
-              quiz?.title.length > 28 && 'top-1/3'
-            } `}
+        <div className="relative w-full h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]">
+          <Link
+            key={quiz.label}
+            href={`/quizes/${quiz.slug}`}
+            className={`block text-2xl text-white p4 col-span-1 w-full  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden ${
+              !quiz.img && 'bg-slate-800'
+            }`}
           >
-            {quiz?.title}
-          </p>
+            {' '}
+            {quiz.img && (
+              <Image
+                src={quiz.img}
+                fill
+                alt={quiz.title}
+                className=" rounded-2xl opacity-40 group-hover:scale-125  duration-300"
+              />
+            )}
+            <p
+              className={`absolute  w-full h-full top-1/2 -translate-y-[15%]  text-white ${
+                quiz?.title.length > 28 && 'top-1/3'
+              } `}
+            >
+              {quiz?.title}
+            </p>
+          </Link>
           <EditQuizButton
             slug={quiz.slug}
             categorySlug={quiz.categorySlug}
             quizAuthor={quiz.author}
           />
-        </Link>
+        </div>
       ))}
       <AddQuizButton />
       <HomeSeeAll path="/quizes" label="Zobacz wszystkie" />

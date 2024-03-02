@@ -1,12 +1,14 @@
 'use client'
 
-import { updateAfterGame } from '@/lib/actions'
+import { updateAfterGame, updateQuizPlayCount } from '@/lib/actions'
 import { questionsProps, sessionUserProps } from '@/types/data'
-import { CheckCircle2, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { title } from 'process'
 import { useEffect, useState } from 'react'
+import HomeSeeAll from './atoms/HomeSeeAll'
+import Link from 'next/link'
 // import { useGameStore } from '@/lib/store'
 // import React, { useEffect } from 'react'
 
@@ -47,6 +49,7 @@ const GameSummary = ({
     if (email) {
       const update = async () => {
         try {
+          await updateQuizPlayCount(quizSlug)
           await updateAfterGame(email, scoredPoints, allCorrect, quizSlug)
           console.log('user after game updated!')
         } catch (err: any) {
@@ -123,6 +126,15 @@ const GameSummary = ({
           </div>
         </div>
       ))}
+
+      <Link
+        href={'/'}
+        className="block absolute left-5 top-[70px]  p-2 rounded-full border-[3px]"
+      >
+        <ArrowLeft strokeWidth={3} />
+      </Link>
+
+      <HomeSeeAll path="/" label="Wróć do menu" />
     </main>
   )
 }

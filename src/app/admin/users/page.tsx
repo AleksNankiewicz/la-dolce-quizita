@@ -84,7 +84,9 @@ const AdminUsersPage = () => {
                     }
                   )
                 }}
-                className="absolute right-[10px] top-[10px] cursor-pointer text-purple-900 hover:text-red-600"
+                className={`absolute right-[10px] top-[10px] cursor-pointer text-purple-900 hover:text-red-600 ${
+                  user.permissions[0] == 'Any' && 'hidden'
+                }`}
               >
                 <X />
               </div>

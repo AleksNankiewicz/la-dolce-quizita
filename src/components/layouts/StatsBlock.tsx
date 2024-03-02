@@ -47,7 +47,7 @@ const StatsBlock = () => {
         <p className=" border-b-[2px] border-white">Wygrane</p>
         <p>{user?.gameWon}</p>
       </div>
-      <div className="flex flex-col  justify-center items-center">
+      <div className="flex flex-col  justify-center items-center mr-4">
         <Gamepad2 size={30} />
         <p className=" border-b-[2px] border-white">Rozegrane quizy</p>
         <p>{user?.gamePlayed}</p>

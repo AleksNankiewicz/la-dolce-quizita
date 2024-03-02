@@ -24,9 +24,10 @@ const EditQuizButton = ({
     const user = await getUserByEmail(email)
 
     const isAuthor = user.email == quizAuthor
-    console.log(isAuthor)
+
+    console.log(user.permissions)
     const hasPermission = user.permissions.some(
-      (perm: any) => perm.categorySlug === categorySlug
+      (perm: any) => perm.slug === categorySlug
     )
 
     if (hasPermission || isAuthor || user.permissions[0] === 'Any') {
@@ -44,7 +45,7 @@ const EditQuizButton = ({
   if (!isAdmin) return
   return (
     <div
-      className="absolute bg-red-500 flex p-1 rounded-bl-xl rounded-tr-xl right-0 text-white cursor-pointer"
+      className="absolute bg-red-500 flex p-1 rounded-bl-xl rounded-tr-xl right-0 text-white cursor-pointer top-0"
       onClick={() => router.push(`/editQuiz/${slug} `)}
     >
       <div className="flex items-center gap-2 text-sm">

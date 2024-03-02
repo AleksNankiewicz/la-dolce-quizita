@@ -8,6 +8,7 @@ import { shuffleArray, sliceArrayByPercentage } from '@/lib/utils'
 import GameSummary from './GameSummary'
 import { useSession } from 'next-auth/react'
 import { questionsProps, sessionUserProps } from '@/types/data'
+import { resetStore } from '../lib/store'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -127,6 +128,7 @@ const Game = (params: any) => {
 
   useEffect(() => {
     const init = () => {
+      resetStore()
       const shuffledQuestions = questions.map((question: any) => ({
         ...question,
         answears: shuffleArray(question.answears),
@@ -206,7 +208,11 @@ const Game = (params: any) => {
           />
         )}
       </div>
-      <div className=" text-2xl text-white p4 col-span-2 w-full text-center py-5">
+      <div
+        className={` text-2xl text-white p4 col-span-2 w-full text-center py-5  ${
+          !questions[index]?.img && '-mt-36 mb-24'
+        }`}
+      >
         <p>{questions[index].title}</p>
       </div>
 

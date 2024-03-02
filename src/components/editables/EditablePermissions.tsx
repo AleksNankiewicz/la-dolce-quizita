@@ -16,11 +16,15 @@ const EditablePermissions = ({
   const [isAbleToSave, setIsAbleToSave] = useState(false)
 
   const savePerms = async () => {
-    const selectedPerm = allPermisions.find((perm: any) => perm.isSelected)
+    const selectedPerms = allPermisions.filter((perm: any) => perm.isSelected)
 
-    console.log(selectedPerm)
+    const userPermissions = selectedPerms.map((perm: any) => ({
+      title: perm.title,
+      slug: perm.slug,
+    }))
+    console.log(userPermissions)
 
-    await setUserPermisson(userEmail, selectedPerm.title, selectedPerm.slug)
+    await setUserPermisson(userEmail, userPermissions)
 
     window.location.reload()
   }
@@ -28,12 +32,13 @@ const EditablePermissions = ({
   const fetchCategories = async () => {
     try {
       const cats = await getSubCategories()
+      console.log(userPermission)
 
       const updatedCategories = cats.map((cat) => {
         return {
           ...cat,
           isSelected: userPermission.some(
-            (permission: any) => permission.categoryName == cat.title
+            (permission: any) => permission.title == cat.title
           ),
         }
       })
@@ -51,14 +56,17 @@ const EditablePermissions = ({
 
   const handleAllPerms = (index: number) => {
     setIsAbleToSave(true)
-    const resetedCats = allPermisions.map(
-      (cat: any) => (cat.isSelected = false)
-    )
-    setAllPermisions(resetedCats)
+    // const resetedCats = allPermisions.map(
+    //   (cat: any) => (cat.isSelected = false)
+    // )
+    // setAllPermisions(resetedCats)
     const updatedCats = [...allPermisions]
 
-    updatedCats[index].isSelected = true
+    if (updatedCats[index].isSelected == true) {
+      updatedCats[index].isSelected = false
+    } else updatedCats[index].isSelected = true
 
+    console.log(updatedCats)
     setAllPermisions(updatedCats)
   }
 

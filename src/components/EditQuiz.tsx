@@ -9,6 +9,7 @@ import {
   Gamepad2,
   Pen,
   Plus,
+  Settings,
   X,
   XCircle,
 } from 'lucide-react'
@@ -393,17 +394,19 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           <p className=" border-b-[2px] border-white">Czas trwania</p>
           <p>{formatTime(quizDuration.time)}</p>
         </div>
-        <div className="flex flex-col  justify-center items-center">
-          <Gamepad2 size={30} />
-          <p className=" border-b-[2px] border-white">Poziom</p>
-          <p
-            className="break-words max-w-full"
-            contentEditable
-            suppressContentEditableWarning={true}
-            ref={editableLevel}
-          >
-            {quiz.level}
-          </p>
+        <div
+          className="flex flex-col  justify-center items-center cursor-pointer group"
+          onClick={() => {
+            if (fetchedUser?.permissions) {
+              setIsModalOpen(true)
+            }
+          }}
+        >
+          <Settings
+            size={50}
+            className="group-hover:rotate-180  duration-300"
+          />
+          <p className=" border-t-[2px] border-white mt-1">Więcej opcji</p>
         </div>
         <div className="flex flex-col  justify-center items-center">
           <Coins size={30} />
@@ -416,17 +419,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           </p>
         </div>
       </div>
-
-      <Button
-        className="w-full bg-slate-800 col-span-2 hover:bg-slate-900 text-xl py-6"
-        onClick={() => {
-          if (fetchedUser?.permissions) {
-            setIsModalOpen(true)
-          }
-        }}
-      >
-        Więcej opcji
-      </Button>
 
       <div className="text-white   p4 col-span-2  r min-h-[150px] rounded-xl flex flex-col items-center justify-center text-md gap-1">
         <p

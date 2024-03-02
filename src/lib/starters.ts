@@ -39,12 +39,6 @@ export const startedModes = [
     color: 'border-red-400',
     isSelected: false,
   },
-  {
-    title: 'Konkurs dla zalogowanych',
-    access: 'Competetive logged',
-    color: 'border-purple-400',
-    isSelected: false,
-  },
 ]
 
 export const startedQuestionsAmount = [

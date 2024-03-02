@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { questionsProps, recordProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import GameRecordsBlock from '@/components/layouts/GameRecordsBlock'
+import PlayQuizButton from '@/components/layouts/PlayQuizButton'
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
@@ -59,14 +60,7 @@ const SingleQuizPage = async (params: any) => {
           />
         </div>
       </div>
-      <div className="text-white   p4 col-span-2   rounded-xl flex flex-col items-center justify-between  text-md gap-1">
-        {/* <div className="">Test z wiedzy o Włoskich krajobrazach</div> */}
-        <Link href={`/game/${quiz.slug}`} className="block w-full">
-          <Button className="w-full bg-purple-600 hover:bg-purple-500 text-2xl py-8">
-            Graj
-          </Button>
-        </Link>
-      </div>
+      <PlayQuizButton slug={quiz.slug} access={quiz.access} />
       <div className="text-white text-sm bg-slate-800 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center ">
         <div className="flex flex-col  justify-center items-center">
           <Timer size={30} />

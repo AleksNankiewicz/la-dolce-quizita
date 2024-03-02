@@ -45,17 +45,17 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const session = useSession()
 
   const [fetchedUser, setFetchedUser] = useState<any>()
-  // const fetchUser = async (email: string) => {
-  //   const user = await getUserByEmail(email)
-  //   setFetchedUser(user)
+  const fetchUser = async (email: string) => {
+    const user = await getUserByEmail(email)
+    setFetchedUser(user)
 
-  //   //  console.log(hasPermission)
-  // }
+    //  console.log(hasPermission)
+  }
 
   useEffect(() => {
     if (session.status == 'authenticated') {
       const user = session.data.user as sessionUserProps
-      //  fetchUser(user.email)
+      fetchUser(user.email)
     }
   }, [session])
 
@@ -67,6 +67,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
   const questionsWithIds = initialQuestions.map((question: any) => ({
     ...question,
+    //id: uuidv4(), // Generate a unique ID for each question
   }))
 
   const [questions, setQuestions] = useState(questionsWithIds)
@@ -181,157 +182,157 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     setQuestions(updatedQuestions)
   }
 
-  // const handleDeleteQuiz = async () => {
-  //   try {
-  //     await deleteQuiz(quiz.slug)
+  const handleDeleteQuiz = async () => {
+    try {
+      await deleteQuiz(quiz.slug)
 
-  //     toast.success('Quiz usunięty!', {
-  //       duration: 3000,
-  //     })
-  //   } catch (err: any) {
-  //     console.log(err)
-  //     throw new Error(err)
-  //   }
-  //   setTimeout(() => {
-  //     window.location.href = '/'
-  //   }, 2000)
-  // }
+      toast.success('Quiz usunięty!', {
+        duration: 3000,
+      })
+    } catch (err: any) {
+      console.log(err)
+      throw new Error(err)
+    }
+    setTimeout(() => {
+      window.location.href = '/'
+    }, 2000)
+  }
 
-  // const saveQuiz = async () => {
-  //   toast.loading('Zapisywanie quizu...')
+  const saveQuiz = async () => {
+    toast.loading('Zapisywanie quizu...')
 
-  //   const title = editableTitle.current?.textContent
-  //     ? editableTitle.current.textContent
-  //     : ''
+    const title = editableTitle.current?.textContent
+      ? editableTitle.current.textContent
+      : ''
 
-  //   const desc = editableDesc.current?.textContent
-  //     ? editableDesc.current.textContent
-  //     : ''
-  //   const img =
-  //     editableImage.current?.files && editableImage.current?.files.length > 0
-  //       ? editableImage.current?.files[0]
-  //       : quiz.img
+    const desc = editableDesc.current?.textContent
+      ? editableDesc.current.textContent
+      : ''
+    const img =
+      editableImage.current?.files && editableImage.current?.files.length > 0
+        ? editableImage.current?.files[0]
+        : quiz.img
 
-  //   console.log(quiz.img)
+    console.log(quiz.img)
 
-  //   const editableQuestionValues: {
-  //     title: string | null
-  //     time: number | null
-  //     points: number | null
-  //     img: '' | File
-  //     answears: { title: any; isCorrect: any }[]
-  //     id: string
-  //   }[] = []
+    const editableQuestionValues: {
+      title: string | null
+      time: number | null
+      points: number | null
+      img: '' | File
+      answears: { title: any; isCorrect: any }[]
+      id: string
+    }[] = []
 
-  //   const formData = new FormData()
-  //   formData.append('imgMain', img)
-  //   editableQuestionsRef.forEach(
-  //     (questionRef: React.RefObject<HTMLDivElement>, index: number) => {
-  //       const questionElement = questionRef.current
+    const formData = new FormData()
+    formData.append('imgMain', img)
+    editableQuestionsRef.forEach(
+      (questionRef: React.RefObject<HTMLDivElement>, index: number) => {
+        const questionElement = questionRef.current
 
-  //       if (questionElement) {
-  //         const titleElement = questionElement.querySelector(
-  //           'p#editableQuestionTitle'
-  //         )
+        if (questionElement) {
+          const titleElement = questionElement.querySelector(
+            'p#editableQuestionTitle'
+          )
 
-  //         const timeElement = questionElement.querySelector(
-  //           'p#editableQuestionTime'
-  //         )
-  //         const pointsElement = questionElement.querySelector(
-  //           'p#editableQuestionPoints'
-  //         )
-  //         const imageElement = questionElement.querySelector<HTMLInputElement>(
-  //           `#imgInput${questionElement.id}`
-  //         )
+          const timeElement = questionElement.querySelector(
+            'p#editableQuestionTime'
+          )
+          const pointsElement = questionElement.querySelector(
+            'p#editableQuestionPoints'
+          )
+          const imageElement = questionElement.querySelector<HTMLInputElement>(
+            `#imgInput${questionElement.id}`
+          )
 
-  //         const title = titleElement ? titleElement.textContent : ''
-  //         const time = timeElement ? Number(timeElement.textContent) : 20
-  //         const points = pointsElement ? Number(pointsElement.textContent) : 20
+          const title = titleElement ? titleElement.textContent : ''
+          const time = timeElement ? Number(timeElement.textContent) : 20
+          const points = pointsElement ? Number(pointsElement.textContent) : 20
 
-  //         const image: string | File =
-  //           imageElement && imageElement.files && imageElement.files.length > 0
-  //             ? imageElement.files[0]
-  //             : questions[index].img
+          const image: string | File =
+            imageElement && imageElement.files && imageElement.files.length > 0
+              ? imageElement.files[0]
+              : questions[index].img
 
-  //         formData.append(`img-${index}`, image)
+          formData.append(`img-${index}`, image)
 
-  //         const answers = Array.from(
-  //           questionElement.querySelectorAll('.editableAnswears')
-  //         ).map((answear: any) => {
-  //           const isCorrect = answear.classList.contains('correct')
-  //           return {
-  //             title: answear.textContent,
-  //             isCorrect: isCorrect,
-  //             id: uuidv4(),
-  //           }
-  //         })
-  //         editableQuestionValues.push({
-  //           title: title,
-  //           id: uuidv4(),
-  //           time: time,
-  //           points: points,
-  //           answears: answers,
-  //           img: '',
-  //         })
-  //       }
-  //     }
-  //   )
+          const answers = Array.from(
+            questionElement.querySelectorAll('.editableAnswears')
+          ).map((answear: any) => {
+            const isCorrect = answear.classList.contains('correct')
+            return {
+              title: answear.textContent,
+              isCorrect: isCorrect,
+              id: uuidv4(),
+            }
+          })
+          editableQuestionValues.push({
+            title: title,
+            id: uuidv4(),
+            time: time,
+            points: points,
+            answears: answers,
+            img: '',
+          })
+        }
+      }
+    )
 
-  //   let imageRefs: any[] = []
-  //   try {
-  //     imageRefs = await uploadImages(formData)
-  //     console.log(imageRefs)
-  //   } catch {
-  //     console.log('err')
-  //   }
+    let imageRefs: any[] = []
+    try {
+      imageRefs = await uploadImages(formData)
+      console.log(imageRefs)
+    } catch {
+      console.log('err')
+    }
 
-  //   const updatedEditableQuestionValues = editableQuestionValues.map(
-  //     (question, index) => {
-  //       const imageRef = imageRefs.slice(1, imageRefs.length)[index]
+    const updatedEditableQuestionValues = editableQuestionValues.map(
+      (question, index) => {
+        const imageRef = imageRefs.slice(1, imageRefs.length)[index]
 
-  //       return {
-  //         ...question,
-  //         img: imageRef,
-  //       }
-  //     }
-  //   )
+        return {
+          ...question,
+          img: imageRef,
+        }
+      }
+    )
 
-  //   const randomSlug = Math.floor(Math.random() * 999923) + ''
+    const randomSlug = Math.floor(Math.random() * 999923) + ''
 
-  //   const savedQuiz: quizProps = {
-  //     title: title,
-  //     desc: desc,
-  //     slug: quiz.slug || randomSlug,
-  //     img: imageRefs[0],
-  //     author: quiz.author || fetchedUser.email,
-  //     records: quiz.records || [],
-  //     questions: updatedEditableQuestionValues,
-  //     ...modalData,
-  //   }
-  //   console.log(savedQuiz)
-  //   try {
-  //     await addQuiz(savedQuiz)
-  //     toast.dismiss()
-  //     toast('Quiz Zapisany!', {
-  //       icon: '😊',
-  //     })
+    const savedQuiz: quizProps = {
+      title: title,
+      desc: desc,
+      slug: quiz.slug || randomSlug,
+      img: imageRefs[0],
+      author: quiz.author || fetchedUser.email,
+      records: quiz.records || [],
+      questions: updatedEditableQuestionValues,
+      ...modalData,
+    }
+    console.log(savedQuiz)
+    try {
+      await addQuiz(savedQuiz)
+      toast.dismiss()
+      toast('Quiz Zapisany!', {
+        icon: '😊',
+      })
 
-  //     if (!quiz.slug) {
-  //       setTimeout(() => {
-  //         window.location.href = `/editQuiz/${randomSlug}`
-  //       }, 2000)
-  //     }
-  //   } catch (err: any) {
-  //     toast.dismiss()
-  //     toast('Nie udało się zapisać quizu!', {
-  //       icon: '😢',
-  //     })
-  //     console.log(err)
-  //     throw new Error(err)
-  //   }
+      if (!quiz.slug) {
+        setTimeout(() => {
+          window.location.href = `/editQuiz/${randomSlug}`
+        }, 2000)
+      }
+    } catch (err: any) {
+      toast.dismiss()
+      toast('Nie udało się zapisać quizu!', {
+        icon: '😢',
+      })
+      console.log(err)
+      throw new Error(err)
+    }
 
-  //   console.log(savedQuiz)
-  // }
+    console.log(savedQuiz)
+  }
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3">
       <div className=" text-2xl text-white p4 col-span-2 w-full ">
@@ -382,7 +383,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         </Link>
         <Button
           className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-xl py-6"
-          // onClick={() => saveQuiz()}
+          onClick={() => saveQuiz()}
         >
           Zapisz
         </Button>
@@ -449,7 +450,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       </Button>
       <Button
         className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-2xl py-8"
-        // onClick={() => saveQuiz()}
+        onClick={() => saveQuiz()}
       >
         Zapisz
       </Button>
@@ -465,7 +466,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
                     className="bg-green-400 col-span-2 hover:bg-green-300 text-2xl "
                     onClick={() => {
                       toast.dismiss(t.id)
-                      //   handleDeleteQuiz()
+                      handleDeleteQuiz()
                     }}
                   >
                     Tak

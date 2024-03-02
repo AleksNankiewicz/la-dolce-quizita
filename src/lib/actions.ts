@@ -312,6 +312,7 @@ export const getBlankQuiz = async () => {
       level: 'Łatwy',
       questions: [
         {
+          id: Math.floor(Math.random() * 99999),
           title: 'tytuł',
           time: 20,
           points: 20,

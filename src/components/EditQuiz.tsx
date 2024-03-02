@@ -10,6 +10,7 @@ import {
   Pen,
   Plus,
   Settings,
+  ShieldQuestion,
   X,
   XCircle,
 } from 'lucide-react'
@@ -28,7 +29,12 @@ import { questionsProps, quizProps, sessionUserProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import EditableQuestion from './editables/EditableQuestion'
 import { v4 as uuidv4 } from 'uuid'
-import { formatNumber, formatTime, removeSpaces } from '@/lib/utils'
+import {
+  formatNumber,
+  formatTime,
+  removeSpaces,
+  sliceArrayByPercentage,
+} from '@/lib/utils'
 import { Input } from './ui/input'
 import toast, { useToaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -390,9 +396,14 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       </div>
       <div className="text-white text-sm bg-slate-800 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center ">
         <div className="flex flex-col  justify-center items-center">
-          <Timer size={30} />
-          <p className=" border-b-[2px] border-white">Czas trwania</p>
-          <p>{formatTime(quizDuration.time)}</p>
+          <ShieldQuestion size={30} />
+          <p className=" border-b-[2px] border-white">Liczba pytań</p>
+          <p>
+            {
+              sliceArrayByPercentage(questions, modalData.questionsPercent)
+                .length
+            }
+          </p>
         </div>
         <div
           className="flex flex-col  justify-center items-center cursor-pointer group"

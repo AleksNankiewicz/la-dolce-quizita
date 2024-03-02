@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { Award, Coins, CoinsIcon, Gamepad2 } from 'lucide-react'
+import { Award, Coins, CoinsIcon, Gamepad2, ShieldQuestion } from 'lucide-react'
 
 import { Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { questionsProps, recordProps } from '@/types/data'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import GameRecordsBlock from '@/components/layouts/GameRecordsBlock'
 import PlayQuizButton from '@/components/layouts/PlayQuizButton'
+import { sliceArrayByPercentage } from '@/lib/utils'
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug
@@ -63,11 +64,16 @@ const SingleQuizPage = async (params: any) => {
       <PlayQuizButton slug={quiz.slug} access={quiz.access} />
       <div className="text-white text-sm bg-slate-800 p4 col-span-2 w-full text-center h-[100px] rounded-xl flex justify-evenly items-center ">
         <div className="flex flex-col  justify-center items-center">
-          <Timer size={30} />
-          <p className=" border-b-[2px] border-white">Czas trwania</p>
+          <ShieldQuestion size={30} />
+          <p className=" border-b-[2px] border-white">Liczba pytań</p>
           <p>
+            {
+              sliceArrayByPercentage(quiz.questions, quiz.questionsPercent)
+                .length
+            }
+
             {/* {quizDuration}s */}
-            {quizDuration.minutes}m {quizDuration.seconds}s
+            {/* {quizDuration.minutes}m {quizDuration.seconds}s */}
           </p>
         </div>
         <div className="flex flex-col  justify-center items-center">

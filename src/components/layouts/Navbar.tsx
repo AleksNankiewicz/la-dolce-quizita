@@ -1,6 +1,6 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { ArrowLeft, Timer } from 'lucide-react'
+import { ArrowLeft, Coins, Timer } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
@@ -80,7 +80,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`w-full   text-white flex bg-purple-700 p-1 z-50 sticky left-0 top-0 ${
+      className={`w-full min-h-12   text-white flex bg-purple-700 p-1 z-50 sticky left-0 top-0 ${
         isGameStarted ? 'justify-center' : 'justify-end'
       }  items-center rounded-b-xl`}
     >
@@ -134,8 +134,8 @@ const Navbar = () => {
           href={isUserLogged ? `/profile/${slug}` : '/auth/login'}
           className="block w-1/3 ml-6 "
         >
-          <div className="flex flex-row-reverse justify-center items-center gap-3 mr-0">
-            <UserImage email={email} />
+          <div className="flex flex-row-reverse justify-center items-center gap-3 ">
+            {isUserLogged && <UserImage email={email} />}
 
             <div className="flex flex-col justify-end">
               <div className="">
@@ -152,7 +152,11 @@ const Navbar = () => {
                     )}
                   </>
                 ) : (
-                  <div className={`${isGameStarted && 'hidden '}  `}>
+                  <div
+                    className={`${
+                      isGameStarted && 'hidden '
+                    } whitespace-nowrap `}
+                  >
                     Zaloguj się
                   </div>
                 )}
@@ -161,6 +165,10 @@ const Navbar = () => {
               {isGameStarted && (
                 <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
                   <AnimatedNumber value={gamePoints} />
+
+                  <span className="text-white ml-1">
+                    <Coins size={14} />
+                  </span>
                 </div>
               )}
             </div>

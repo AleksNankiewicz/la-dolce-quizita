@@ -35,7 +35,7 @@ export default async function Home() {
         }`}
       >
         <div className="w-full h-full md:flex gap-4">
-          <div className="relative w-full h-full md:w-[400px] md:h-[300px] flex flex-col gap-6">
+          <div className="relative w-full h-full md:w-[400px] md:h-[300px] sm:h-[250px] flex flex-col gap-6">
             {quizes[0].img && (
               <Image
                 src={quizes[0].img}

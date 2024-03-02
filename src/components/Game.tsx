@@ -240,9 +240,9 @@ const Game = (params: any) => {
 
       {isCorrectAnswear === true && (
         <motion.div
-          className="w-5 h-5 bg-green-400 rounded-full absolute "
+          className="w-5 h-5 bg-green-400 rounded-full absolute lg:hidden"
           initial={{ y: '60vh', x: '10vw' }}
-          animate={{ y: '-5vh', x: ['40vw', '78vw'], opacity: [1, 1, 1, 0] }}
+          animate={{ y: '-5vw', x: ['40vw', '78vw'], opacity: [1, 1, 1, 0] }}
           transition={{ duration: 0.75, ease: 'easeInOut' }}
         ></motion.div>
       )}

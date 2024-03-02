@@ -383,7 +383,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         </Link>
         <Button
           className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-xl py-6"
-          onClick={() => saveQuiz()}
+          // onClick={() => saveQuiz()}
         >
           Zapisz
         </Button>
@@ -450,7 +450,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       </Button>
       <Button
         className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-2xl py-8"
-        onClick={() => saveQuiz()}
+        // onClick={() => saveQuiz()}
       >
         Zapisz
       </Button>

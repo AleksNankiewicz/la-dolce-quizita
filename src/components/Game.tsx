@@ -223,7 +223,7 @@ const Game = (params: any) => {
             setClickedButton(answear)
           }}
           key={answear.id || answear.title}
-          className={` text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer `}
+          className={`text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer text-wrap `}
           animate={
             isAnimate === true && {
               border: ['3px solid white', '3px solid black', '3px solid white'],
@@ -234,7 +234,9 @@ const Game = (params: any) => {
             checkAnswear()
           }}
         >
-          <p>{answear.title}</p>
+          <p className="w-full h-full p-4 flex justify-center items-center">
+            {answear.title}
+          </p>
         </motion.div>
       ))}
 

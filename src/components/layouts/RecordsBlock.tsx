@@ -20,13 +20,22 @@ const RecordsBlock = async () => {
           <div className="flex items-center gap-2">
             {' '}
             <Image
+              sizes="100vw"
               className="rounded-full w-10 h-10"
               src={user.img ? user.img : '/noavatar.png'}
               alt="avatar"
               width={25}
               height={25}
             />
-            <p>{user.username}</p>
+            {user.username.length > 12 ? (
+              <p className="sm:hidden">
+                {user.username.slice(0, 12)}
+                <span>...</span>
+              </p>
+            ) : (
+              <p className="sm:hidden">{user.username}</p>
+            )}
+            <p className="hidden sm:block">{user.username}</p>
           </div>
           <div className="flex  gap-3">
             {user.streak > 0 && (

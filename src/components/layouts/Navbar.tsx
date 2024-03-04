@@ -50,7 +50,6 @@ const Navbar = () => {
     }
   }, [session?.data, session?.status])
 
-  console.log(slug)
   //Store
   const isGameStarted = useGameStore((state) => state.isGameStarted)
 

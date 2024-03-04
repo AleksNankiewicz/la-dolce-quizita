@@ -24,7 +24,6 @@ const PlayQuizButton = ({ slug, access }: { slug: string; access: string }) => {
     if (session.status == 'authenticated') {
       const user = session.data.user as sessionUserProps
       fetchUser(user.email)
-      console.log('hallo')
     } else setIsLoading(false)
   }, [session])
 

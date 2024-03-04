@@ -20,6 +20,8 @@ export type quizProps = {
   img: string | File
   author: string
   slug: string
+  categorySlug: string
+  categoryName: string
   records: recordProps[]
   questions: any[]
 }

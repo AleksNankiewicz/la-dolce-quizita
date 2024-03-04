@@ -20,6 +20,7 @@ const QuizesPage = async () => {
           title={quiz.title}
           categorySlug={quiz.categorySlug}
           author={quiz.author}
+          key={quiz._id || quiz.slug}
         />
       ))}
       <AddQuizButton />

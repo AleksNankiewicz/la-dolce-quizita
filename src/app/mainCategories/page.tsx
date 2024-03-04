@@ -18,6 +18,7 @@ const mainCategoriesPage = async () => {
           title={category.title}
           slug={category.slug}
           img={category.img}
+          key={category.slug}
         />
       ))}
     </main>

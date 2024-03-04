@@ -44,7 +44,7 @@ const EditableCategoryModal = ({
     try {
       const title = titleRef.current?.innerText || ''
       const desc = descriptionRef.current?.innerText || ''
-      const slug = category.slug || Math.floor(Math.random() * 9999000) + ''
+      const slug = category.slug || Math.floor(Math.random() * 9999999) + ''
 
       console.log(title)
       console.log(desc)

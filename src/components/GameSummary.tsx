@@ -31,8 +31,6 @@ const GameSummary = ({
 
   const allCorrect = correctAnswearsNumber == allQuestionsNumber
 
-  console.log(allCorrect)
-
   const [email, setEmail] = useState('')
   const [emailSet, setEmailSet] = useState(false)
   const session = useSession()
@@ -64,7 +62,7 @@ const GameSummary = ({
   // console.log(scoredPoints)
 
   return (
-    <main className=" w-full h-screen p-4 grid grid-cols-2 gap-3 select-none fixed bg-black/95 left-0 top-0 overflow-scroll  py-16">
+    <main className=" w-full h-screen p-4 grid grid-cols-2 gap-3 select-none fixed bg-black/95 left-0 top-0 overflow-scroll  py-16 md:px-7 overflow-x-hidden overflow-y-scroll">
       <div className="col-span-2 w-full flex  items-center flex-col gap-2 text-center">
         <h1 className="text-3xl text-green-400">Gratulacje</h1>
         <div className="">
@@ -129,12 +127,14 @@ const GameSummary = ({
 
       <Link
         href={'/'}
-        className="block absolute left-5 top-[70px]  p-2 rounded-full border-[3px]"
+        className="block absolute left-5 md:left-9 top-[70px]  p-2 rounded-full border-[3px]"
       >
         <ArrowLeft strokeWidth={3} />
       </Link>
 
-      <HomeSeeAll path="/" label="Wróć do menu" />
+      <div className="col-span-2 w-full">
+        <HomeSeeAll path="/" label="Wróć do menu" />
+      </div>
     </main>
   )
 }

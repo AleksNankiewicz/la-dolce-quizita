@@ -33,6 +33,21 @@ export const getQuizes = async (amount = Infinity) => {
   }
 }
 
+export const getQuizSlugsAndTitles = async (amount = Infinity) => {
+  noStore() // Assuming these are helper functions defined elsewhere
+  try {
+    connectToDb() // Assuming these are helper functions defined elsewhere
+    const quizes = await Quiz.find()
+      .select('slug title')
+      .sort({ playCount: -1 })
+      .limit(amount)
+    return quizes.map((quiz) => ({ slug: quiz.slug, title: quiz.title })) // Return array of objects with slug and title
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
 export const getSubCategories = async (amount = Infinity) => {
   noStore()
   try {

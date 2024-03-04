@@ -16,6 +16,10 @@ import UserImage from '../misc/UserImage'
 import { useRouter } from 'next/navigation'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { ThreeDots } from 'react-loader-spinner'
+import NavbarSearchbar from './NavbarSearchbar'
+
+const includedRoutes = ['/', '/quizes', '/mainCategories', '/^/quizes/*/']
+
 const Navbar = () => {
   //session
 
@@ -30,6 +34,7 @@ const Navbar = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [slug, setSlug] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
   useEffect(() => {
     if (session.status == 'loading') {
       setIsLoading(true)
@@ -47,6 +52,7 @@ const Navbar = () => {
       setUsername(user.username)
       setEmail(user.email)
       setSlug(user.slug)
+      setIsAdmin(user.isAdmin)
     }
   }, [session?.data, session?.status])
 
@@ -70,28 +76,53 @@ const Navbar = () => {
 
   useEffect(() => {
     // Do something here...
-    setActualQuestionsNumber(1)
+    // setActualQuestionsNumber(1)
+
+    console.log(isLoading)
+
+    if (session.status === 'unauthenticated' && pathname.includes('/admin')) {
+      router.push('/')
+    }
+
+    if (!isUserLogged && isUserLogged) {
+      if (pathname.includes('/admin') && !isAdmin) {
+        router.push('/')
+      }
+    }
     if (!isGameStarted) return
     if (!pathname.includes('/game/')) {
       resetStore()
     }
-  }, [pathname])
+  }, [pathname, isUserLogged, isAdmin, isLoading, session.status])
 
   return (
     <div
       className={`w-full min-h-12   text-white flex bg-purple-700 p-1 z-50 sticky left-0 top-0 ${
-        isGameStarted ? 'justify-center' : 'justify-end'
+        isGameStarted ? 'justify-center' : 'justify-between'
       }  items-center rounded-b-xl`}
     >
       <div
         className={`${
           isGameStarted ? 'hidden' : 'flex'
-        }  w-2/3 justify-start font-bold text-center`}
+        }  w-1/3 justify-start font-bold text-center`}
       >
         <Link href={'/'} className="pl-3 text-xl">
           QuizyMania
         </Link>
       </div>
+
+      <div
+        className={`${
+          (!isGameStarted && pathname.includes('/quizes')) ||
+          pathname.includes('/mainCategories') ||
+          pathname == '/'
+            ? 'flex'
+            : 'hidden'
+        }  w-2/5 md:w-[70%] md:justify-center  `}
+      >
+        <NavbarSearchbar />
+      </div>
+
       <div
         className={`${
           isGameStarted ? 'flex' : 'hidden'

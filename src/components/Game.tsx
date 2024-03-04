@@ -73,6 +73,8 @@ const Game = (params: any) => {
   const intervalId = useRef<any>(null)
   const timerIntervalId = useRef<any>(null)
 
+  const nextButtonRef = useRef<HTMLButtonElement>(null)
+
   //functions
 
   const checkAnswear = () => {
@@ -98,6 +100,7 @@ const Game = (params: any) => {
       }
     })
     setIsGameRunning(false)
+
     setButtonColors(newButtonColors)
     setClickedButton('')
   }
@@ -106,6 +109,7 @@ const Game = (params: any) => {
     clearInterval(intervalId.current)
     clearInterval(timerIntervalId.current)
     resetQuestionTime()
+    handleScrollToTop()
 
     if (isEndGame) return
     if (index == questions.length - 1) return endGame()
@@ -128,7 +132,28 @@ const Game = (params: any) => {
     clearInterval(timerIntervalId.current)
   }
 
+  const handleScrollToBottom = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+    })
+  }
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0, // Scroll to the top of the document
+      behavior: 'smooth',
+    })
+  }
+
   //Use Effects
+
+  useEffect(() => {
+    const isSmallScreen = window.innerWidth < 768 // Define the threshold for small screens
+    console.log(window.innerWidth)
+    if (isSmallScreen && nextButtonRef.current) {
+      nextButtonRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isGameRunning])
 
   useEffect(() => {
     const init = () => {
@@ -138,14 +163,13 @@ const Game = (params: any) => {
         answears: shuffleArray(question.answears),
       }))
 
-      console.log(quiz.questionsPercent)
       setQuestions(
         sliceArrayByPercentage(
           shuffleArray(shuffledQuestions),
           quiz.questionsPercent
         )
       )
-      console.log(questions.length)
+
       setQuestionsNumber(questions.length)
       setIsGameStarted(true)
     }
@@ -167,7 +191,6 @@ const Game = (params: any) => {
     const animate = () => {
       decrementActualQuestionTime(1 / questions[index].time)
       tampstamp++
-      // console.log(tampstamp)
 
       if (tampstamp >= questions[index].time * 100) {
         tampstamp = 0
@@ -201,14 +224,18 @@ const Game = (params: any) => {
   ])
 
   return (
-    <main className=" w-full p-4 grid grid-cols-2 gap-3 select-none">
+    <main
+      className={` w-full p-4 grid grid-cols-2 gap-3 select-none ${
+        isEndGame && 'overflow-y-hidden'
+      }`}
+    >
       <div className=" text-3xl text-black  col-span-2 w-[40vh]  min-h-[30vh]  rounded-2xl flex justify-center items-center  relative mx-auto">
         {questions[index]?.img && (
           <Image
             src={questions[index]?.img}
             fill
             alt="background"
-            className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300"
+            className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300 object-cover"
           />
         )}
       </div>
@@ -255,6 +282,7 @@ const Game = (params: any) => {
 
       {!isGameRunning && (
         <Button
+          ref={nextButtonRef}
           onClick={nextQuestion}
           className="col-span-2 py-10 bg-purple-600 hover:bg-purple-500 text-3xl"
         >

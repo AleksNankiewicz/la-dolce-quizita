@@ -143,7 +143,7 @@ const EditableProfile = ({ user }: { user: any }) => {
         </Button>
       )}
       <StatsBlock />
-      {loggedUser.permissions[0] == 'Any' && (
+      {loggedUser.isAdmin && (
         <Button
           className="w-full text-2xl py-7 text-purple-400"
           onClick={() => (window.location.href = '/admin')}

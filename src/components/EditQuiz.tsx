@@ -37,7 +37,7 @@ import {
 } from '@/lib/utils'
 import { Input } from './ui/input'
 import toast, { useToaster } from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import EditableModal from './editables/EditableModal'
 import {
@@ -49,7 +49,8 @@ import {
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   //auth
   const session = useSession()
-
+  const router = useRouter()
+  const pathname = usePathname()
   const [fetchedUser, setFetchedUser] = useState<any>()
   const fetchUser = async (email: string) => {
     const user = await getUserByEmail(email)
@@ -63,7 +64,28 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       const user = session.data.user as sessionUserProps
       fetchUser(user.email)
     }
+
+    if (session.status == 'unauthenticated') {
+      router.push('/')
+    }
   }, [session])
+
+  useEffect(() => {
+    if (!fetchedUser) return
+
+    if (fetchedUser.permissions[0] == 'Any' || fetchedUser.isAdmin) return
+    if (pathname.includes('/editQuiz/newQuiz')) return
+    if (fetchedUser.email == quiz.author) return
+    else {
+      const isUserPerm = fetchedUser.permissions.find(
+        (perm: any) => perm.slug == quiz.categorySlug
+      )
+
+      if (!isUserPerm) router.push('/')
+    }
+
+    console.log(fetchedUser)
+  }, [fetchedUser])
 
   //  console.log(fetchedUser?.permissions)
 

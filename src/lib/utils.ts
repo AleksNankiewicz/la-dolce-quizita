@@ -156,3 +156,27 @@ export function formatDate(date: Date) {
 const userCreatedAt = new Date() // Załóżmy, że to jest data utworzenia użytkownika
 const formattedDate = formatDate(userCreatedAt) // Użyj funkcji formatDate() do sformatowania daty
 // Wyświetli sformatowaną datę w formacie "DD-MM-RRRR"
+
+export const divideLastSyllableInSentence = (sentence: string): string => {
+  const words = sentence.split(' ')
+  const modifiedWords = words.map((word) => {
+    if (word.length > 12) {
+      const lastSpaceIndex = word.lastIndexOf(' ')
+      if (lastSpaceIndex !== -1) {
+        const lastSyllableIndex = word
+          .slice(lastSpaceIndex + 1)
+          .lastIndexOf('-')
+        if (lastSyllableIndex !== -1) {
+          const beforeLastSyllable = word.slice(
+            0,
+            lastSpaceIndex + lastSyllableIndex
+          )
+          const lastSyllable = word.slice(lastSpaceIndex + lastSyllableIndex)
+          return `${beforeLastSyllable}- ${lastSyllable}`
+        }
+      }
+    }
+    return word
+  })
+  return modifiedWords.join(' ')
+}

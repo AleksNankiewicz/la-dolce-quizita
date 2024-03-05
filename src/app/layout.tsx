@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import 'react-circular-progressbar/dist/styles.css'
 import Navbar from '@/components/layouts/Navbar'
 import Footer from '@/components/layouts/Footer'
 import { AppProvider } from '@/components/Appcontext'
@@ -26,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AppProvider>
-          <div className="max-w-screen-xl mx-auto min-h-screen">
+          <div className="max-w-screen-xl mx-auto min-h-[90vh]">
             <Navbar />
             <div className="min-h-screen">{children}</div>
             {/* <Footer /> */}

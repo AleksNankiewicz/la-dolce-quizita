@@ -108,3 +108,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #7e22ce9f; /* Change thumb color on hover */
 }
+
+.slick-slide div {
+  outline: none;
+}

@@ -20,6 +20,16 @@ const GameRecordsBlock = async ({ record }: { record: recordProps }) => {
           width={25}
           height={25}
         />
+        {user?.selectedBadge && (
+          <Image
+            sizes="100vw"
+            className="rounded-full w-6 h-6"
+            src={user.selectedBadge}
+            alt="avatar"
+            width={20}
+            height={20}
+          />
+        )}
         <p>{user?.username}</p>
       </div>
 

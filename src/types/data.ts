@@ -78,4 +78,6 @@ export type UserProps = {
   streak: number
   lastGameDate?: Date
   permissions?: string[]
+  selectedBadge?: string
+  level: number
 }

@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Loading from '@/app/loading'
 import CustomizablesBlock from '../blocks/CustomizablesBlock'
+import useNavStore from '@/lib/store'
 
 const EditableProfile = ({ user }: { user: any }) => {
   const loggedUser = user
@@ -20,6 +21,7 @@ const EditableProfile = ({ user }: { user: any }) => {
   const [isUserLogged, setIsUserLogged] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
+  const refreshNavbar = useNavStore((state) => state.setRefresh)
 
   const [slug, setSlug] = useState('')
   useEffect(() => {
@@ -96,6 +98,7 @@ const EditableProfile = ({ user }: { user: any }) => {
       await updateUser(updatedUser)
       toast.dismiss()
       toast.success('Profil zapisany')
+      refreshNavbar(true)
     } catch (err: any) {
       toast.dismiss()
       toast.success('Nie udało się zapisać profilu')

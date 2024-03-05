@@ -148,6 +148,20 @@ export const getLevels = async () => {
   }
 }
 
+export const setBadge = async (email: string, badge: string) => {
+  noStore()
+  try {
+    connectToDb()
+    const user = await getUserByEmail(email)
+    user.selectedBadge = badge
+    await user.save()
+    return console.log('user badge updated')
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
 export const deleteCategory = async (slug: string) => {
   console.log(slug)
   try {
@@ -186,7 +200,7 @@ export const updateAfterGame = async (
   try {
     connectToDb()
     const user = await getUserByEmail(email)
-
+    const levels = await getLevels()
     user.points = user.points + points
     user.gamePlayed = user.gamePlayed + 1
     user.quizesPlayed.push(quizSlug)
@@ -208,6 +222,24 @@ export const updateAfterGame = async (
 
     // Zaktualizuj datę ostatniej gry
     user.lastGameDate = now
+
+    let newLevel = null
+    for (const level of levels) {
+      if (user.points >= level.threshold) {
+        newLevel = level.number
+      } else {
+        break // Stop searching if the user's points are less than the current level's threshold
+      }
+    }
+
+    // Update user's level if a new level is found
+    if (newLevel !== null && newLevel !== user.level) {
+      user.level = newLevel
+    }
+    console.log('userpoints type', typeof user.points)
+    console.log('user points', user.points)
+    console.log('level ', newLevel)
+    console.log('first level threshold', levels[0].threshold)
 
     await user.save()
     console.log('user updated')

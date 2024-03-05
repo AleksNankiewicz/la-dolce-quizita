@@ -4,7 +4,7 @@ import { ArrowLeft, Coins, Timer } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
-import { resetStore, useGameStore } from '@/lib/store'
+import useNavStore, { resetStore, useGameStore } from '@/lib/store'
 import { AnimatedNumber } from '../animations/AnimatedNumber'
 import { motion } from 'framer-motion'
 // import { useRouter } from 'next/router'
@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { ThreeDots } from 'react-loader-spinner'
 import NavbarSearchbar from './NavbarSearchbar'
+import UserBadge from '../misc/UserBadge'
+import UserNavbar from '../misc/UserNavbar'
 
 const includedRoutes = ['/', '/quizes', '/mainCategories', '/^/quizes/*/']
 
@@ -70,9 +72,6 @@ const Navbar = () => {
   )
 
   const gamePoints = useGameStore((state) => state.gamePoints)
-  const setActualQuestionsNumber = useGameStore(
-    (state) => state.setActualQuestionsNumber
-  )
 
   useEffect(() => {
     // Do something here...
@@ -165,13 +164,14 @@ const Navbar = () => {
           className="block w-1/3 ml-6 "
         >
           <div className="flex flex-row-reverse justify-center items-center gap-3 ">
-            {isUserLogged && <UserImage email={email} />}
+            {isUserLogged && <UserNavbar email={email} />}
 
-            <div className="flex flex-col justify-end">
+            {/* <UserBadge email={email} /> */}
+            <div className="flex justify-end">
               <div className="">
                 {isUserLogged ? (
                   <>
-                    <p className="hidden md:block">{username}</p>
+                    {/* <p className="hidden md:block">{username}</p>
                     {username.length > 5 ? (
                       <p className="md:hidden">
                         {username.slice(0, 5)}
@@ -179,7 +179,7 @@ const Navbar = () => {
                       </p>
                     ) : (
                       <p className="md:hidden">{username}</p>
-                    )}
+                    )} */}
                   </>
                 ) : (
                   <div

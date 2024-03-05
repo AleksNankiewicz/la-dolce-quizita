@@ -61,3 +61,15 @@ export const resetStore = () => {
     actualQuestionsNumber: 1,
   })
 }
+
+type NavStore = {
+  refresh: boolean
+  setRefresh: (boolean: boolean) => void
+}
+
+const useNavStore = create<NavStore>((set) => ({
+  refresh: false,
+  setRefresh: () => set({ refresh: true }),
+}))
+
+export default useNavStore

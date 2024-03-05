@@ -9,6 +9,7 @@ import { title } from 'process'
 import { useEffect, useState } from 'react'
 import HomeSeeAll from './atoms/HomeSeeAll'
 import Link from 'next/link'
+import useNavStore from '@/lib/store'
 // import { useGameStore } from '@/lib/store'
 // import React, { useEffect } from 'react'
 
@@ -19,6 +20,8 @@ const GameSummary = ({
   questions: questionsProps[]
   quizSlug: string
 }) => {
+  const refreshNavbar = useNavStore((state) => state.setRefresh)
+
   let correctAnswearsNumber = 0
   const scoredPoints = questions.reduce((acc, question) => {
     if (question.correctAnswear) {
@@ -50,6 +53,7 @@ const GameSummary = ({
           await updateQuizPlayCount(quizSlug)
           await updateAfterGame(email, scoredPoints, allCorrect, quizSlug)
           console.log('user after game updated!')
+          refreshNavbar(true)
         } catch (err: any) {
           console.log(err)
           throw new Error(err)
@@ -114,7 +118,7 @@ const GameSummary = ({
             {question.answears.map((answear) => (
               <div
                 key={answear.id || answear.title}
-                className={`w-1/3 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8 ${
+                className={`w-1/3 min-w-28 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8 ${
                   !answear.isCorrect ? 'border-red-600' : 'border-green-400'
                 } `}
               >

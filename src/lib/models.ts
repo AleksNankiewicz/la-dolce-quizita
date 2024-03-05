@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { string } from 'zod'
 
 const userSchema = new mongoose.Schema(
   {
@@ -55,6 +56,16 @@ const userSchema = new mongoose.Schema(
     records: {
       type: Array,
       default: [],
+    },
+    selectedBadge: {
+      type: String,
+    },
+    selectedProfileFrame: {
+      type: String,
+    },
+    level: {
+      type: Number,
+      default: 1,
     },
   },
   { timestamps: true }

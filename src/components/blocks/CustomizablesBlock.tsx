@@ -55,13 +55,20 @@ const CustomizablesBlock = ({ user }: { user: UserProps }) =>
             strokeWidth={1}
             className="w-1/2 md:w-1/2 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0"
           />
-          <div className="absolute left-[10%] top-1/4 ">
-            <p className="sm:text-3xl text-3xl text-left ">Obramówki</p>
+          <div className="absolute left-[5%] top-1/4 ">
+            <p className=" sm:text-3xl text-3xl text-left ">Obramówki</p>
             {/* <p className="sm:text-xl w-1/2">Rozegranych quizów</p> */}
           </div>
         </div>
 
-        {isBadgesModalOpen && <BadgesModal points={user.points} />}
+        {isBadgesModalOpen && (
+          <BadgesModal
+            onClose={setIsBadgesModalOpen}
+            email={user.email}
+            points={user.points}
+            selectedBadge={user.selectedBadge}
+          />
+        )}
         {isProfileFramesModalOpen && <ProfileFramesModal />}
       </div>
     )

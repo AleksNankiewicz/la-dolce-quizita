@@ -11,6 +11,7 @@ import { updateUser, uploadImages } from '@/lib/actions'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Loading from '@/app/loading'
+import CustomizablesBlock from '../blocks/CustomizablesBlock'
 
 const EditableProfile = ({ user }: { user: any }) => {
   const loggedUser = user
@@ -143,6 +144,7 @@ const EditableProfile = ({ user }: { user: any }) => {
         </Button>
       )}
       <StatsBlock />
+      <CustomizablesBlock user={loggedUser} />
       {loggedUser.isAdmin && (
         <Button
           className="w-full text-2xl py-7 text-purple-400"

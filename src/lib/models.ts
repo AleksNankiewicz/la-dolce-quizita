@@ -161,6 +161,25 @@ const categorySchema = new mongoose.Schema({
   },
 })
 
+const levelSchema = new mongoose.Schema({
+  number: {
+    type: Number,
+    required: true,
+  },
+  threshold: {
+    type: Number,
+    required: true,
+  },
+  badge: {
+    type: String, // Możesz przechowywać ścieżkę do obrazka odznaki
+    default: null, // Domyślnie brak odznaki
+  },
+  profileFrame: {
+    type: String, // Możesz przechowywać ścieżkę do obrazka obramówki profilowej
+    default: null, // Domyślnie brak obramówki
+  },
+})
+
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
 export const Quiz = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema)
 
@@ -171,3 +190,6 @@ export const Question =
   mongoose.models.Question || mongoose.model('Question', questionSchema)
 export const Answear =
   mongoose.models.Answear || mongoose.model('Answear', answearSchema)
+
+export const Level =
+  mongoose.models.Level || mongoose.model('Level', levelSchema)

@@ -2,7 +2,7 @@
 
 import { quizProps } from '@/types/data'
 import { connectToDb } from './connectToDb'
-import { Category, Question, Quiz, User } from './models'
+import { Category, Level, Question, Quiz, User } from './models'
 
 import { unstable_noStore as noStore } from 'next/cache'
 import firebase from 'firebase/app'
@@ -131,6 +131,17 @@ export const getUsers = async () => {
     connectToDb()
     const users = await User.find()
     return users
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+export const getLevels = async () => {
+  noStore()
+  try {
+    connectToDb()
+    const levels = await Level.find()
+    return levels
   } catch (err: any) {
     console.log(err)
     throw new Error(err)

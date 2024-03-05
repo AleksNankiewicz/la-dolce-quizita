@@ -58,3 +58,24 @@ export type QuizCategoryProps = {
   categoryName: string
   questionsAmount: number
 }
+
+export type LevelProps = {
+  number: number
+  threshold: string
+  badge: string
+  profileFrame: string
+}
+
+export type UserProps = {
+  username: string
+  email: string
+  password: string
+  isAdmin: boolean
+  img?: string
+  points: number
+  gamePlayed: number
+  gameWon: number
+  streak: number
+  lastGameDate?: Date
+  permissions?: string[]
+}

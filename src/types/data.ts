@@ -61,7 +61,7 @@ export type QuizCategoryProps = {
 
 export type LevelProps = {
   number: number
-  threshold: string
+  threshold: number
   badge: string
   profileFrame: string
 }

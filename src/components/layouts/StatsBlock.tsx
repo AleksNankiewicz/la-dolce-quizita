@@ -44,7 +44,7 @@ const StatsBlock = () => {
     const nearest = levels.reduce(
       (nearestLevel: LevelProps | null, currentLevel) => {
         if (
-          currentLevel.threshold > user.points &&
+          currentLevel.threshold > +user.points && // Convert user.points to a number
           (!nearestLevel || currentLevel.threshold < nearestLevel.threshold)
         ) {
           return currentLevel
@@ -54,10 +54,12 @@ const StatsBlock = () => {
       },
       null
     )
+
     let missingPercentage = 0
     if (nearest) {
-      missingPercentage = (nearest.threshold - user.points) / nearest.threshold
+      missingPercentage = user.points / nearest.threshold // Calculate achieved percentage
     }
+    console.log(missingPercentage)
 
     setNearestLevel(missingPercentage)
   }, [user, levels])

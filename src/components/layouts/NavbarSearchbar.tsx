@@ -158,7 +158,7 @@ const NavbarSearchbar = () => {
       {isModal && (
         <div
           ref={modalRef}
-          className="fixed top-[120px] md:top-12 md:left-[49%] left-0 md:-translate-x-1/2 bg-white w-full md:w-2/5  p-4 rounded-xl flex flex-col md:gap-1 gap-4 "
+          className="fixed top-[120px] md:top-12 md:left-[52%] left-0 md:-translate-x-1/2 bg-white w-full md:w-2/5  p-4 rounded-xl flex flex-col md:gap-1 gap-4 "
         >
           {searchedQuizes.map((quiz: IQuiz) => (
             <div

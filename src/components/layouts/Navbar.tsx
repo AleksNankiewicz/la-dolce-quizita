@@ -115,7 +115,7 @@ const Navbar = () => {
           pathname == '/'
             ? 'flex'
             : 'hidden'
-        }  w-3/5  md:w-[70%] md:justify-center  `}
+        }  w-1/5  md:w-[70%] md:justify-center  `}
       >
         <NavbarSearchbar />
       </div>

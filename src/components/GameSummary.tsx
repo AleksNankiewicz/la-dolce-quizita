@@ -1,7 +1,7 @@
 'use client'
 
 import { updateAfterGame, updateQuizPlayCount } from '@/lib/actions'
-import { questionsProps, sessionUserProps } from '@/types/data'
+import { LevelProps, questionsProps, sessionUserProps } from '@/types/data'
 import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import HomeSeeAll from './atoms/HomeSeeAll'
 import Link from 'next/link'
 import useNavStore from '@/lib/store'
+import toast from 'react-hot-toast'
 // import { useGameStore } from '@/lib/store'
 // import React, { useEffect } from 'react'
 
@@ -37,7 +38,8 @@ const GameSummary = ({
   const [email, setEmail] = useState('')
   const [emailSet, setEmailSet] = useState(false)
   const session = useSession()
-
+  const [distanceBetweenRecords, setDistanceBetweenRecords] = useState(0)
+  const [newLevel, setNewLevel] = useState<LevelProps>()
   useEffect(() => {
     if (!emailSet && session.status === 'authenticated') {
       const user = session.data?.user as sessionUserProps
@@ -51,9 +53,22 @@ const GameSummary = ({
       const update = async () => {
         try {
           await updateQuizPlayCount(quizSlug)
-          await updateAfterGame(email, scoredPoints, allCorrect, quizSlug)
+          const ResponseData = await updateAfterGame(
+            email,
+            scoredPoints,
+            allCorrect,
+            quizSlug
+          )
+          if (ResponseData?.distanceBetweenRecords) {
+            setDistanceBetweenRecords(ResponseData.distanceBetweenRecords)
+          }
+          if (ResponseData?.newLevelData) {
+            setNewLevel(ResponseData.newLevelData)
+          }
+
+          console.log(ResponseData)
+
           console.log('user after game updated!')
-          refreshNavbar(true)
         } catch (err: any) {
           console.log(err)
           throw new Error(err)
@@ -63,26 +78,78 @@ const GameSummary = ({
     }
   }, [email])
 
+  useEffect(() => {
+    if (newLevel) {
+      refreshNavbar(true)
+      toast(
+        <div className=" text-center">
+          <p>Osiągnołeś nowy level!</p>
+          <p className="text-green-400 text-3xl font-bold">{newLevel.number}</p>
+        </div>,
+        {
+          duration: 3000,
+          id: 'clipboard',
+        }
+      )
+
+      setTimeout(() => {
+        toast(
+          <div className=" text-center">
+            <p>Oblokowano nową odznakę</p>
+            <div className="text-green-400 text-3xl font-bold w-full flex justify-center">
+              <Image src={newLevel.badge} alt="frame" width={40} height={40} />
+            </div>
+          </div>,
+          { duration: 3000, id: 'secondToast' }
+        )
+      }, 3000) // Adjust the delay as needed
+      setTimeout(() => {
+        toast(
+          <div className=" text-center">
+            <p>Oblokowano nową obramówkę</p>
+            <div className="text-green-400 text-3xl font-bold w-full flex justify-center">
+              <Image
+                src={newLevel.profileFrame}
+                alt="frame"
+                width={40}
+                height={40}
+              />
+            </div>
+          </div>,
+          { duration: 3000, id: 'thirdtToast' }
+        )
+      }, 6000) // Adjust the delay as needed
+    }
+  }, [newLevel])
+
   // console.log(scoredPoints)
 
   return (
     <main className=" w-full h-screen p-4 grid grid-cols-2 gap-3 select-none fixed bg-black/95 left-0 top-0 overflow-scroll  py-16 md:px-7 overflow-x-hidden overflow-y-scroll">
       <div className="col-span-2 w-full flex  items-center flex-col gap-2 text-center">
         <h1 className="text-3xl text-green-400">Gratulacje</h1>
-        <div className="">
+        <div className="text-2xl">
           Zdobyłeś{' '}
-          <span className="text-green-400 text-xl">{scoredPoints} </span>
+          <span className="text-green-400 text-3xl">{scoredPoints} </span>
           punktów!
         </div>
+
+        {distanceBetweenRecords !== 0 && (
+          <div className="">
+            Pobiłeś swój rekord o{' '}
+            <span className="text-green-400 text-2xl">{scoredPoints} </span>
+            punktów!
+          </div>
+        )}
         <div className="h-0.5 w-full bg-white rounded-full"></div>
-        <div className="w-8/12 ">
+        <div className="w-8/12  md:text-2xl text-[17px]">
           Odpowiedziałeś poprawnie na{' '}
-          <span className="text-green-400 text-xl">
+          <span className="text-green-400 text-2xl  md:text-3xl">
             {correctAnswearsNumber}{' '}
           </span>{' '}
           z {allQuestionsNumber} pytań
         </div>
-        <div className="">Poniżej znajdziesz swoje odpowiedzi</div>
+        <div className=" text-sm">Poniżej znajdziesz swoje odpowiedzi</div>
       </div>
       {questions.map((question) => (
         <div
@@ -128,13 +195,13 @@ const GameSummary = ({
           </div>
         </div>
       ))}
-
+      {/* 
       <Link
         href={'/'}
         className="block absolute left-5 md:left-9 top-[70px]  p-2 rounded-full border-[3px]"
       >
-        <ArrowLeft strokeWidth={3} />
-      </Link>
+        <ArrowLeft strokeWidth={3} size={20} />
+      </Link> */}
 
       <div className="col-span-2 w-full">
         <HomeSeeAll path="/" label="Wróć do menu" />

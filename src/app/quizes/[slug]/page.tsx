@@ -25,7 +25,11 @@ const SingleQuizPage = async (params: any) => {
     seconds: 0,
   }
   let quizMaxPoints = 0
-  questions.forEach((question: questionsProps) => {
+  const slicedArr = sliceArrayByPercentage(
+    quiz.questions,
+    quiz.questionsPercent
+  )
+  slicedArr.forEach((question: questionsProps) => {
     quizDuration.time += question.time
 
     quizMaxPoints += question.points
@@ -67,10 +71,7 @@ const SingleQuizPage = async (params: any) => {
           <ShieldQuestion size={30} />
           <p className=" border-b-[2px] border-white">Liczba pytań</p>
           <p>
-            {
-              sliceArrayByPercentage(quiz.questions, quiz.questionsPercent)
-                .length
-            }
+            {slicedArr.length}
 
             {/* {quizDuration}s */}
             {/* {quizDuration.minutes}m {quizDuration.seconds}s */}

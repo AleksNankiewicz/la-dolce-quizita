@@ -29,7 +29,7 @@ export default function RootLayout({
         <AppProvider>
           <div className="max-w-screen-xl mx-auto min-h-[90vh]">
             <Navbar />
-            <div className="min-h-screen">{children}</div>
+            <div className="min-h-[90vh]">{children}</div>
             {/* <Footer /> */}
             <Toaster />
           </div>

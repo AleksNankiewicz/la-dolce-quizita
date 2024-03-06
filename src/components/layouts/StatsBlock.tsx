@@ -115,7 +115,7 @@ const StatsBlock = () => {
             <CircularProgressbar
               value={nearestLevel}
               maxValue={1}
-              text={`${nearestLevel * 100}%`}
+              text={`${(nearestLevel * 100).toFixed(0)}%`}
               styles={buildStyles({
                 pathColor: `#7e22ce`,
                 textColor: `white`,

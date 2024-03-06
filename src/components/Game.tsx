@@ -158,6 +158,7 @@ const Game = (params: any) => {
   useEffect(() => {
     const init = () => {
       resetStore()
+      handleScrollToTop()
       const shuffledQuestions = questions.map((question: any) => ({
         ...question,
         answears: shuffleArray(question.answears),
@@ -235,7 +236,7 @@ const Game = (params: any) => {
             src={questions[index]?.img}
             fill
             alt="background"
-            className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300 object-cover"
+            className="overflow-hidden rounded-2xl  group-hover:scale-125  duration-300 object-contain"
           />
         )}
       </div>

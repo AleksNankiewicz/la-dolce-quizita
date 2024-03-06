@@ -115,7 +115,7 @@ const Navbar = () => {
           pathname == '/'
             ? 'flex'
             : 'hidden'
-        }  w-2/5 md:w-[70%] md:justify-center  `}
+        }  w-3/5  md:w-[70%] md:justify-center  `}
       >
         <NavbarSearchbar />
       </div>
@@ -159,7 +159,7 @@ const Navbar = () => {
       {!isLoading ? (
         <Link
           href={isUserLogged ? `/profile/${slug}` : '/auth/login'}
-          className="block w-1/3 ml-6 "
+          className="block w-[25%] ml-6 "
         >
           <div className="flex flex-row-reverse justify-center items-center gap-3 ">
             {isUserLogged && <UserNavbar email={email} />}

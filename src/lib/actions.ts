@@ -212,11 +212,43 @@ export const updateAfterGame = async (
 ) => {
   try {
     connectToDb()
+
+    console.log('quiz slug', quizSlug)
     const user = await getUserByEmail(email)
     const levels = await getLevels()
-    user.points = user.points + points
-    user.gamePlayed = user.gamePlayed + 1
-    user.quizesPlayed.push(quizSlug)
+
+    let highestPointsQuiz = null
+
+    let distanceBetweenRecords = null
+    const quizzesWithSlug = user.quizesPlayed.filter(
+      (quiz: any) => quiz.slug === quizSlug
+    )
+    if (quizzesWithSlug.length > 0) {
+      highestPointsQuiz = quizzesWithSlug.reduce(
+        (prev: { points: number }, current: { points: number }) => {
+          return prev.points > current.points ? prev : current
+        }
+      )
+
+      if (highestPointsQuiz.points < points) {
+        user.points += points - highestPointsQuiz.points
+        distanceBetweenRecords = points - highestPointsQuiz.points
+
+        console.log('user points updated on old quiz')
+
+        console.log('points added', points - highestPointsQuiz.points)
+      } else {
+        console.log('same record or smaller')
+      }
+    } else {
+      user.points += points
+      ;('new quiz points')
+    }
+
+    console.log(highestPointsQuiz)
+
+    user.gamePlayed++
+    user.quizesPlayed.push({ slug: quizSlug, points: points })
     if (isAllCorrect) {
       user.gameWon = user.gameWon + 1
     }
@@ -235,8 +267,8 @@ export const updateAfterGame = async (
 
     // Zaktualizuj datę ostatniej gry
     user.lastGameDate = now
-
-    let newLevel = null
+    let newLevelData = null
+    let newLevel: null | string = null
     for (const level of levels) {
       if (user.points >= level.threshold) {
         newLevel = level.number
@@ -248,11 +280,8 @@ export const updateAfterGame = async (
     // Update user's level if a new level is found
     if (newLevel !== null && newLevel !== user.level) {
       user.level = newLevel
+      newLevelData = levels.find((level) => level.number === newLevel)
     }
-    console.log('userpoints type', typeof user.points)
-    console.log('user points', user.points)
-    console.log('level ', newLevel)
-    console.log('first level threshold', levels[0].threshold)
 
     await user.save()
     console.log('user updated')
@@ -283,6 +312,12 @@ export const updateAfterGame = async (
     }
 
     await quiz.save()
+
+    const responseObject = {
+      newLevelData,
+      distanceBetweenRecords,
+    }
+    return responseObject
 
     console.log('quiz updated')
   } catch (err: any) {

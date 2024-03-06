@@ -20,14 +20,24 @@ const UserNavbar = ({ email }: { email: string }) => {
   }, [email, refreshNavbar])
   return (
     <>
-      <div className="rounded-full w-10 h-10 relative">
+      <div className="rounded-full w-12 h-12 relative flex justify-center items-center">
         <Image
           src={user?.img ? user?.img : '/noavatar.png'}
           alt="profilepic"
           width={50}
           height={50}
-          className="rounded-full w-10 h-10"
+          className="rounded-full w-8 h-8"
         />
+
+        {user?.selectedProfileFrame && (
+          <Image
+            src={user.selectedProfileFrame}
+            alt="profilepic"
+            width={70}
+            height={70}
+            className=" absolute top-0 left-0 w-12 h-12"
+          />
+        )}
         <div className="absolute right-0 bottom-0 bg-white rounded-full w-4 h-4 text-xs text-center text-purple-700 font-bold border border-purple-700">
           <p className="">{user?.level ? user?.level : 1}</p>
         </div>

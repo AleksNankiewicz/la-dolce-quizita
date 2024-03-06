@@ -161,6 +161,19 @@ export const setBadge = async (email: string, badge: string) => {
     throw new Error(err)
   }
 }
+export const setProfileFrame = async (email: string, profileFrame: string) => {
+  noStore()
+  try {
+    connectToDb()
+    const user = await getUserByEmail(email)
+    user.selectedProfileFrame = profileFrame
+    await user.save()
+    return console.log('user profileFrame updated')
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
 
 export const deleteCategory = async (slug: string) => {
   console.log(slug)

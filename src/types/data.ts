@@ -79,5 +79,6 @@ export type UserProps = {
   lastGameDate?: Date
   permissions?: string[]
   selectedBadge?: string
+  selectedProfileFrame?: string
   level: number
 }

@@ -77,8 +77,6 @@ const Navbar = () => {
     // Do something here...
     // setActualQuestionsNumber(1)
 
-    console.log(isLoading)
-
     if (session.status === 'unauthenticated' && pathname.includes('/admin')) {
       router.push('/')
     }

@@ -69,7 +69,15 @@ const CustomizablesBlock = ({ user }: { user: UserProps }) =>
             selectedBadge={user.selectedBadge}
           />
         )}
-        {isProfileFramesModalOpen && <ProfileFramesModal />}
+        {isProfileFramesModalOpen && (
+          <ProfileFramesModal
+            userImg={user.img}
+            onClose={setIsProfileFramesModalOpen}
+            email={user.email}
+            points={user.points}
+            selectedProfileFrame={user.selectedProfileFrame}
+          />
+        )}
       </div>
     )
   }

@@ -39,7 +39,7 @@ const UserNavbar = ({ email }: { email: string }) => {
           width={20}
           height={20}
           alt={'UserBadge'}
-          className="w-6 h-6 block "
+          className="w-6 h-6 hidden md:block "
         />
       )}
     </>

@@ -57,7 +57,9 @@ const StatsBlock = () => {
 
     let missingPercentage = 0
     if (nearest) {
-      missingPercentage = user.points / nearest.threshold // Calculate achieved percentage
+      missingPercentage = parseFloat(
+        (user.points / nearest.threshold).toFixed(2)
+      ) // Calculate achieved percentage
     }
     console.log(missingPercentage)
 

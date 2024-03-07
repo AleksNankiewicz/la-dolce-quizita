@@ -81,4 +81,5 @@ export type UserProps = {
   selectedBadge?: string
   selectedProfileFrame?: string
   level: number
+  isVerified: boolean
 }

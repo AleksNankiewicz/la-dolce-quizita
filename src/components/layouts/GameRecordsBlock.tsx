@@ -4,22 +4,43 @@ import { Coins } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
-const GameRecordsBlock = async ({ record }: { record: recordProps }) => {
+const GameRecordsBlock = async ({
+  record,
+  quizMaxPoints,
+}: {
+  record: recordProps
+  quizMaxPoints: number
+}) => {
   const { email, score } = record
 
   const user = await getUserByEmail(email)
 
   return (
-    <div className="flex text-sm  justify-between items-center py-1">
+    <div className="flex text-sm  justify-between items-center py-2">
       <div className="flex items-center gap-2">
         {' '}
-        <Image
-          className="rounded-full w-10 h-10"
-          src={user?.img ? user.img : '/noavatar.png'}
-          alt="avatar"
-          width={25}
-          height={25}
-        />
+        <div className="rounded-full w-12 h-12 relative flex justify-center items-center">
+          <Image
+            src={user?.img ? user?.img : '/noavatar.png'}
+            alt="profilepic"
+            width={50}
+            height={50}
+            className="rounded-full w-8 h-8"
+          />
+
+          {user?.selectedProfileFrame && (
+            <Image
+              src={user.selectedProfileFrame}
+              alt="profilepic"
+              width={70}
+              height={70}
+              className=" absolute top-0 left-0 w-12 h-12"
+            />
+          )}
+          <div className="absolute right-0 bottom-0 bg-white rounded-full w-4 h-4 text-xs text-center text-purple-700 font-bold border border-purple-700">
+            <p className="">{user?.level ? user?.level : 1}</p>
+          </div>
+        </div>
         {user?.selectedBadge && (
           <Image
             sizes="100vw"
@@ -34,8 +55,17 @@ const GameRecordsBlock = async ({ record }: { record: recordProps }) => {
       </div>
 
       <div className="flex flex-col-reverse">
-        <p>{score}</p>
-        <Coins size={25} />
+        {quizMaxPoints == score ? (
+          <>
+            <p className="text-green-400">Max</p>
+            <Coins size={25} className="text-green-400" />
+          </>
+        ) : (
+          <>
+            <p>{score}</p>
+            <Coins size={25} />
+          </>
+        )}
       </div>
     </div>
   )

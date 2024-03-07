@@ -31,20 +31,19 @@ const BadgesModal = ({
     autoplay: false,
     autoplaySpeed: 2000,
     rtl: true,
+    initialSlide: slides.length - 1,
 
     beforeChange: (current: number, next: number) => setCurrentSlide(next),
   }
 
   const fetchLevels = async () => {
     const levels = await getLevels()
+
     setAllLevels(levels)
-    const updatedLevels = [...levels]
-    if (updatedLevels.length >= 2) {
-      const temp = updatedLevels[0]
-      updatedLevels[0] = updatedLevels[1]
-      updatedLevels[1] = temp
-    }
-    setSlides(updatedLevels)
+    levels.sort((a, b) => a.number - b.number)
+    const shiftedLevels = levels.slice(4).concat(levels.slice(0, 4)).reverse()
+
+    setSlides(shiftedLevels)
   }
 
   useEffect(() => {
@@ -96,14 +95,14 @@ const BadgesModal = ({
         {points >= Number(allLevels[currentSlide].threshold) ? (
           <Button onClick={() => handleBadgeChange()}>Zmień obramówkę</Button>
         ) : (
-          <p>
+          <Button disabled>
             Żeby odblokować tę obramówkę musisz zdobyć jeszcze
-            <span className="text-red-400">
+            <span className="text-red-400 mx-1">
               {' '}
               {Number(allLevels[currentSlide].threshold) - points}{' '}
             </span>
             punktów
-          </p>
+          </Button>
         )}
       </div>
       <X

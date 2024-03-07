@@ -99,22 +99,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   }))
 
   const [questions, setQuestions] = useState(questionsWithIds)
-  const quizDuration = {
-    time: 0,
-    minutes: 0,
-    seconds: 0,
-  }
-  let startQuizMaxPoints = 0
-  questions.forEach((question: questionsProps) => {
-    quizDuration.time += question.time
-
-    startQuizMaxPoints += question.points
-  })
-
-  const quizMaxPoints = startQuizMaxPoints
-
-  quizDuration.minutes = Math.floor(quizDuration.time / 60)
-  quizDuration.seconds = quizDuration.time - quizDuration.minutes * 60
 
   //refs
 
@@ -137,6 +121,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     categorySlug: quiz.categorySlug,
     questionsPercent: quiz.questionsPercent || 100,
   })
+
+  const quizPoints = sliceArrayByPercentage(
+    questions,
+    modalData.questionsPercent
+  ).reduce((accumulator, question) => accumulator + question.points, 0)
 
   const handleModal = (value: any) => {
     console.log(value)
@@ -448,7 +437,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             className="
       "
           >
-            {formatNumber(quizMaxPoints)}
+            {formatNumber(quizPoints)}
           </p>
         </div>
       </div>

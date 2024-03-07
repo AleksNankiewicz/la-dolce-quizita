@@ -33,7 +33,9 @@ const CustomizablesBlock = ({ user }: { user: UserProps }) =>
     }, [isBadgesModalOpen, isProfileFramesModalOpen])
 
     return (
-      <div className="text-white text-sm  p4 col-span-2 md:col-span-4 w-full text-center  rounded-xl  relative grid md:grid-cols-4 grid-cols-2 gap-3 ">
+      <div
+        className={`text-white text-sm  p4 col-span-2 md:col-span-4 w-full text-center  rounded-xl  relative grid md:grid-cols-4 grid-cols-2 gap-3 `}
+      >
         <div
           onClick={() => setIsBadgesModalOpen(true)}
           className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-slate-800 rounded-xl relative cursor-pointer"

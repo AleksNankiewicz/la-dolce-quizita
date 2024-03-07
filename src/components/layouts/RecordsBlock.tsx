@@ -12,22 +12,36 @@ const RecordsBlock = async () => {
   const noNewUsers = users.filter((user) => user.points)
 
   return (
-    <div className="text-white  bg-slate-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center p-4  ">
+    <div className="text-white  bg-slate-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center p-4 divide-y divide-gray-600  ">
       {noNewUsers.map((user: UserProps, i: number) => (
         <div
           key={i}
-          className="flex text-sm  justify-between items-center py-1"
+          className="flex text-sm  justify-between items-center py-2"
         >
           <div className="flex items-center gap-2">
             {' '}
-            <Image
-              sizes="100vw"
-              className="rounded-full w-10 h-10"
-              src={user.img ? user.img : '/noavatar.png'}
-              alt="avatar"
-              width={25}
-              height={25}
-            />
+            <div className="rounded-full w-12 h-12 relative flex justify-center items-center">
+              <Image
+                src={user?.img ? user?.img : '/noavatar.png'}
+                alt="profilepic"
+                width={50}
+                height={50}
+                className="rounded-full w-8 h-8"
+              />
+
+              {user?.selectedProfileFrame && (
+                <Image
+                  src={user.selectedProfileFrame}
+                  alt="profilepic"
+                  width={70}
+                  height={70}
+                  className=" absolute top-0 left-0 w-12 h-12"
+                />
+              )}
+              <div className="absolute right-0 bottom-0 bg-white rounded-full w-4 h-4 text-xs text-center text-purple-700 font-bold border border-purple-700">
+                <p className="">{user?.level ? user?.level : 1}</p>
+              </div>
+            </div>
             {user.selectedBadge && (
               <Image
                 sizes="100vw"

@@ -4,7 +4,8 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import { Button } from '../ui/button'
-import { X } from 'lucide-react'
+import { ArrowBigLeft, X } from 'lucide-react'
+import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
 
 const BadgesModal = ({
   selectedBadge,
@@ -20,7 +21,7 @@ const BadgesModal = ({
   const [allLevels, setAllLevels] = useState<LevelProps[]>([])
   const [currentSlide, setCurrentSlide] = useState<number>(0)
   const [slides, setSlides] = useState<LevelProps[]>([])
-  console.log(points)
+
   const settings = {
     dots: true,
     infinite: true,
@@ -29,20 +30,21 @@ const BadgesModal = ({
     autoplay: false,
     autoplaySpeed: 2000,
     rtl: true,
+    prevArrow: <ArrowBigLeft />,
+    // nextArrow: <NextArrow />,
+    initialSlide: slides.length - 1,
 
     beforeChange: (current: number, next: number) => setCurrentSlide(next),
   }
 
   const fetchLevels = async () => {
     const levels = await getLevels()
+
     setAllLevels(levels)
-    const updatedLevels = [...levels]
-    if (updatedLevels.length >= 2) {
-      const temp = updatedLevels[0]
-      updatedLevels[0] = updatedLevels[1]
-      updatedLevels[1] = temp
-    }
-    setSlides(updatedLevels)
+    levels.sort((a, b) => a.number - b.number)
+    const shiftedLevels = levels.slice(4).concat(levels.slice(0, 4)).reverse()
+
+    setSlides(shiftedLevels)
   }
 
   useEffect(() => {
@@ -52,8 +54,8 @@ const BadgesModal = ({
   const handleBadgeChange = async () => {
     const selectedBadge = allLevels[currentSlide].badge
 
-    console.log(allLevels[currentSlide])
-    console.log(currentSlide)
+    // console.log(allLevels[currentSlide])
+    // console.log(currentSlide)
 
     const updatedBadge = await setBadge(email, selectedBadge)
 
@@ -62,39 +64,37 @@ const BadgesModal = ({
 
   if (allLevels.length == 0) return
 
+  console.log(slides)
+
+  const correctSlidesOrderARR = slides.map((level: LevelProps, index) => (
+    <div
+      key={level.number || index}
+      className=" w-40 h-40 flex justify-center items-center relative"
+    >
+      <Image alt="badge" src={level.badge} fill className="object-contain" />
+    </div>
+  ))
   return (
-    <div className="fixed left-0 top-12 bg-slate-800 w-full h-screen flex flex-col items-center justify-evenly pb-36">
+    <div className="fixed left-0 md:left-1/2 md:-translate-x-1/2 top-12 bg-slate-800 w-full max-w-screen-xl h-screen flex flex-col items-center justify-evenly pb-36">
       <div className=" text-2xl  ">Wybierz swoją odznakę</div>
 
       <div className="w-full ">
-        <Slider {...settings}>
-          {slides.map((level: LevelProps) => (
-            <div
-              key={level.number}
-              className=" w-40 h-40 flex justify-center items-center relative"
-            >
-              <Image
-                alt="badge"
-                src={level.badge}
-                fill
-                className="object-contain"
-              />
-            </div>
-          ))}
-        </Slider>
+        <Slider {...settings}>{correctSlidesOrderARR}</Slider>
       </div>
       <div className="">
         {points >= Number(allLevels[currentSlide].threshold) ? (
-          <Button onClick={() => handleBadgeChange()}>Zmień odznakę</Button>
+          <Button onClick={() => handleBadgeChange()}>
+            Wybierz tą odznakę
+          </Button>
         ) : (
-          <p>
+          <Button disabled>
             Żeby odblokować tę odznakę musisz zdobyć jeszcze
-            <span className="text-red-400">
+            <span className="text-red-400 mx-1">
               {' '}
               {Number(allLevels[currentSlide].threshold) - points}{' '}
             </span>
             punktów
-          </p>
+          </Button>
         )}
       </div>
       <X

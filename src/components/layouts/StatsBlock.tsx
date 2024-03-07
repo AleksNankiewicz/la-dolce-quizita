@@ -111,7 +111,7 @@ const StatsBlock = () => {
       </div>
       <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-slate-800 rounded-xl relative">
         <div className="w-1/3 md:w-1/3 lg:w-1/3 h-1/2 absolute right-3 bottom-3 lg:bottom-1/2 lg:translate-y-1/2 sm:bottom-14 md:bottom-3 text-5xl">
-          {nearestLevel && (
+          {nearestLevel ? (
             <CircularProgressbar
               value={nearestLevel}
               maxValue={1}
@@ -122,6 +122,10 @@ const StatsBlock = () => {
                 trailColor: `white`,
               })}
             />
+          ) : (
+            <div className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-6 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0 text-3xl text-green-400">
+              Max
+            </div>
           )}
         </div>
         <div className="absolute left-[10%] top-1/4  ">

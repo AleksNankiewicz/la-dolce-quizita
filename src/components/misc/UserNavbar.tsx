@@ -7,11 +7,13 @@ import React from 'react'
 const UserNavbar = ({ email }: { email: string }) => {
   const [user, setUser] = React.useState<UserProps>()
   const refreshNavbar = useNavStore((state) => state.refresh)
+  const setRefreshNavbar = useNavStore((state) => state.setRefresh)
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
         const user = await getUserByEmail(email)
         setUser(user)
+        setRefreshNavbar(false)
       } catch (error) {
         console.error('Error fetching user:', error)
       }

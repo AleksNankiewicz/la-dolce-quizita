@@ -325,6 +325,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       records: quiz.records || [],
       questions: updatedEditableQuestionValues,
       ...modalData,
+      playCount: quiz.playCount || 0,
     }
     console.log(savedQuiz)
     try {

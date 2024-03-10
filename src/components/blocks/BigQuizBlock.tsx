@@ -29,13 +29,15 @@ const BigQuizBlock = ({
       <div className="w-full h-full md:flex gap-4">
         <div className="relative w-full h-full md:w-[400px] md:h-[300px] sm:h-[250px] flex flex-col gap-6">
           {typeof img === 'string' && img.trim() !== '' && (
-            <Image
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              src={img}
-              fill
-              alt="background"
-              className="overflow-hidden rounded-2xl opacity-40 group-hover:scale-125 md:group-hover:scale-100 duration-300 object-cover"
-            />
+            <div className="w-full h-2/3 relative md:h-full">
+              <Image
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                src={img}
+                fill
+                alt="background"
+                className="overflow-hidden rounded-2xl  group-hover:scale-125 md:group-hover:scale-100 duration-300 object-cover"
+              />
+            </div>
           )}
         </div>
 
@@ -52,9 +54,8 @@ const BigQuizBlock = ({
         </div>
 
         <p
-          className={`absolute md:hidden  max-w-full h-full top-1/2 left-1/2 -translate-x-[50%] -translate-y-[15%] text-4xl md:text-6xl text-white ${
-            title.length > 20 && 'top-1/3'
-          }`}
+          className={`md:hidden absolute h-[34%] w-full 
+         bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 text-white`}
         >
           {title}
         </p>

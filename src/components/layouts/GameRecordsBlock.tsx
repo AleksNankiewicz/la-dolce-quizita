@@ -55,7 +55,7 @@ const GameRecordsBlock = async ({
       </div>
 
       <div className="flex flex-col-reverse">
-        {quizMaxPoints == score ? (
+        {quizMaxPoints <= score ? (
           <>
             <p className="text-green-400">Max</p>
             <Coins size={25} className="text-green-400" />

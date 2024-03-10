@@ -94,7 +94,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`w-full min-h-12   text-white flex bg-purple-700 p-1 z-50 sticky left-0 top-0 ${
+      className={`w-full min-h-12   text-white flex bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-1 z-50 sticky left-0 top-0 ${
         isGameStarted ? 'justify-center' : 'justify-between'
       }  items-center rounded-b-xl`}
     >

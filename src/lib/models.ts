@@ -71,6 +71,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    badges: {
+      type: Array,
+    },
+    profileFrames: {
+      type: Array,
+    },
   },
   { timestamps: true }
 )
@@ -120,6 +126,9 @@ const quizSchema = new mongoose.Schema(
     playCount: {
       type: Number,
       default: 0,
+    },
+    reward: {
+      type: Object,
     },
   },
   { timestamps: true }
@@ -195,6 +204,27 @@ const levelSchema = new mongoose.Schema({
   },
 })
 
+const shopItemSchema = new mongoose.Schema({
+  title: {
+    type: String,
+  },
+  desc: {
+    type: String,
+  },
+  price: {
+    type: Number,
+  },
+  promotion: {
+    type: Number,
+  },
+  type: {
+    type: String,
+  },
+  img: {
+    type: String,
+  },
+})
+
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
 export const Quiz = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema)
 
@@ -208,3 +238,5 @@ export const Answear =
 
 export const Level =
   mongoose.models.Level || mongoose.model('Level', levelSchema)
+export const ShopItem =
+  mongoose.models.ShopItem || mongoose.model('ShopItem', shopItemSchema)

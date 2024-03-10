@@ -23,7 +23,7 @@ const QuizesPage = async () => {
           key={quiz._id || quiz.slug}
         />
       ))}
-      <AddQuizButton />
+      <AddQuizButton isWide={false} />
     </main>
   )
 }

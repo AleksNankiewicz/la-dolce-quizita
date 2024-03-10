@@ -2,24 +2,36 @@
 
 import { quizProps } from '@/types/data'
 import { connectToDb } from './connectToDb'
-import { Category, Level, Question, Quiz, User } from './models'
+import { Category, Level, Question, Quiz, ShopItem, User } from './models'
 
 import { unstable_noStore as noStore } from 'next/cache'
 import firebase from 'firebase/app'
 import 'firebase/storage'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import app from './firebase'
-// export const getQuizes2 = async (amount = Infinity) => {
-//   noStore()
-//   try {
-//     connectToDb()
-//     const quizes = await Quiz.find().sort({ updatedAt: -1 }).limit(amount)
-//     return quizes
-//   } catch (err: any) {
-//     console.log(err)
-//     throw new Error(err)
-//   }
-// }
+
+export const getPopularQuizes = async (amount = Infinity) => {
+  noStore()
+  try {
+    connectToDb()
+    const quizes = await Quiz.find().sort({ playCount: -1 }).limit(amount)
+    return quizes
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+export const getNewestQuizes = async (amount = Infinity) => {
+  noStore()
+  try {
+    connectToDb()
+    const quizes = await Quiz.find().sort({ createdAt: -1 }).limit(amount)
+    return quizes
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
 
 export const getQuizes = async (amount = Infinity) => {
   noStore()
@@ -121,6 +133,17 @@ export const setCategory = async (
     }
   } catch (err: any) {
     console.error(err)
+    throw new Error(err)
+  }
+}
+export const getShopItems = async () => {
+  noStore()
+  try {
+    connectToDb()
+    const shopItems = await ShopItem.find()
+    return shopItems
+  } catch (err: any) {
+    console.log(err)
     throw new Error(err)
   }
 }

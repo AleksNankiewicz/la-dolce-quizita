@@ -12,7 +12,7 @@ const RecordsBlock = async () => {
   const noNewUsers = users.filter((user) => user.points)
 
   return (
-    <div className="text-white  bg-slate-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center p-4 divide-y divide-gray-600  ">
+    <div className="text-white  bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center px-2 py-1 divide-y divide-gray-600  ">
       {noNewUsers.map((user: UserProps, i: number) => (
         <div
           key={i}

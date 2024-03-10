@@ -73,7 +73,7 @@ const StatsBlock = () => {
           Zaloguj się, aby zobaczyć statystyki
         </div>
       )}
-      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-slate-800 rounded-xl relative">
+      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
         <Award
           strokeWidth={1}
           className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0"
@@ -85,7 +85,7 @@ const StatsBlock = () => {
           <p className="sm:text-xl">Wygranych</p>
         </div>
       </div>
-      <div className="flex flex-col  justify-center items-center  border col-span-1  h-36 bg-slate-800 rounded-xl relative">
+      <div className="flex flex-col  justify-center items-center  border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
         <Gamepad2
           strokeWidth={1}
           className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0"
@@ -97,7 +97,7 @@ const StatsBlock = () => {
           <p className="sm:text-xl w-1/2">Rozegranych quizów</p>
         </div>
       </div>
-      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-slate-800 rounded-xl relative">
+      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
         <Coins
           strokeWidth={1}
           className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0"
@@ -109,7 +109,7 @@ const StatsBlock = () => {
           <p className="sm:text-xl ">Punktów</p>
         </div>
       </div>
-      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-slate-800 rounded-xl relative">
+      <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
         <div className="w-1/3 md:w-1/3 lg:w-1/3 h-1/2 absolute right-3 bottom-3 lg:bottom-1/2 lg:translate-y-1/2 sm:bottom-14 md:bottom-3 text-5xl">
           {nearestLevel ? (
             <CircularProgressbar

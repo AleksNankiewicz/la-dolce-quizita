@@ -18,38 +18,42 @@ const SmallQuizBlock = ({
   categorySlug: string
   author: string
 }) => {
-  console.log(slug)
   return (
     <div className="relative w-full h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center">
       <Link
         href={`/quizes/${slug}`}
-        className={`block text-2xl text-white p4 col-span-1 w-full h-full   text-center gap-2 rounded-xl relative group overflow-hidden ${
+        className={`block text-2xl text-white p4 col-span-1 w-full h-full   text-center gap-2 rounded-xl relative group overflow-hidden flex-col${
           !img && 'bg-slate-800'
         }`}
       >
-        {' '}
-        {img && (
-          <Image
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            src={img}
-            fill
-            alt={title}
-            className=" rounded-2xl opacity-30 group-hover:scale-125  duration-300 object-cover"
-          />
+        <div className="w-full h-2/3 relative">
+          {img && (
+            <Image
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              blurDataURL={img}
+              placeholder="blur"
+              src={img}
+              fill
+              alt={title}
+              className="   group-hover:scale-125  duration-300 object-cover"
+            />
+          )}
+        </div>
+        {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
+        {title && (
+          <p
+            className={`absolute h-[34%] w-full 
+         bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 text-base text-left`}
+          >
+            {title}
+          </p>
         )}
-        <p
-          className={`absolute  w-full h-full top-1/2 -translate-y-[15%]   text-white ${
-            title?.length > 28 && 'top-1/3'
-          } `}
-        >
-          {title}
-        </p>
       </Link>
-      <EditQuizButton
+      {/* <EditQuizButton
         slug={slug}
         categorySlug={categorySlug}
         quizAuthor={author}
-      />
+      /> */}
     </div>
   )
 }

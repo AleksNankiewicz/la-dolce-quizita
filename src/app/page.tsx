@@ -10,6 +10,8 @@ import StatsBlock from '@/components/layouts/StatsBlock'
 import { AddQuizButton } from '@/components/layouts/addQuizButton'
 import { Button } from '@/components/ui/button'
 import {
+  getNewestQuizes,
+  getPopularQuizes,
   getQuizes,
   getRandomSubCategories,
   getSubCategories,
@@ -22,11 +24,14 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import BigQuizBlock from '@/components/blocks/BigQuizBlock'
 import SmallCategoryBlock from '@/components/blocks/SmallCategoryBlock'
+import ShopAndProfileBlock from '@/components/blocks/ShopAndProfileBlock'
+import HomeSlider from '@/components/misc/HomeSlider'
+import HomeCategoriesSlider from '@/components/misc/HomeCategoriesSlider'
 
 export default async function Home() {
-  const quizes = await getQuizes(9)
-
-  const subCategories = await getRandomSubCategories(4)
+  const quizes = await getPopularQuizes(8)
+  const newestQuizes = await getNewestQuizes(8)
+  const subCategories = await getRandomSubCategories(8)
 
   return (
     <main className=" w-full p-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -41,31 +46,22 @@ export default async function Home() {
       />
       <HomeQuizSectionLabel title={'Wybrane Quizy'} />
 
-      {quizes.slice(1).map((quiz) => (
-        <SmallQuizBlock
-          slug={quiz.slug}
-          img={quiz.img}
-          title={quiz.title}
-          categorySlug={quiz.categorySlug}
-          author={quiz.author}
-          key={quiz._id}
-        />
-      ))}
-      <AddQuizButton />
+      <HomeSlider quizes={quizes} />
+      <AddQuizButton isWide={true} />
       <HomeSeeAll path="/quizes" label="Zobacz wszystkie" />
-      <HomeQuizSectionLabel title={'Kategorie'} />
-      {subCategories.map((category) => (
-        <SmallCategoryBlock
-          title={category.title}
-          img={category.img}
-          slug={category.slug}
-          key={category._id || category.slug}
-        />
-      ))}
-      <HomeSeeAll path="/mainCategories" label="Zobacz wszystkie" />
-
       <HomeQuizSectionLabel title="Statystyki" />
       <StatsBlock />
+      <HomeQuizSectionLabel title={'Najnowsze Quizy'} />
+
+      <HomeSlider quizes={newestQuizes} />
+
+      <HomeQuizSectionLabel title="Sklep i Profil" />
+      <ShopAndProfileBlock />
+
+      <HomeQuizSectionLabel title={'Kategorie'} />
+      <HomeCategoriesSlider categories={subCategories} />
+      <HomeSeeAll path="/mainCategories" label="Zobacz wszystkie" />
+
       <HomeQuizSectionLabel title="Najlepsi gracze" />
 
       <RecordsBlock />

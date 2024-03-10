@@ -24,6 +24,8 @@ export type quizProps = {
   categoryName: string
   records: recordProps[]
   questions: any[]
+  playCount: number
+  questionsPercent: number
 }
 
 export type recordProps = {
@@ -82,4 +84,20 @@ export type UserProps = {
   selectedProfileFrame?: string
   level: number
   isVerified: boolean
+  slug: string
+  quizesPlayed: QuizesPlayedProps[]
+}
+
+export type ShopItemProps = {
+  price: number
+  promotion: number
+  type: 'badge' | 'profileFrame'
+  img: string
+  desc: string
+  title: string
+}
+
+export type QuizesPlayedProps = {
+  slug: string
+  points: number
 }

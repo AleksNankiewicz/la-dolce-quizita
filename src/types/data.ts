@@ -11,6 +11,8 @@ export type questionsProps = {
   answears: answearProps[]
   time: number
   img: string
+  type: 'multiple-choice' | 'open-ended' | 'sortable'
+  shuffledAnswears?: answearProps[]
 }
 
 export type quizProps = {

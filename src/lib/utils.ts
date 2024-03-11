@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function shuffleArray(array: []) {
+export function shuffleArray(array: any[]) {
   let currentIndex = array.length,
     randomIndex
 
@@ -179,4 +179,17 @@ export const divideLastSyllableInSentence = (sentence: string): string => {
     return word
   })
   return modifiedWords.join(' ')
+}
+
+export const handleScrollToBottom = () => {
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: 'smooth',
+  })
+}
+export const handleScrollToTop = () => {
+  window.scrollTo({
+    top: 0, // Scroll to the top of the document
+    behavior: 'smooth',
+  })
 }

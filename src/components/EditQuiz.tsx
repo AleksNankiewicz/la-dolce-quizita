@@ -4,13 +4,18 @@ import Image from 'next/image'
 import {
   Award,
   CheckCircle2,
+  ClipboardPenLine,
   Coins,
   CoinsIcon,
+  CopyCheck,
+  FileQuestion,
   Gamepad2,
+  ListCollapse,
   Pen,
   Plus,
   Settings,
   ShieldQuestion,
+  Trash2,
   X,
   XCircle,
 } from 'lucide-react'
@@ -32,6 +37,7 @@ import { v4 as uuidv4 } from 'uuid'
 import {
   formatNumber,
   formatTime,
+  handleScrollToBottom,
   removeSpaces,
   sliceArrayByPercentage,
 } from '@/lib/utils'
@@ -40,11 +46,10 @@ import toast, { useToaster } from 'react-hot-toast'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import EditableModal from './editables/EditableModal'
-import {
-  startedLevels,
-  startedModes,
-  startedQuestionsAmount,
-} from '@/lib/starters'
+
+import EditableSortableQuestion from './editables/EditableSortableQuestion'
+
+import { motion } from 'framer-motion'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   //auth
@@ -110,8 +115,10 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
 
-  //modal
+  //modals
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
 
   // console.log(fetchedUser?.permissions)
   const [modalData, setModalData] = useState({
@@ -143,8 +150,8 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     }
   }
 
-  const addNewQuestion = () => {
-    const newQuestion = {
+  const addNewSortableQuestion = () => {
+    const newQuestion: questionsProps = {
       id: uuidv4(),
       title: 'Pytanie',
       correctAnswear: false,
@@ -152,6 +159,26 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       answears: [],
       time: 20,
       img: '',
+      type: 'sortable',
+    }
+
+    const newQuestionRef = React.createRef<HTMLDivElement>()
+
+    // Update refs array with the new ref
+    setEditableQuestionsRef([...editableQuestionsRef, newQuestionRef])
+    setQuestions([...questions, newQuestion])
+  }
+
+  const addNewQuestion = () => {
+    const newQuestion: questionsProps = {
+      id: uuidv4(),
+      title: 'Pytanie',
+      correctAnswear: false,
+      points: 20,
+      answears: [],
+      time: 20,
+      img: '',
+      type: 'multiple-choice',
     }
 
     const newQuestionRef = React.createRef<HTMLDivElement>()
@@ -239,6 +266,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       img: '' | File
       answears: { title: any; isCorrect: any }[]
       id: string
+      type: ''
     }[] = []
 
     const formData = new FormData()
@@ -290,6 +318,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
             points: points,
             answears: answers,
             img: '',
+            type: questions[index].type,
           })
         }
       }
@@ -454,23 +483,98 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         </p>
       </div>
 
-      {questions.map((question: any, index: number) => (
-        <EditableQuestion
-          question={question}
-          refId={index}
-          index={question.id || removeSpaces(question.title)}
-          reference={editableQuestionsRef}
-          key={question.id || removeSpaces(question.title)}
-          onDelete={deleteQuestion}
-          onInput={updateQuizOnInput}
-        />
+      {questions.map((question: questionsProps, index: number) => (
+        <React.Fragment key={question.id || removeSpaces(question.title)}>
+          {question.type === 'multiple-choice' && (
+            <EditableQuestion
+              question={question}
+              refId={index}
+              index={question.id || removeSpaces(question.title)}
+              reference={editableQuestionsRef}
+              key={question.id || removeSpaces(question.title)}
+              onDelete={deleteQuestion}
+              onInput={updateQuizOnInput}
+            />
+          )}
+          {question.type === 'sortable' && (
+            <EditableSortableQuestion
+              question={question}
+              refId={index}
+              index={question.id || removeSpaces(question.title)}
+              reference={editableQuestionsRef}
+              key={question.id || removeSpaces(question.title)}
+              onDelete={deleteQuestion}
+              onInput={updateQuizOnInput}
+            />
+          )}
+        </React.Fragment>
       ))}
-      <Button
-        className="w-full bg-slate-950 col-span-2 hover:bg-slate-800 border py-8"
-        onClick={() => addNewQuestion()}
+
+      <motion.div
+        initial={{
+          height: isQuestionModalOpen ? 0 : 100,
+          scale: isQuestionModalOpen ? 0 : 1,
+          opacity: isQuestionModalOpen ? 0 : 1,
+        }}
+        animate={{
+          height: isQuestionModalOpen ? 100 : 0,
+          scale: isQuestionModalOpen ? 1 : 0,
+          opacity: isQuestionModalOpen ? 1 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+        exit={{ height: 60, opacity: 0 }}
+        className="w-full col-span-2 flex flex-col   gap-1 justify-center items-center my-2"
       >
-        <Plus />
-      </Button>
+        <Button
+          variant={'secondary'}
+          className="w-full bg-white text-black text-2xl flex justify-start gap-2"
+          onClick={() => {
+            addNewQuestion()
+            setIsQuestionModalOpen(false)
+            handleScrollToBottom()
+          }}
+        >
+          <CopyCheck />
+          Wielokrotnego Wyboru
+        </Button>
+        <Button
+          variant={'secondary'}
+          className="w-full bg-white text-black text-2xl gap-2 flex justify-start"
+        >
+          <ClipboardPenLine />
+          Otwarte
+        </Button>
+        <Button
+          variant={'secondary'}
+          className="w-full bg-white text-black gap-2 text-2xl flex justify-start"
+          onClick={() => {
+            addNewSortableQuestion()
+            setIsQuestionModalOpen(false)
+            handleScrollToBottom()
+          }}
+        >
+          <ListCollapse />
+          Sortowalne
+        </Button>
+      </motion.div>
+
+      {!isQuestionModalOpen ? (
+        <Button
+          className="w-full bg-slate-950 col-span-2 hover:bg-slate-800 border py-8 relative"
+          onClick={() => setIsQuestionModalOpen(true)}
+        >
+          <FileQuestion />
+          <Plus className="absolute left-1/2 top-1/2 translate-x-1/4" />
+        </Button>
+      ) : (
+        <Button
+          className="w-full bg-slate-950 col-span-2 hover:bg-slate-800 border py-8"
+          onClick={() => setIsQuestionModalOpen(false)}
+        >
+          <X />
+        </Button>
+      )}
+
       <Button
         className="w-full bg-red-500 col-span-2 hover:bg-red-400 text-2xl py-8"
         onClick={() => saveQuiz()}
@@ -478,7 +582,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         Zapisz
       </Button>
       <Button
-        className="w-full bg-slate-800 col-span-2 hover:bg-slate-700 text-red-500"
+        className="w-full bg-slate-800 col-span-2 hover:bg-slate-700 text-red-500 "
         onClick={() =>
           toast(
             (t) => (
@@ -509,6 +613,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
           )
         }
       >
+        <Trash2 size={15} />
         Usuń Quiz
       </Button>
       {isModalOpen && (

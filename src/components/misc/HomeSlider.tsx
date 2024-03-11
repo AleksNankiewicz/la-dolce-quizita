@@ -21,37 +21,13 @@ import SliderQuiz from './SliderQuiz'
 import Loading from '@/app/loading'
 import { ThreeDots } from 'react-loader-spinner'
 
-const MarqueeWithLoading = ({
-  children,
-  loading,
-}: {
-  children: React.ReactNode
-  loading: boolean
-}) => {
-  return loading ? (
-    <div className="relative w-fu   mx-2 h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center ">
-      <ThreeDots
-        visible={true}
-        height="40"
-        width="40"
-        color="white"
-        radius="9"
-        ariaLabel="three-dots-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
-    </div>
-  ) : (
-    <Marquee pauseOnHover pauseOnClick>
-      {children}
-    </Marquee>
-  )
-}
+import { useKeenSlider } from 'keen-slider/react'
+import 'keen-slider/keen-slider.min.css'
 
 const HomeSlider = ({ quizes }: { quizes: quizProps[] }) => {
   const session = useSession()
   const [email, setEmail] = useState<string | undefined>()
-  const [loading, setLoading] = useState(true)
+
   const fetchUser = async (email: string) => {
     const user: UserProps = await getUserByEmail(email)
     setEmail(user.email)
@@ -65,15 +41,69 @@ const HomeSlider = ({ quizes }: { quizes: quizProps[] }) => {
     setLoading(false)
   }, [session])
 
+  const animation = { duration: 20000, easing: (t: number) => t }
+  const [loading, setLoading] = useState(true)
+  const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
+    loop: true,
+    drag: true,
+    mode: 'free',
+    renderMode: 'performance',
+
+    breakpoints: {
+      '(min-width: 768px)': {
+        slides: {
+          perView: 4,
+          spacing: 13,
+        },
+      },
+    },
+    slides: {
+      perView: 2,
+      spacing: 13,
+    },
+
+    created(s) {
+      s.moveToIdx(5, true, animation)
+    },
+    updated(s) {
+      s.moveToIdx(s.track.details.abs + 5, true, animation)
+    },
+    animationEnded(s) {
+      s.moveToIdx(s.track.details.abs + 5, true, animation)
+    },
+  })
+
+  useEffect(() => {
+    setLoading(false)
+  }, [loading])
+
+  if (loading) {
+    return (
+      <div className="relative w-full mx-2 h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center md:col-span-4 col-span-2">
+        <ThreeDots
+          visible={true}
+          height="40"
+          width="40"
+          color="white"
+          radius="9"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className="w-full col-span-2 md:col-span-4 relative ">
-      <div className="absolute w-16 -left-2 top-0 h-full  bg-gradient-to-r from-slate-950 to-black/0  z-20"></div>
-      <div className="absolute w-20 -right-2 top-0 h-full  bg-gradient-to-l from-slate-950 to-black/0  z-20"></div>
-      <MarqueeWithLoading loading={loading}>
+    <div className="w-full col-span-2 md:col-span-4">
+      <div ref={sliderRef} className="keen-slider ">
+        <div className="absolute w-16 -left-2 top-0 h-full  bg-gradient-to-r from-slate-950 to-black/0  z-20"></div>
+        <div className="absolute w-20 -right-2 top-0 h-full  bg-gradient-to-l from-slate-950 to-black/0  z-20"></div>
+
         {quizes.map((quiz: quizProps) => (
           <SliderQuiz quiz={quiz} email={email} key={quiz.slug} />
         ))}
-      </MarqueeWithLoading>
+      </div>
     </div>
   )
 }

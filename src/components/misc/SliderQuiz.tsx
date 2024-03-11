@@ -1,12 +1,12 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import EditQuizButton from '../layouts/EditQuizButton'
+
 import Link from 'next/link'
 import { CheckCircle, CheckCircle2, UserRound } from 'lucide-react'
 import { formatNumber, sliceArrayByPercentage } from '@/lib/utils'
 import { QuizesPlayedProps, questionsProps, quizProps } from '@/types/data'
-
+import 'keen-slider/keen-slider.min.css'
 const SliderQuiz = ({
   quiz,
   email,
@@ -34,7 +34,7 @@ const SliderQuiz = ({
   }, [userScore, email])
 
   return (
-    <div className="relative w-[200px] md:w-[250px]  mx-2 h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center">
+    <div className="keen-slider__slide  relative  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px] rounded-xl flex">
       <Link
         href={`/quizes/${quiz.slug}`}
         className={`block text-2xl text-white p4 col-span-1 w-full h-full   text-center gap-2 rounded-xl relative group overflow-hidden flex-col${
@@ -74,12 +74,19 @@ const SliderQuiz = ({
         </div>
 
         {quiz.title && (
-          <p
+          <div
             className={`absolute h-[34%] w-full 
             bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 text-base text-left`}
           >
-            {quiz.title}
-          </p>
+            <p className="hidden md:block">{quiz.title}</p>
+            <p
+              className={`md:hidden block ${
+                quiz.title.length > 20 && 'text-xs'
+              }`}
+            >
+              {quiz.title}
+            </p>
+          </div>
         )}
       </Link>
       {/* <EditQuizButton

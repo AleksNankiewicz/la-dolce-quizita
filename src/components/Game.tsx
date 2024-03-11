@@ -11,8 +11,10 @@ import {
 } from '@/lib/utils'
 import GameSummary from './GameSummary'
 import { useSession } from 'next-auth/react'
-import { questionsProps, sessionUserProps } from '@/types/data'
+import { answearProps, questionsProps, sessionUserProps } from '@/types/data'
 import { resetStore } from '../lib/store'
+import MultipleChoice from './game/MultipleChoice'
+import Sortable from './game/Sortable'
 const startButtonColors = [
   'bg-orange-600',
   'bg-blue-600',
@@ -27,10 +29,8 @@ const Game = (params: any) => {
   //primary
   const quiz = params.data
 
-  const [questions, setQuestions] = useState(quiz.questions)
+  const [questions, setQuestions] = useState<questionsProps[]>(quiz.questions)
   const [index, setIndex] = useState<number>(0)
-
-  const initialQuestionsNumber = questions.length
 
   //user
 
@@ -67,6 +67,9 @@ const Game = (params: any) => {
   const [isEndGame, setIsEndGame] = useState(false)
 
   const [clickedButton, setClickedButton] = useState<any>()
+  const [shuffledSortableAnswears, setShuffledSortableAnswears] = useState<
+    answearProps[]
+  >([])
 
   //refs
 
@@ -76,6 +79,21 @@ const Game = (params: any) => {
   const nextButtonRef = useRef<HTMLButtonElement>(null)
 
   //functions
+
+  const checkSortableAnswear = (sortedAnswers: answearProps[]) => {
+    if (!isGameRunning) return
+    resetQuestionTime()
+    clearInterval(intervalId.current)
+    clearInterval(timerIntervalId.current)
+
+    console.log('orginal', questions[index].answears)
+    console.log(questions[index].answears)
+    const isOrderSame = questions[index].answears.every((answer, index) => {
+      return answer.title === sortedAnswers[index].title
+    })
+
+    console.log('Is order same:', isOrderSame)
+  }
 
   const checkAnswear = () => {
     if (!isGameRunning) return
@@ -149,7 +167,7 @@ const Game = (params: any) => {
 
   useEffect(() => {
     const isSmallScreen = window.innerWidth < 768 // Define the threshold for small screens
-    console.log(window.innerWidth)
+
     if (isSmallScreen && nextButtonRef.current) {
       nextButtonRef.current.scrollIntoView({ behavior: 'smooth' })
     }
@@ -159,10 +177,29 @@ const Game = (params: any) => {
     const init = () => {
       resetStore()
       handleScrollToTop()
-      const shuffledQuestions = questions.map((question: any) => ({
-        ...question,
-        answears: shuffleArray(question.answears),
-      }))
+      const shuffledQuestions = questions.map((question: questionsProps) => {
+        if (question.type == 'multiple-choice' || '') {
+          return {
+            ...question,
+            answears: shuffleArray(question.answears),
+          }
+        }
+
+        if (question.type == 'sortable') {
+          const originalAnswears = question.answears.slice()
+
+          const shuffledAnswears = shuffleArray(question.answears)
+          setShuffledSortableAnswears(shuffledAnswears)
+          console.log(originalAnswears)
+          return {
+            ...question,
+            orderedAnswears: originalAnswears,
+            shuffledAnswears: shuffledAnswears,
+          }
+        }
+
+        if (question.type == 'open-ended') return
+      })
 
       setQuestions(
         sliceArrayByPercentage(
@@ -201,18 +238,11 @@ const Game = (params: any) => {
     }
     if (index == questions.length) return endGame()
 
-    // intervalId.current = setInterval(() => {
-    //   nextQuestion()
-    // }, questions[index].time * 1000)
-
-    timerIntervalId.current = requestAnimationFrame(animate)
-    // timerIntervalId.current = setInterval(() => {
-    //   decrementActualQuestionTime((1 / (questions[index].time * 10)) * 4)
-    // }, 1)
+    // włacz tym gre  timerIntervalId.current = requestAnimationFrame(animate)
 
     return () => {
       clearInterval(intervalId.current)
-      //   clearInterval(timerIntervalId.current)
+
       cancelAnimationFrame(timerIntervalId.current)
     }
   }, [
@@ -223,6 +253,15 @@ const Game = (params: any) => {
     isAnimate,
     index,
   ])
+
+  useEffect(() => {
+    if (questions[index].shuffledAnswears !== undefined) {
+      // console.log(questions[index].orderedAnswears)
+      setShuffledSortableAnswears(
+        questions[index].shuffledAnswears as answearProps[]
+      )
+    }
+  }, [questions])
 
   return (
     <main
@@ -248,48 +287,35 @@ const Game = (params: any) => {
         <p>{questions[index].title}</p>
       </div>
 
-      {questions[index].answears.map((answear: any, i: number) => (
-        <motion.div
-          onClick={() => {
-            setIsAnimate(true)
-            setClickedButton(answear)
-          }}
-          key={answear.id || answear.title}
-          className={`text-xl md:text-2xl text-white  col-span-1 w-full  min-h-[10vh] ${buttonColors[i]} rounded-2xl flex justify-center items-center text-center cursor-pointer text-wrap `}
-          animate={
-            isAnimate === true && {
-              border: ['3px solid white', '3px solid black', '3px solid white'],
-            }
-          }
-          transition={{ repeat: 3, duration: 1 }}
-          onAnimationComplete={() => {
-            checkAnswear()
-          }}
-        >
-          <p className="w-full h-full p-4 flex justify-center items-center ">
-            {answear.title}
-          </p>
-        </motion.div>
-      ))}
+      {questions[index].type == 'multiple-choice' || '' ? (
+        <MultipleChoice
+          answears={questions[index]?.answears || []}
+          setIsAnimate={setIsAnimate}
+          setClickedButton={setClickedButton}
+          isAnimate={isAnimate}
+          checkAnswear={checkAnswear}
+          isCorrectAnswear={isCorrectAnswear}
+          isGameRunning={isGameRunning}
+          nextButtonRef={nextButtonRef}
+          nextQuestion={nextQuestion}
+          buttonColors={buttonColors}
+        />
+      ) : null}
 
-      {isCorrectAnswear === true && (
-        <motion.div
-          className="w-5 h-5 bg-green-400 rounded-full absolute lg:hidden"
-          initial={{ y: '60vh', x: '10vw' }}
-          animate={{ y: '-5vw', x: ['40vw', '78vw'], opacity: [1, 1, 1, 0] }}
-          transition={{ duration: 0.75, ease: 'easeInOut' }}
-        ></motion.div>
-      )}
-
-      {!isGameRunning && (
-        <Button
-          ref={nextButtonRef}
-          onClick={nextQuestion}
-          className="col-span-2 py-10 bg-purple-600 hover:bg-purple-500 text-3xl"
-        >
-          Dalej
-        </Button>
-      )}
+      {questions[index].type == 'sortable' ? (
+        <Sortable
+          answears={shuffledSortableAnswears || []}
+          setIsAnimate={setIsAnimate}
+          setClickedButton={setClickedButton}
+          isAnimate={isAnimate}
+          checkSortableAnswear={checkSortableAnswear}
+          isCorrectAnswear={isCorrectAnswear}
+          isGameRunning={isGameRunning}
+          nextButtonRef={nextButtonRef}
+          nextQuestion={nextQuestion}
+          buttonColors={buttonColors}
+        />
+      ) : null}
 
       {isEndGame && <GameSummary questions={questions} quizSlug={quiz.slug} />}
     </main>

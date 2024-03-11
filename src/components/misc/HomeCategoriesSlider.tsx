@@ -1,101 +1,109 @@
 'use client'
 import { categoryProps, quizProps } from '@/types/data'
 import React, { useEffect, useState } from 'react'
-import Slider from 'react-slick'
-import SmallQuizBlock from '../blocks/SmallQuizBlock'
-import SmallCategoryBlock from '../blocks/SmallCategoryBlock'
-import Marquee from 'react-fast-marquee'
+
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { useKeenSlider } from 'keen-slider/react'
+import 'keen-slider/keen-slider.min.css'
+import { ThreeDots } from 'react-loader-spinner'
 const HomeCategoriesSlider = ({
   categories,
 }: {
   categories: categoryProps[]
 }) => {
-  const [preloadedImages, setPreloadedImages] = useState<string[]>([])
+  const animation = { duration: 20000, easing: (t: number) => t }
+  const [loading, setLoading] = useState(true)
+  const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
+    loop: true,
+    drag: true,
+    mode: 'free',
+    renderMode: 'performance',
+    breakpoints: {
+      '(min-width: 768px)': {
+        slides: {
+          perView: 4,
+          spacing: 13,
+        },
+      },
+    },
+    slides: {
+      perView: 2,
+      spacing: 13,
+    },
+
+    created(s) {
+      s.moveToIdx(5, true, animation)
+    },
+    updated(s) {
+      s.moveToIdx(s.track.details.abs + 5, true, animation)
+    },
+    animationEnded(s) {
+      s.moveToIdx(s.track.details.abs + 5, true, animation)
+    },
+  })
 
   useEffect(() => {
-    // Preload images
-    const imagesToPreload = categories.map((category: categoryProps) => {
-      return typeof category.img === 'string' ? category.img : ''
-    })
+    setLoading(false)
+  }, [loading])
 
-    const preloaded = imagesToPreload.filter(Boolean) as string[]
-
-    setPreloadedImages(preloaded)
-  }, [categories])
-  const settings = {
-    dots: false,
-    // infinite: true,
-    slidesToShow: 2,
-
-    autoplay: true,
-    speed: 7500,
-    autoplaySpeed: 1,
-    cssEase: 'linear',
-    // pauseOnHover: true,
-    arrows: false,
-    responsive: [
-      {
-        breakpoint: 768, // Adjust this breakpoint as needed
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 3000, // Adjust this breakpoint as needed
-        settings: {
-          slidesToShow: 4,
-        },
-      },
-    ],
+  if (loading) {
+    return (
+      <div className="relative w-full mx-2 h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center md:col-span-4 col-span-2">
+        <ThreeDots
+          visible={true}
+          height="40"
+          width="40"
+          color="white"
+          radius="9"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    )
   }
-  return (
-    <div className="w-full col-span-2 md:col-span-4 relative ">
-      <div className="absolute w-16 -left-2 top-0 h-full  bg-gradient-to-r from-slate-950 to-black/0  z-20"></div>
-      <div className="absolute w-20 -right-2 top-0 h-full  bg-gradient-to-l from-slate-950 to-black/0  z-20"></div>
 
-      <Marquee
-        pauseOnHover
-        pauseOnClick
-        // gradient
-        // gradientColor="#020617"
-      >
-        {categories.map((quiz: categoryProps) => (
-          <Link
-            key={quiz.title}
-            href={`/mainCategories/${quiz.slug}`}
-            className={`block text-2xl text-white mx-2 col-span-1 w-[200px] md:w-[250px]  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px]  text-center gap-2 rounded-xl relative group overflow-hidden flex-col ${
-              !quiz.img && 'bg-slate-800'
-            }`}
+  return (
+    <div className="w-full col-span-2 md:col-span-4">
+      <div ref={sliderRef} className="keen-slider ">
+        <div className="absolute w-16 -left-2 top-0 h-full  bg-gradient-to-r from-slate-950 to-black/0  z-20"></div>
+        <div className="absolute w-20 -right-2 top-0 h-full  bg-gradient-to-l from-slate-950 to-black/0  z-20"></div>
+
+        {categories.map((quiz: categoryProps, index: number) => (
+          <div
+            key={index}
+            className="keen-slider__slide  relative  h-[200px] sm:h-[240px] md:h-[200px] lg:h-[280px] rounded-xl flex"
           >
-            {' '}
-            <div className="w-full h-2/3 relative">
-              {quiz.img && (
-                <Image
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  blurDataURL={quiz.img}
-                  placeholder="blur"
-                  src={quiz.img}
-                  fill
-                  alt={quiz.title}
-                  className="  group-hover:scale-125  duration-300 object-cover"
-                />
+            <Link
+              href={`/mainCategories/${quiz.slug}`}
+              className="w-full h-full"
+            >
+              <div className="w-full h-2/3 relative">
+                {quiz.img && (
+                  <Image
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    blurDataURL={quiz.img}
+                    placeholder="blur"
+                    src={quiz.img}
+                    fill
+                    alt={quiz.title}
+                    className="  group-hover:scale-125  duration-300 object-cover"
+                  />
+                )}
+              </div>
+              {quiz.title && (
+                <p
+                  className={`absolute h-[34%] w-full
+           bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 `}
+                >
+                  {quiz.title}
+                </p>
               )}
-            </div>
-            {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
-            {quiz.title && (
-              <p
-                className={`absolute h-[34%] w-full 
-       bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 `}
-              >
-                {quiz.title}
-              </p>
-            )}
-          </Link>
+            </Link>
+          </div>
         ))}
-      </Marquee>
+      </div>
     </div>
   )
 }

@@ -104,7 +104,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   }))
 
   const [questions, setQuestions] = useState(questionsWithIds)
-
   //refs
 
   const editableTitle = React.useRef<HTMLHeadingElement>(null)
@@ -115,6 +114,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
 
+  console.log(editableQuestionsRef)
   //modals
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -485,7 +485,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
 
       {questions.map((question: questionsProps, index: number) => (
         <React.Fragment key={question.id || removeSpaces(question.title)}>
-          {question.type === 'multiple-choice' && (
+          {question.type === 'multiple-choice' || !question.type ? (
             <EditableQuestion
               question={question}
               refId={index}
@@ -495,7 +495,7 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
               onDelete={deleteQuestion}
               onInput={updateQuizOnInput}
             />
-          )}
+          ) : null}
           {question.type === 'sortable' && (
             <EditableSortableQuestion
               question={question}

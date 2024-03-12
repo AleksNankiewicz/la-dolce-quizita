@@ -183,25 +183,30 @@ const GameSummary = ({
 
           <div className=" flex flex-wrap gap-3 justify-center">
             {question.answears.map((answear) => (
-              <div
-                key={answear.id || answear.title}
-                className={`w-1/3 min-w-28 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8 ${
-                  !answear.isCorrect ? 'border-red-600' : 'border-green-400'
-                } `}
-              >
-                {answear.title}
-              </div>
+              <>
+                {question.type == 'multiple-choice' || !question.type ? (
+                  <div
+                    key={answear.id || answear.title}
+                    className={`w-1/3 min-w-28 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8 ${
+                      !answear.isCorrect ? 'border-red-600' : 'border-green-400'
+                    } `}
+                  >
+                    {answear.title}
+                  </div>
+                ) : null}
+                {question.type == 'sortable' ? (
+                  <div
+                    key={answear.id || answear.title}
+                    className={`w-full min-w-28 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8  `}
+                  >
+                    {answear.title}
+                  </div>
+                ) : null}
+              </>
             ))}
           </div>
         </div>
       ))}
-      {/* 
-      <Link
-        href={'/'}
-        className="block absolute left-5 md:left-9 top-[70px]  p-2 rounded-full border-[3px]"
-      >
-        <ArrowLeft strokeWidth={3} size={20} />
-      </Link> */}
 
       <div className="col-span-2 w-full">
         <HomeSeeAll path="/" label="Wróć do menu" />

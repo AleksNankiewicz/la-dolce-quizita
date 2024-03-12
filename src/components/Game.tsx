@@ -80,17 +80,21 @@ const Game = (params: any) => {
 
   //functions
 
-  const checkSortableAnswear = (sortedAnswers: answearProps[]) => {
+  const checkSortableAnswear = () => {
     if (!isGameRunning) return
     resetQuestionTime()
     clearInterval(intervalId.current)
     clearInterval(timerIntervalId.current)
-
-    console.log('orginal', questions[index].answears)
-    console.log(sortedAnswers)
+    setIsGameRunning(false)
     const isOrderSame = questions[index].answears.every((answer, index) => {
-      return answer.title === sortedAnswers[index].title
+      return answer.title === shuffledSortableAnswears[index].title
     })
+
+    if (isOrderSame) {
+      setGamePoints(gamePoints + questions[index].points)
+      setIsCorrectAnswear(true)
+      questions[index].correctAnswear = true
+    }
 
     //To do
     console.log('Is order same:', isOrderSame)
@@ -234,7 +238,7 @@ const Game = (params: any) => {
     if (index == questions.length) return endGame()
 
     //Tym wyłaczasz czas
-    timerIntervalId.current = requestAnimationFrame(animate)
+    //timerIntervalId.current = requestAnimationFrame(animate)
 
     return () => {
       clearInterval(intervalId.current)
@@ -252,11 +256,12 @@ const Game = (params: any) => {
 
   useEffect(() => {
     if (questions[index].type == 'sortable') {
-      console.log(questions[index].answears)
       const copyArr = [...questions[index].answears]
       setShuffledSortableAnswears(shuffleArray(copyArr) as answearProps[])
     }
-  }, [questions])
+  }, [questions, index])
+
+  console.log(questions[index].answears)
 
   return (
     <main
@@ -300,6 +305,7 @@ const Game = (params: any) => {
       {questions[index].type == 'sortable' ? (
         <Sortable
           answears={shuffledSortableAnswears || []}
+          setAnswears={setShuffledSortableAnswears}
           setIsAnimate={setIsAnimate}
           setClickedButton={setClickedButton}
           isAnimate={isAnimate}

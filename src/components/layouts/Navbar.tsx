@@ -191,7 +191,7 @@ const Navbar = () => {
               </div>
 
               {isGameStarted && (
-                <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto">
+                <div className="text-green-400 font-bold h-6 flex justify-center items-center mx-auto w-8 md:w-auto">
                   <AnimatedNumber value={gamePoints} />
 
                   <span className="text-white ml-1">

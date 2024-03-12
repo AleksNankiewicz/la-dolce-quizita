@@ -10,6 +10,7 @@ import { disableTextInInput } from '@/lib/utils'
 import { Reorder } from 'framer-motion'
 import EditableSortableAnswear from './EditableSortableAnswear'
 import { motion } from 'framer-motion'
+import { v4 as uuidv4 } from 'uuid'
 const EditableSortableQuestion = ({
   question,
   index,
@@ -44,7 +45,7 @@ const EditableSortableQuestion = ({
     const newAnswear = {
       title: 'Odpowiedź',
       isCorrect: false,
-      id: Math.floor(Math.random() * 9999) + '',
+      id: uuidv4(),
     }
     setAnswears([...answears, newAnswear])
   }

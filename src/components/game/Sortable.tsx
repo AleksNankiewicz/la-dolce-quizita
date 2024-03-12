@@ -10,10 +10,11 @@ interface Answear {
 
 interface SortableProps {
   answears: Answear[]
+  setAnswears: ([]) => void
   setIsAnimate: React.Dispatch<React.SetStateAction<boolean>>
   setClickedButton: React.Dispatch<React.SetStateAction<Answear>>
   isAnimate: boolean
-  checkSortableAnswear: ([]) => void
+  checkSortableAnswear: () => void
   isCorrectAnswear: boolean
   isGameRunning: boolean
   nextButtonRef: React.RefObject<HTMLButtonElement>
@@ -23,6 +24,7 @@ interface SortableProps {
 
 const Sortable: React.FC<SortableProps> = ({
   answears,
+  setAnswears,
   setIsAnimate,
   setClickedButton,
   isAnimate,
@@ -32,47 +34,82 @@ const Sortable: React.FC<SortableProps> = ({
   nextButtonRef,
   nextQuestion,
 }) => {
-  //   console.log(answears)
+  console.log(isCorrectAnswear)
 
   const [answers, setAnswers] = useState<Answear[]>(answears)
+  const [corrected, setCorrected] = useState(false)
+  const handleSubmit = () => {
+    setIsAnimate(true)
+  }
 
   useEffect(() => {
+    setCorrected(false)
+    if (isCorrectAnswear) {
+      setCorrected(true)
+    }
     setAnswers(answears)
-  }, [answears])
+  }, [answears, isCorrectAnswear])
+
+  console.log(isGameRunning)
   return (
     <>
       <Reorder.Group
         axis="y"
         values={answers}
-        onReorder={(newAnswers) => setAnswers(newAnswers)}
+        onReorder={(newAnswers) => {
+          setAnswers(newAnswers)
+          setAnswears(newAnswers)
+        }}
         className="w-full col-span-2 h-1/2 flex flex-col gap-2"
       >
         {answers.map((answer) => (
           <Reorder.Item key={answer.id} value={answer}>
-            <div className="w-full bg-white text-black p-2 border-purple-700 border-2">
+            <motion.div
+              className={`w-full bg-white text-black p-2 border-4 ${
+                !isGameRunning
+                  ? corrected
+                    ? 'border-green-400'
+                    : 'border-red-700'
+                  : 'border-purple-700'
+              }`}
+              animate={
+                isAnimate === true && {
+                  boxShadow: [
+                    '0px 0px 0px 3px black',
+                    '0px 0px 0px 3px #6d28d9',
+                    '0px 0px 0px 3px black',
+                  ],
+                }
+              }
+              onAnimationComplete={() => {
+                checkSortableAnswear()
+                setIsAnimate(false)
+              }}
+              transition={{ repeat: 2, duration: 0.75 }}
+            >
               {answer.title}
-            </div>
+            </motion.div>
           </Reorder.Item>
         ))}
       </Reorder.Group>
-
-      <Button
-        ref={nextButtonRef}
-        onClick={() => checkSortableAnswear(answers)}
-        className="col-span-2 py-8 bg-purple-600 hover:bg-purple-500 text-2xl"
-      >
-        Zatwierdź
-      </Button>
-      {/* 
+      {isGameRunning && (
+        <Button
+          ref={nextButtonRef}
+          onClick={() => handleSubmit()}
+          className="col-span-2 py-8 bg-purple-600 hover:bg-purple-500 text-2xl"
+        >
+          Zatwierdź
+        </Button>
+      )}
       {!isGameRunning && (
         <Button
           ref={nextButtonRef}
-          onClick={nextQuestion}
-          className="col-span-2 py-10 bg-purple-600 hover:bg-purple-500 text-3xl"
+          onClick={() => nextQuestion()}
+          className="col-span-2 py-8 bg-purple-600 hover:bg-purple-500 text-2xl"
         >
           Dalej
         </Button>
-      )} */}
+      )}
     </>
   )
 }

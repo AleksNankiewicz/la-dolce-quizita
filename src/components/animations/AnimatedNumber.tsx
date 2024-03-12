@@ -5,15 +5,18 @@ export const AnimatedNumber = ({ value }: { value: number }) => {
   const [displayedValue, setDisplayedValue] = useState(0)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setDisplayedValue((prevValue) => {
-        if (prevValue >= value) {
-          clearInterval(interval)
-          return value
-        }
-        return prevValue + 1
-      })
-    }, 25) // Adjust the interval as needed
+    const interval = setInterval(
+      () => {
+        setDisplayedValue((prevValue) => {
+          if (prevValue >= value) {
+            clearInterval(interval)
+            return value
+          }
+          return prevValue + 1
+        })
+      },
+      value > 100 ? 5 : 25
+    ) // Adjust the interval as needed
 
     return () => clearInterval(interval)
   }, [value])

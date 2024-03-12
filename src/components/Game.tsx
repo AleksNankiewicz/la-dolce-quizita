@@ -87,11 +87,12 @@ const Game = (params: any) => {
     clearInterval(timerIntervalId.current)
 
     console.log('orginal', questions[index].answears)
-    console.log(questions[index].answears)
+    console.log(sortedAnswers)
     const isOrderSame = questions[index].answears.every((answer, index) => {
       return answer.title === sortedAnswers[index].title
     })
 
+    //To do
     console.log('Is order same:', isOrderSame)
   }
 
@@ -179,6 +180,7 @@ const Game = (params: any) => {
       handleScrollToTop()
       const shuffledQuestions = questions.map((question: questionsProps) => {
         if (question.type == 'multiple-choice' || '') {
+          console.log('multi')
           return {
             ...question,
             answears: shuffleArray(question.answears),
@@ -186,15 +188,8 @@ const Game = (params: any) => {
         }
 
         if (question.type == 'sortable') {
-          const originalAnswears = question.answears.slice()
-
-          const shuffledAnswears = shuffleArray(question.answears)
-          setShuffledSortableAnswears(shuffledAnswears)
-          console.log(originalAnswears)
           return {
             ...question,
-            orderedAnswears: originalAnswears,
-            shuffledAnswears: shuffledAnswears,
           }
         }
 
@@ -238,7 +233,8 @@ const Game = (params: any) => {
     }
     if (index == questions.length) return endGame()
 
-    // włacz tym gre  timerIntervalId.current = requestAnimationFrame(animate)
+    //Tym wyłaczasz czas
+    timerIntervalId.current = requestAnimationFrame(animate)
 
     return () => {
       clearInterval(intervalId.current)
@@ -255,12 +251,9 @@ const Game = (params: any) => {
   ])
 
   useEffect(() => {
-    if (questions[index].shuffledAnswears !== undefined) {
-      // console.log(questions[index].orderedAnswears)
-      setShuffledSortableAnswears(
-        questions[index].shuffledAnswears as answearProps[]
-      )
-    }
+    console.log(questions[index].answears)
+    const copyArr = [...questions[index].answears]
+    setShuffledSortableAnswears(shuffleArray(copyArr) as answearProps[])
   }, [questions])
 
   return (

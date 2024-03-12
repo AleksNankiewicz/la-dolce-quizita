@@ -57,7 +57,7 @@ const LoginForm = () => {
     <CardWrapper
       headerTitle="Logowanie"
       headerLabel="Witaj ponownie"
-      backButtonLabel="Nie masz konta? Zarejestrój się"
+      backButtonLabel="Nie masz konta? Zarejestruj się"
       backButtonHref="/auth/register"
       // showSocial
     >

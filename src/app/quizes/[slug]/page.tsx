@@ -85,7 +85,7 @@ const SingleQuizPage = async (params: any) => {
               src={quiz.img}
               fill
               alt="background"
-              className="overflow-hidden rounded-2xl opacity-40   duration-300 object-cover"
+              className="overflow-hidden rounded-2xl    duration-300 object-cover"
             />
           )}
           <EditQuizButton

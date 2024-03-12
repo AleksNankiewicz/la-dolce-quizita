@@ -7,8 +7,8 @@ const EditableAnswear = ({ answear }: { answear: any }) => {
     <div
       contentEditable
       suppressContentEditableWarning={true}
-      className={`break-words  border-2 p-3 text-center rounded-xl flex justify-center items-center editableAnswears ${
-        !correct ? 'incorrect bg-red-500' : 'correct bg-green-400'
+      className={`editableAnswears break-words  border-2 p-3 text-center  flex justify-center items-center  ${
+        !correct ? 'incorrect bg-red-600' : 'correct bg-green-400'
       } `}
       onClick={() => {
         setCorrect(!correct)

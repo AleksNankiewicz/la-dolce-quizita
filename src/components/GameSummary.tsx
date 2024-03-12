@@ -6,7 +6,7 @@ import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { title } from 'process'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import HomeSeeAll from './atoms/HomeSeeAll'
 import Link from 'next/link'
 import useNavStore from '@/lib/store'
@@ -183,7 +183,7 @@ const GameSummary = ({
 
           <div className=" flex flex-wrap gap-3 justify-center">
             {question.answears.map((answear) => (
-              <>
+              <React.Fragment key={answear.id}>
                 {question.type == 'multiple-choice' || !question.type ? (
                   <div
                     key={answear.id || answear.title}
@@ -202,8 +202,15 @@ const GameSummary = ({
                     {answear.title}
                   </div>
                 ) : null}
-              </>
+              </React.Fragment>
             ))}
+            {question.type == 'open-ended' ? (
+              <div
+                className={`w-full min-w-28 border-2 p-3 text-center rounded-xl flex justify-center items-center px-8  `}
+              >
+                {question.answears[0].title}
+              </div>
+            ) : null}
           </div>
         </div>
       ))}

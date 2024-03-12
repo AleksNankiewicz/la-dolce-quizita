@@ -50,6 +50,7 @@ import EditableModal from './editables/EditableModal'
 import EditableSortableQuestion from './editables/EditableSortableQuestion'
 
 import { motion } from 'framer-motion'
+import EditableOpenQuestion from './editables/EditableOpenQuestion'
 
 const EditQuiz = ({ quiz }: { quiz: any }) => {
   //auth
@@ -60,8 +61,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
   const fetchUser = async (email: string) => {
     const user = await getUserByEmail(email)
     setFetchedUser(user)
-
-    //  console.log(hasPermission)
   }
 
   useEffect(() => {
@@ -114,7 +113,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     Array<React.RefObject<HTMLDivElement>>
   >(initialQuestions.map(() => React.createRef<HTMLDivElement>()))
 
-  console.log(editableQuestionsRef)
   //modals
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -148,6 +146,25 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
     if (event.target.files && event.target.files.length > 0) {
       setImage(URL.createObjectURL(event.target.files[0]))
     }
+  }
+
+  const addNewOpenQuestion = () => {
+    const newQuestion: questionsProps = {
+      id: uuidv4(),
+      title: 'Pytanie',
+      correctAnswear: false,
+      points: 20,
+      answears: [],
+      time: 20,
+      img: '',
+      type: 'open-ended',
+    }
+
+    const newQuestionRef = React.createRef<HTMLDivElement>()
+
+    // Update refs array with the new ref
+    setEditableQuestionsRef([...editableQuestionsRef, newQuestionRef])
+    setQuestions([...questions, newQuestion])
   }
 
   const addNewSortableQuestion = () => {
@@ -256,8 +273,6 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
       editableImage.current?.files && editableImage.current?.files.length > 0
         ? editableImage.current?.files[0]
         : quiz.img
-
-    console.log(quiz.img)
 
     const editableQuestionValues: {
       title: string | null
@@ -507,6 +522,17 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
               onInput={updateQuizOnInput}
             />
           )}
+          {question.type === 'open-ended' && (
+            <EditableOpenQuestion
+              question={question}
+              refId={index}
+              index={question.id || removeSpaces(question.title)}
+              reference={editableQuestionsRef}
+              key={question.id || removeSpaces(question.title)}
+              onDelete={deleteQuestion}
+              onInput={updateQuizOnInput}
+            />
+          )}
         </React.Fragment>
       ))}
 
@@ -540,6 +566,11 @@ const EditQuiz = ({ quiz }: { quiz: any }) => {
         <Button
           variant={'secondary'}
           className="w-full bg-white text-black text-2xl gap-2 flex justify-start"
+          onClick={() => {
+            addNewOpenQuestion()
+            setIsQuestionModalOpen(false)
+            handleScrollToBottom()
+          }}
         >
           <ClipboardPenLine />
           Otwarte

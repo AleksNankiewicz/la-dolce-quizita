@@ -179,7 +179,7 @@ const Game = (params: any) => {
       resetStore()
       handleScrollToTop()
       const shuffledQuestions = questions.map((question: questionsProps) => {
-        if (question.type == 'multiple-choice' || '') {
+        if (question.type == 'multiple-choice' || !question.type) {
           console.log('multi')
           return {
             ...question,
@@ -251,9 +251,11 @@ const Game = (params: any) => {
   ])
 
   useEffect(() => {
-    console.log(questions[index].answears)
-    const copyArr = [...questions[index].answears]
-    setShuffledSortableAnswears(shuffleArray(copyArr) as answearProps[])
+    if (questions[index].type == 'sortable') {
+      console.log(questions[index].answears)
+      const copyArr = [...questions[index].answears]
+      setShuffledSortableAnswears(shuffleArray(copyArr) as answearProps[])
+    }
   }, [questions])
 
   return (
@@ -280,7 +282,7 @@ const Game = (params: any) => {
         <p>{questions[index].title}</p>
       </div>
 
-      {questions[index].type == 'multiple-choice' || '' ? (
+      {questions[index].type == 'multiple-choice' || !questions[index].type ? (
         <MultipleChoice
           answears={questions[index]?.answears || []}
           setIsAnimate={setIsAnimate}

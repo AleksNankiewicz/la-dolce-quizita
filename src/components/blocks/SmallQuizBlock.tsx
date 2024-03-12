@@ -41,12 +41,15 @@ const SmallQuizBlock = ({
         </div>
         {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
         {title && (
-          <p
+          <div
             className={`absolute h-[34%] w-full 
          bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 text-base text-left`}
           >
-            {title}
-          </p>
+            <p className="hidden md:block">{title}</p>
+            <p className={`md:hidden block ${title.length > 20 && 'text-xs'}`}>
+              {title}
+            </p>
+          </div>
         )}
       </Link>
       {/* <EditQuizButton

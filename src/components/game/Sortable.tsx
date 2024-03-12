@@ -14,7 +14,7 @@ interface SortableProps {
   setIsAnimate: React.Dispatch<React.SetStateAction<boolean>>
   setClickedButton: React.Dispatch<React.SetStateAction<Answear>>
   isAnimate: boolean
-  checkSortableAnswear: () => void
+  checkSortableAnswear: ([]) => void
   isCorrectAnswear: boolean
   isGameRunning: boolean
   nextButtonRef: React.RefObject<HTMLButtonElement>
@@ -34,7 +34,7 @@ const Sortable: React.FC<SortableProps> = ({
   nextButtonRef,
   nextQuestion,
 }) => {
-  console.log(isCorrectAnswear)
+  // console.log(isCorrectAnswear)
 
   const [answers, setAnswers] = useState<Answear[]>(answears)
   const [corrected, setCorrected] = useState(false)
@@ -47,10 +47,17 @@ const Sortable: React.FC<SortableProps> = ({
     if (isCorrectAnswear) {
       setCorrected(true)
     }
-    setAnswers(answears)
-  }, [answears, isCorrectAnswear])
+  }, [isCorrectAnswear])
 
-  console.log(isGameRunning)
+  useEffect(() => {
+    // setCorrected(false)
+    // if (isCorrectAnswear) {
+    //   setCorrected(true)
+    // }
+    setAnswers(answears)
+  }, [answears])
+
+  // console.log(isGameRunning)
   return (
     <>
       <Reorder.Group
@@ -58,11 +65,11 @@ const Sortable: React.FC<SortableProps> = ({
         values={answers}
         onReorder={(newAnswers) => {
           setAnswers(newAnswers)
-          setAnswears(newAnswers)
+          // setAnswears(newAnswers)
         }}
         className="w-full col-span-2 h-1/2 flex flex-col gap-2"
       >
-        {answers.map((answer) => (
+        {answers.map((answer, index) => (
           <Reorder.Item key={answer.id} value={answer}>
             <motion.div
               className={`w-full bg-white text-black p-2 border-4 ${
@@ -82,12 +89,13 @@ const Sortable: React.FC<SortableProps> = ({
                 }
               }
               onAnimationComplete={() => {
-                checkSortableAnswear()
+                checkSortableAnswear(answers)
                 setIsAnimate(false)
               }}
               transition={{ repeat: 2, duration: 0.75 }}
             >
-              {answer.title}
+              <p>{index + 1}</p>
+              <p>{answer.title}</p>
             </motion.div>
           </Reorder.Item>
         ))}

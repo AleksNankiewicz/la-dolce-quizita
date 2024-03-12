@@ -80,14 +80,14 @@ const Game = (params: any) => {
 
   //functions
 
-  const checkSortableAnswear = () => {
+  const checkSortableAnswear = (sortedAnswears: answearProps[]) => {
     if (!isGameRunning) return
     resetQuestionTime()
     clearInterval(intervalId.current)
     clearInterval(timerIntervalId.current)
     setIsGameRunning(false)
     const isOrderSame = questions[index].answears.every((answer, index) => {
-      return answer.title === shuffledSortableAnswears[index].title
+      return answer.title === sortedAnswears[index].title
     })
 
     if (isOrderSame) {
@@ -221,6 +221,14 @@ const Game = (params: any) => {
   useEffect(() => {
     if (!isGameRunning || isAnimate || isEndGame) return
 
+    console.log(
+      isGameRunning,
+      nextQuestion,
+      questions.length,
+      resetQuestionTime,
+      isAnimate,
+      index
+    )
     resetQuestionTime()
     setIsCorrectAnswear(false)
     let tampstamp = 0
@@ -238,7 +246,7 @@ const Game = (params: any) => {
     if (index == questions.length) return endGame()
 
     //Tym wyłaczasz czas
-    //timerIntervalId.current = requestAnimationFrame(animate)
+    timerIntervalId.current = requestAnimationFrame(animate)
 
     return () => {
       clearInterval(intervalId.current)

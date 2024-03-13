@@ -1,6 +1,6 @@
 'use server'
 
-import { quizProps } from '@/types/data'
+import { ShopItemProps, UserProps, quizProps } from '@/types/data'
 import { connectToDb } from './connectToDb'
 import { Category, Level, Question, Quiz, ShopItem, User } from './models'
 
@@ -142,6 +142,43 @@ export const getShopItems = async () => {
     connectToDb()
     const shopItems = await ShopItem.find()
     return shopItems
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+export const buyShopItem = async (shopItem: ShopItemProps, email: string) => {
+  noStore()
+  try {
+    connectToDb()
+
+    const user = await getUserByEmail(email)
+
+    const foundShopItem = (await ShopItem.findById(
+      shopItem._id
+    )) as ShopItemProps | null
+    if (!foundShopItem) {
+      throw new Error('Shop item not found')
+    }
+    //  console.log(foundShopItem)
+
+    if (foundShopItem.type == 'badge') {
+      if (user.badges.includes(foundShopItem.img)) {
+        console.log('Badge already exists')
+      } else {
+        user.badges.push(foundShopItem.img)
+      }
+    }
+
+    if (foundShopItem.type === 'profileFrame') {
+    }
+
+    user.points -= foundShopItem.price
+
+    await user.save()
+    console.log('user saved')
+
+    return foundShopItem
   } catch (err: any) {
     console.log(err)
     throw new Error(err)

@@ -64,12 +64,12 @@ export const resetStore = () => {
 
 type NavStore = {
   refresh: boolean
-  setRefresh: (boolean: boolean) => void
+  setRefresh: (refresh: boolean) => void // Modify the parameter name to be descriptive
 }
 
 const useNavStore = create<NavStore>((set) => ({
   refresh: false,
-  setRefresh: () => set({ refresh: true }),
+  setRefresh: (refresh) => set({ refresh }), // Update the state with the provided value
 }))
 
 export default useNavStore

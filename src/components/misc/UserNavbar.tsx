@@ -3,10 +3,15 @@ import useNavStore from '@/lib/store'
 import { UserProps } from '@/types/data'
 import Image from 'next/image'
 import React from 'react'
+import { AnimatedNumber } from '../animations/AnimatedNumber'
+import { Coins } from 'lucide-react'
+import { formatNumber } from '@/lib/utils'
+import { usePathname } from 'next/navigation'
 
 const UserNavbar = ({ email }: { email: string }) => {
   const [user, setUser] = React.useState<UserProps>()
   const refreshNavbar = useNavStore((state) => state.refresh)
+  const pathname = usePathname()
   const setRefreshNavbar = useNavStore((state) => state.setRefresh)
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -51,9 +56,20 @@ const UserNavbar = ({ email }: { email: string }) => {
           width={20}
           height={20}
           alt={'UserBadge'}
-          className="w-6 h-6 hidden md:block "
+          className={`w-6 h-6 ${
+            !pathname.includes('/shop') && 'hidden'
+          }  md:block `}
         />
       )}
+      {user?.points && pathname.includes('/shop') ? (
+        <div className="absolute right-[30%] md:right-[20%]  text-green-400 font-bold h-6 flex justify-center items-center mx-auto w-8 md:w-auto">
+          <p>{formatNumber(user.points)}</p>
+
+          <span className="text-white ml-1">
+            <Coins size={14} />
+          </span>
+        </div>
+      ) : null}
     </>
   )
 }

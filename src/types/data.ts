@@ -88,9 +88,11 @@ export type UserProps = {
   isVerified: boolean
   slug: string
   quizesPlayed: QuizesPlayedProps[]
+  badges: string[]
 }
 
 export type ShopItemProps = {
+  _id(_id: any): unknown
   price: number
   promotion: number
   type: 'badge' | 'profileFrame'

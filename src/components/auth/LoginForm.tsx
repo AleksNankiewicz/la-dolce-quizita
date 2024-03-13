@@ -28,6 +28,8 @@ const LoginForm = () => {
 
   const [isPending, startTransition] = useTransition()
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -37,12 +39,14 @@ const LoginForm = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    setIsLoading(true)
     setError('')
     setSuccess('')
     startTransition(() => {
       login(values).then((data) => {
         setError(data?.error)
         setSuccess(data?.success)
+        setIsLoading(false)
       })
     })
   }
@@ -75,7 +79,7 @@ const LoginForm = () => {
                       className="bg-white"
                       {...field}
                       placeholder="pączek@example.pl"
-                      disabled={isPending}
+                      disabled={isLoading}
                       type="email"
                     />
                   </FormControl>
@@ -94,7 +98,7 @@ const LoginForm = () => {
                       className="bg-white"
                       {...field}
                       placeholder="******"
-                      disabled={isPending}
+                      disabled={isLoading}
                       type="password"
                     />
                   </FormControl>
@@ -106,7 +110,7 @@ const LoginForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button
-            disabled={isPending}
+            disabled={isLoading}
             type="submit"
             className="w-full bg-green-600  hover:bg-pink-400"
           >

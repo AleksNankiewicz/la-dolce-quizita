@@ -1,5 +1,5 @@
 'use client'
-import { getUserByEmail } from '@/lib/actions'
+import { getUserByEmail, setBadge } from '@/lib/actions'
 import {
   LevelProps,
   ShopItemProps,
@@ -10,65 +10,86 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
+import { AnimatePresence } from 'framer-motion'
+import ShopItemModal from './ShopItemModal'
+import useNavStore from '@/lib/store'
+import ButtonWithAnimation from '../animations/ButtonWithAnimation'
 
-const SmallShopItemBlock = ({ shopItem }: { shopItem: ShopItemProps }) => {
-  const session = useSession()
+const SmallShopItemBlock = ({
+  shopItem,
+  user,
+  setRefresh,
+}: {
+  shopItem: ShopItemProps
+  user: UserProps | undefined
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [isUserLogged, setIsUserLogged] = useState(false)
+  const refreshNavbar = useNavStore((state) => state.setRefresh)
 
-  const [email, setEmail] = useState('')
+  const handleChange = async (shopItem: ShopItemProps) => {
+    if (!user?.email) return
 
-  useEffect(() => {
-    if (session.status == 'authenticated') {
-      setIsUserLogged(true)
-      const user = session.data.user as sessionUserProps
-      setEmail(user.email ?? null)
-    }
-  }, [session?.data, session?.status])
+    const item = await setBadge(user?.email, shopItem.img)
+    refreshNavbar(true)
+    setRefresh(true)
+  }
 
-  const [user, setUser] = React.useState<UserProps>()
-  const [newShopItem, setShopItem] = useState<ShopItemProps>()
-
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await getUserByEmail(email)
-
-        setUser(user)
-        setShopItem(shopItem)
-      } catch (error) {
-        console.error('Error fetching user:', error)
-      }
-    }
-    fetchUser()
-  }, [email])
   return (
-    <div className="relative w-full h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 group:  rounded-xl overflow-hidden">
-      {' '}
-      <div className="w-full h-2/3 relative mb-16">
-        {shopItem.img && (
-          <Image
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            blurDataURL={shopItem.img}
-            placeholder="blur"
-            src={shopItem.img}
-            fill
-            alt={shopItem.title}
-            className="   group-hover:scale-125  duration-300 object-contain"
-          />
+    <>
+      <div className="relative w-full min-h-[230px] sm:min-h-[240px] md:min-h-[200px] lg:min-h-[280px] flex justify-center items-center bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 group:  rounded-xl overflow-hidden">
+        {' '}
+        <div className="w-full h-2/3 relative mb-16">
+          {shopItem.img && (
+            <Image
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              blurDataURL={shopItem.img}
+              placeholder="blur"
+              src={shopItem.img}
+              fill
+              alt={shopItem.title}
+              className="   group-hover:scale-125  duration-300 object-contain"
+            />
+          )}
+        </div>
+        {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
+        {shopItem.title && (
+          <div
+            className={`absolute h-[34%] w-full 
+        bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex flex-col justify-center items-center px-2 text-base text-center`}
+          >
+            {shopItem.title}
+
+            {user &&
+              (!user.badges.includes(shopItem.img) ? (
+                <Button onClick={() => setIsModalOpen(true)}>Kup</Button>
+              ) : user.selectedBadge === shopItem.img ? (
+                // Render something else here when the condition is true
+                <Button disabled>Wybrana</Button>
+              ) : (
+                <Button onClick={() => handleChange(shopItem)}>Wybierz</Button>
+                // Uncomment below to use ButtonWithAnimation
+                // <ButtonWithAnimation
+                //   onClick={() => handleChange(shopItem)}
+                //   label="Wybierz"
+                // />
+              ))}
+          </div>
         )}
       </div>
-      {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
-      {shopItem.title && (
-        <p
-          className={`absolute h-[34%] w-full 
-   bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex flex-col justify-center items-center px-2 text-base text-center`}
-        >
-          {shopItem.title}
-          <Button>Kup</Button>
-        </p>
-      )}
-    </div>
+
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isModalOpen && (
+          <ShopItemModal
+            setRefresh={setRefresh}
+            handleClose={setIsModalOpen}
+            shopItem={shopItem}
+            user={user && JSON.parse(JSON.stringify(user))}
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 

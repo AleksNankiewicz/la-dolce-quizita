@@ -28,7 +28,7 @@ export type quizProps = {
   questions: any[]
   playCount: number
   questionsPercent: number
-  _id: number
+  _id?: number
 }
 
 export type recordProps = {

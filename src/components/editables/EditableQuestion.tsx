@@ -24,7 +24,7 @@ const EditableQuestion = ({
   onInput: (index: number, time: number, points: number) => void
 }) => {
   const ref = reference[refId]
-  console.log(question)
+
   const [answears, setAnswears] = useState<answearProps[]>(question.answears)
 
   const [image, setImage] = useState<string | null>(question.img)

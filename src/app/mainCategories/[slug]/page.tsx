@@ -2,6 +2,7 @@
 import SmallQuizBlock from '@/components/blocks/SmallQuizBlock'
 import EditQuizButton from '@/components/layouts/EditQuizButton'
 import { AddQuizButton } from '@/components/layouts/addQuizButton'
+import QuizesPage from '@/components/pages/QuizesPage'
 
 import { getQuizesByCategories, getSubCategories } from '@/lib/actions'
 import Image from 'next/image'
@@ -15,20 +16,7 @@ const SinglequizPage = async ({ params }: any) => {
   const quizes = await getQuizesByCategories(slug)
 
   console.log(quizes)
-  return (
-    <main className=" w-full p-4 grid grid-cols-2 md:grid-cols-4  gap-3 ">
-      {quizes.map((quiz) => (
-        <SmallQuizBlock
-          slug={quiz.slug}
-          img={quiz.img}
-          title={quiz.title}
-          categorySlug={quiz.categorySlug}
-          author={quiz.author}
-          key={quiz._id}
-        />
-      ))}
-    </main>
-  )
+  return <QuizesPage quizes={quizes} />
 }
 
 export default SinglequizPage

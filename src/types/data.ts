@@ -28,6 +28,7 @@ export type quizProps = {
   questions: any[]
   playCount: number
   questionsPercent: number
+  _id: number
 }
 
 export type recordProps = {
@@ -89,6 +90,7 @@ export type UserProps = {
   slug: string
   quizesPlayed: QuizesPlayedProps[]
   badges: string[]
+  quizCoins: number
 }
 
 export type ShopItemProps = {

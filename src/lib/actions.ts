@@ -136,11 +136,15 @@ export const setCategory = async (
     throw new Error(err)
   }
 }
-export const getShopItems = async () => {
+export const getShopItems = async (amount = Infinity) => {
   noStore()
   try {
     connectToDb()
-    const shopItems = await ShopItem.find()
+    const pipeline = []
+
+    pipeline.push({ $sample: { size: amount } })
+
+    const shopItems = await ShopItem.aggregate(pipeline)
     return shopItems
   } catch (err: any) {
     console.log(err)
@@ -173,7 +177,7 @@ export const buyShopItem = async (shopItem: ShopItemProps, email: string) => {
     if (foundShopItem.type === 'profileFrame') {
     }
 
-    user.points -= foundShopItem.price
+    user.quizCoins -= foundShopItem.price
 
     await user.save()
     console.log('user saved')
@@ -185,11 +189,22 @@ export const buyShopItem = async (shopItem: ShopItemProps, email: string) => {
   }
 }
 
-export const getUsers = async () => {
+export const getUsers = async (amount = Infinity) => {
   noStore()
   try {
     connectToDb()
-    const users = await User.find()
+    const users = await User.find().limit(amount)
+    return users
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+export const getTopFiveUsers = async (amount = 5) => {
+  noStore()
+  try {
+    connectToDb()
+    const users = await User.find().sort({ points: -1 }).limit(amount)
     return users
   } catch (err: any) {
     console.log(err)
@@ -202,6 +217,18 @@ export const getLevels = async () => {
     connectToDb()
     const levels = await Level.find()
     return levels
+  } catch (err: any) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
+export const getProfileFrames = async () => {
+  noStore()
+  try {
+    connectToDb()
+    const levels = await Level.find({}, { profileFrame: 1, _id: 0 }).limit(3) // Fetching only the profileFrame field
+    return levels.map((level) => level.profileFrame) // Extracting profileFrame from each level object
   } catch (err: any) {
     console.log(err)
     throw new Error(err)
@@ -292,6 +319,8 @@ export const updateAfterGame = async (
 
       if (highestPointsQuiz.points < points) {
         user.points += points - highestPointsQuiz.points
+        user.quizCoins += points - highestPointsQuiz.points
+
         distanceBetweenRecords = points - highestPointsQuiz.points
 
         console.log('user points updated on old quiz')
@@ -303,15 +332,17 @@ export const updateAfterGame = async (
     } else {
       user.points += points
       ;('new quiz points')
+      user.quizCoins += points
+      if (isAllCorrect) {
+        user.gameWon = user.gameWon + 1
+      }
     }
 
     console.log(highestPointsQuiz)
 
     user.gamePlayed++
     user.quizesPlayed.push({ slug: quizSlug, points: points })
-    if (isAllCorrect) {
-      user.gameWon = user.gameWon + 1
-    }
+
     const lastGameDate = user.lastGameDate ?? new Date(0)
     const now = new Date()
     const hoursSinceLastGame =

@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    quizCoins: {
+      type: Number,
+      default: 0,
+    },
     gamePlayed: {
       type: Number,
       default: 0,

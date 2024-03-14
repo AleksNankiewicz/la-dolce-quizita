@@ -61,7 +61,6 @@ const StatsBlock = () => {
         (user.points / nearest.threshold).toFixed(2)
       ) // Calculate achieved percentage
     }
-    console.log(missingPercentage)
 
     setNearestLevel(missingPercentage)
   }, [user, levels])
@@ -76,7 +75,7 @@ const StatsBlock = () => {
       <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
         <Award
           strokeWidth={1}
-          className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0"
+          className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0 text-yellow-500"
         />
         <div className="absolute left-[10%] top-1/4 ">
           <p className="sm:text-4xl text-3xl ">
@@ -110,7 +109,7 @@ const StatsBlock = () => {
         </div>
       </div>
       <div className="flex flex-col  justify-center items-center border col-span-1  h-36 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-xl relative">
-        <div className="w-1/3 md:w-1/3 lg:w-1/3 h-1/2 absolute right-3 bottom-3 lg:bottom-1/2 lg:translate-y-1/2 sm:bottom-14 md:bottom-3 text-5xl">
+        <div className="w-1/3 md:w-1/3 lg:w-1/3 h-1/2 absolute right-3 bottom-8 lg:bottom-1/2 lg:translate-y-1/2 sm:bottom-14 md:bottom-3 text-5xl">
           {nearestLevel ? (
             <CircularProgressbar
               value={nearestLevel}

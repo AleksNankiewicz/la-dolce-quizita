@@ -1,4 +1,4 @@
-import { getUsers } from '@/lib/actions'
+import { getTopFiveUsers, getUsers } from '@/lib/actions'
 import { formatNumber } from '@/lib/utils'
 import { UserProps } from '@/types/data'
 import { Coins, Flame } from 'lucide-react'
@@ -6,14 +6,14 @@ import Image from 'next/image'
 import React from 'react'
 
 const RecordsBlock = async () => {
-  const users = await getUsers()
+  const users = await getTopFiveUsers()
 
-  users.sort((a, b) => b.points - a.points)
-  const noNewUsers = users.filter((user) => user.points)
+  // users.sort((a, b) => b.points - a.points)
+  // const noNewUsers = users.filter((user) => user.points)
 
   return (
     <div className="text-white  bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800  col-span-2 md:col-span-4 w-full text-center min-h-[90px] rounded-xl flex-col justify-center items-center px-2 py-1 divide-y divide-gray-600  ">
-      {noNewUsers.map((user: UserProps, i: number) => (
+      {users.map((user: UserProps, i: number) => (
         <div
           key={i}
           className="flex text-sm  justify-between items-center py-2"

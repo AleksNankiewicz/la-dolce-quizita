@@ -35,7 +35,7 @@ const BigQuizBlock = ({
                 src={img}
                 fill
                 alt="background"
-                className="overflow-hidden rounded-2xl  group-hover:scale-125 md:group-hover:scale-100 duration-300 object-cover"
+                className="overflow-hidden md:rounded-2xl  group-hover:scale-125 md:group-hover:scale-100 duration-300 object-cover"
               />
             </div>
           )}

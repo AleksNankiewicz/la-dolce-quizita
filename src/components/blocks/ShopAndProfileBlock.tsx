@@ -54,7 +54,7 @@ const ShopAndProfileBlock = () => {
         </div>
       )}
       <Link href={'/shop'} className="block col-span-2">
-        <div className="flex flex-col  justify-center items-center border col-span-2  h-36 bg-gradient-to-br from-purple-500 via-purple-700 to-purple-900 rounded-xl relative">
+        <div className="flex flex-col  justify-center items-center border col-span-2  h-36 bg-gradient-to-br from-purple-500 via-purple-700 to-purple-900 rounded-xl relative hover:animate-pulse">
           <Store
             strokeWidth={1}
             className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-0 bottom-1/2 translate-y-1/2 "

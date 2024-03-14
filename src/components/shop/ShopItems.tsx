@@ -26,8 +26,6 @@ const ShopItems = ({ shopItems }: { shopItems: ShopItemProps[] }) => {
     }
   }, [session?.data, session?.status])
 
-  const [newShopItem, setShopItem] = useState<ShopItemProps>()
-
   React.useEffect(() => {
     if (refresh) {
       setRefresh(false)
@@ -63,6 +61,7 @@ const ShopItems = ({ shopItems }: { shopItems: ShopItemProps[] }) => {
         slug: user.slug,
         quizesPlayed: user.quizesPlayed,
         badges: user.badges,
+        quizCoins: user.quizCoins,
       }
     : undefined
 

@@ -42,7 +42,7 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({
             setClickedButton(answear)
           }}
           key={answear.id || answear.title}
-          className={`text-xl md:text-2xl text-white  md:col-span-1 col-span-2 w-full  min-h-[10vh] ${buttonColors[i]} rounded-xl flex justify-center items-center text-center cursor-pointer text-wrap `}
+          className={`text-xl md:text-2xl text-white  md:col-span-1 col-span-2 w-full  min-h-[10vh] ${buttonColors[i]} rounded-sm flex justify-center items-center text-center cursor-pointer text-wrap `}
           animate={
             isAnimate === true && {
               border: ['3px solid white', '3px solid black', '3px solid white'],

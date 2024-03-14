@@ -5,7 +5,9 @@ import Image from 'next/image'
 import { Button } from '../ui/button'
 import { buyShopItem } from '@/lib/actions'
 import ButtonWithAnimation from '../animations/ButtonWithAnimation'
-import { Coins } from 'lucide-react'
+import { BadgeDollarSign, Coins, X } from 'lucide-react'
+import { formatNumber } from '@/lib/utils'
+import useNavStore from '@/lib/store'
 
 const dropIn = {
   hidden: {
@@ -39,15 +41,25 @@ const ShopItemModal = ({
   user: UserProps | undefined
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const refreshNavbar = useNavStore((state) => state.setRefresh)
+
   const handleBuy = async (shopItem: ShopItemProps) => {
     if (!user?.email) return
 
     await buyShopItem(shopItem, user?.email)
     setRefresh(true)
+    refreshNavbar(true)
     handleClose(false)
   }
   return (
     <Backdrop onClick={() => handleClose(false)}>
+      <div className="absolute right-[40px] top-[100px] ">
+        <X
+          size={40}
+          className="cursor-pointer text-red-400"
+          onClick={() => handleClose(false)}
+        />
+      </div>
       <motion.div
         onClick={(e) => e.stopPropagation()}
         className="modal w-[clamp(50%,700px,90%)] h-[min(50%,300px)] mx-auto px-8 py-0 rounded-xl flex flex-col items-center gap-2"
@@ -72,18 +84,30 @@ const ShopItemModal = ({
         </div>
 
         {shopItem.price && (
-          <div className=" flex text-2xl relative">
-            <p className=""> {shopItem.price}</p>
-            <Coins className="absolute -right-1/2" />
+          <div className=" flex text-2xl relative items-center gap-1">
+            <p className="">{formatNumber(shopItem.price)}</p>
+            <BadgeDollarSign size={20} />
           </div>
         )}
 
-        {user && (
-          <ButtonWithAnimation
-            label="Kup"
-            onClick={() => handleBuy(shopItem)}
-          />
-        )}
+        {user &&
+          (user.points > shopItem.price ? (
+            <ButtonWithAnimation
+              label="Kup"
+              onClick={() => handleBuy(shopItem)}
+            />
+          ) : (
+            <>
+              <Button disabled>Kup</Button>
+              <p className="text-center">
+                Musisz zdobyć jeszcze{' '}
+                <span className="text-orange-400 text-xl">
+                  {shopItem.price - user.points}{' '}
+                </span>{' '}
+                punktów, żeby odblokować tą odznakę
+              </p>
+            </>
+          ))}
       </motion.div>
     </Backdrop>
   )

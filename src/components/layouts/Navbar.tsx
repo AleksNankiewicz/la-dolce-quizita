@@ -134,7 +134,7 @@ const Navbar = () => {
       <div
         className={`${
           isGameStarted ? 'flex' : 'hidden'
-        } w-1/3 flex flex-col items-center justify-start gap-2 `}
+        } w-1/3 flex flex-col items-center justify-start md:mr-16 mr-2 gap-2 `}
       >
         {actualQuestionTime < 20 ? (
           <motion.div

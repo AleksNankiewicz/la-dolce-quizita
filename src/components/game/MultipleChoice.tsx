@@ -48,7 +48,7 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({
               border: ['3px solid white', '3px solid black', '3px solid white'],
             }
           }
-          transition={{ repeat: 2, duration: 0.75 }}
+          transition={{ repeat: 2, duration: 0.5 }}
           onAnimationComplete={() => {
             checkAnswear()
           }}

@@ -4,6 +4,7 @@ import { getQuizSlugsAndTitles } from '@/lib/actions'
 import { quizProps } from '@/types/data'
 import Link from 'next/link'
 import { ArrowUpRightFromSquare, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const NavbarSearchbar = () => {
   interface IQuiz {
@@ -20,6 +21,9 @@ const NavbarSearchbar = () => {
   const modalRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const mobileInputRef = useRef<HTMLInputElement>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
+
+  const router = useRouter()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,6 +100,35 @@ const NavbarSearchbar = () => {
     }
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isModal) {
+        if (event.key === 'ArrowDown') {
+          setSelectedIndex((prevIndex) =>
+            prevIndex < searchedQuizes.length - 1 ? prevIndex + 1 : prevIndex
+          )
+        } else if (event.key === 'ArrowUp') {
+          setSelectedIndex((prevIndex) =>
+            prevIndex > 0 ? prevIndex - 1 : prevIndex
+          )
+        }
+
+        if (event.key === 'Enter') {
+          router.push(`/quizes/${searchedQuizes[selectedIndex].slug}`)
+          reset()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isModal, searchedQuizes, selectedIndex])
+
+  console.log(selectedIndex)
+
   return (
     <>
       <div className="relative w-full md:w-3/4 flex justify-center items-center">
@@ -160,10 +193,12 @@ const NavbarSearchbar = () => {
           ref={modalRef}
           className="fixed top-[120px] md:top-12 md:left-[52%] left-0 md:-translate-x-1/2 bg-white w-full md:w-2/5  p-4 rounded-xl flex flex-col md:gap-1 gap-4 "
         >
-          {searchedQuizes.map((quiz: IQuiz) => (
+          {searchedQuizes.map((quiz: IQuiz, index: number) => (
             <div
               key={quiz.slug}
-              className="text-black flex justify-between items-center"
+              className={` ${
+                index == selectedIndex && 'bg-gray-400'
+              } text-black flex justify-between items-center`}
             >
               <Link href={`/quizes/${quiz.slug}`} onClick={reset}>
                 {quiz.title}

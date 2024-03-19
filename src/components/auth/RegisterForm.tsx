@@ -124,7 +124,7 @@ const RegisterForm = () => {
               type="submit"
               className="w-full bg-green-600  hover:bg-green-500"
             >
-              Zarejestrój się
+              Zarejestruj się
             </Button>
           ) : (
             <Link href={'/auth/login'} className="block">

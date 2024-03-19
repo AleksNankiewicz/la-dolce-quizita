@@ -121,11 +121,11 @@ const StatsBlock = () => {
                 trailColor: `white`,
               })}
             />
-          ) : (
+          ) : user?.level !== 1 && user?.level ? (
             <div className="w-1/2 md:w-1/3 lg:w-1/2 h-1/2 absolute right-6 bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -rotate-45 lg:rotate-0 text-3xl text-green-400">
               Max
             </div>
-          )}
+          ) : null}
         </div>
         <div className="absolute left-[10%] top-1/4  ">
           <p className="sm:text-4xl text-3xl ">

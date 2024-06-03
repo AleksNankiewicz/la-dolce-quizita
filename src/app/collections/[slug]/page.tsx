@@ -1,5 +1,5 @@
 import Navbar from "@/components/layouts/Navbar";
-import CollectionNavbar from "@/components/pages/collections/slug/CollectionNavbar";
+
 import EditCollectionDialog from "@/components/pages/profile/collections/EditCollectionDialog";
 import { db } from "@/lib/db";
 import Image from "next/image";

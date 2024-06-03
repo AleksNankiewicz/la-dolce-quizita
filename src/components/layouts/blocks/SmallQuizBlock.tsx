@@ -1,64 +1,64 @@
-'use client'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-import EditQuizButton from '../EditQuizButton'
-import Link from 'next/link'
-import { questionsProps, quizProps } from '@/types/data'
-import { CheckCircle2, UserRound } from 'lucide-react'
-import { formatNumber, sliceArrayByPercentage } from '@/lib/utils'
+"use client";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+
+import Link from "next/link";
+import { questionsProps, quizProps } from "@/types/data";
+import { CheckCircle2, UserRound } from "lucide-react";
+import { formatNumber, sliceArrayByPercentage } from "@/lib/utils";
 
 const SmallQuizBlock = ({
   quiz,
   email,
 }: {
-  quiz: quizProps
-  email: string | undefined
+  quiz: quizProps;
+  email: string | undefined;
 }) => {
-  const [userScore, setUserScore] = useState<number>()
-  let quizMaxPoints = 0
+  const [userScore, setUserScore] = useState<number>();
+  let quizMaxPoints = 0;
   const slicedArr = sliceArrayByPercentage(
     quiz.questions,
-    quiz.questionsPercent
-  )
+    quiz.questionsPercent,
+  );
   slicedArr &&
     slicedArr.forEach((question: questionsProps) => {
-      quizMaxPoints += question.points
-    })
+      quizMaxPoints += question.points;
+    });
 
   useEffect(() => {
-    const userQuiz = quiz.records?.find((record) => record.email == email)
+    const userQuiz = quiz.records?.find((record) => record.email == email);
 
     if (userQuiz) {
-      setUserScore(userQuiz.score)
+      setUserScore(userQuiz.score);
     }
-  }, [userScore, email])
+  }, [userScore, email]);
   return (
-    <div className="relative w-full h-[180px] sm:h-[240px] md:h-[200px] lg:h-[280px] flex justify-center items-center">
+    <div className="relative flex h-[180px] w-full items-center justify-center sm:h-[240px] md:h-[200px] lg:h-[280px]">
       <Link
         href={`/quizes/${quiz.slug}`}
-        className={`block text-2xl text-white p4 col-span-1 w-full h-full   text-center gap-2 rounded-xl relative group overflow-hidden flex-col${
-          !quiz.img && 'bg-slate-800'
+        className={`p4 group relative col-span-1 block h-full w-full gap-2 overflow-hidden rounded-xl text-center text-2xl text-white flex-col${
+          !quiz.img && "bg-slate-800"
         }`}
       >
-        <div className="w-full h-2/3 relative">
+        <div className="relative h-2/3 w-full">
           {quiz.img && (
             <Image
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              blurDataURL={typeof quiz.img == 'string' ? quiz.img : ''}
+              blurDataURL={typeof quiz.img == "string" ? quiz.img : ""}
               placeholder="blur"
-              src={typeof quiz.img == 'string' ? quiz.img : ''}
+              src={typeof quiz.img == "string" ? quiz.img : ""}
               fill
               alt={quiz.title}
-              className="   group-hover:scale-125  duration-300 object-cover"
+              className="object-cover duration-300 group-hover:scale-125"
             />
           )}
-          <div className="absolute right-2 bottom-2 text-xs bg-slate-900 flex items-center gap-1 rounded-xl px-1">
-            <UserRound size={12} strokeWidth={2} />{' '}
+          <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-xl bg-slate-900 px-1 text-xs">
+            <UserRound size={12} strokeWidth={2} />{" "}
             {formatNumber(quiz.playCount)}
           </div>
 
           {email && (
-            <div className="absolute right-2 top-2 text-xs bg-slate-900 flex items-center gap-1 rounded-xl px-1">
+            <div className="absolute right-2 top-2 flex items-center gap-1 rounded-xl bg-slate-900 px-1 text-xs">
               {userScore ? (
                 userScore < quizMaxPoints ? (
                   <p>{((userScore / quizMaxPoints) * 100).toFixed()}%</p>
@@ -74,13 +74,12 @@ const SmallQuizBlock = ({
         {/* {title && <div className="w-full h-1/3 bg-slate-900 ">{title}</div>} */}
         {quiz.title && (
           <div
-            className={`absolute h-[34%] w-full 
-         bottom-0 left-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex justify-start items-center px-2 text-base text-left`}
+            className={`absolute bottom-0 left-0 flex h-[34%] w-full items-center justify-start bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 px-2 text-left text-base`}
           >
             <p className="hidden md:block">{quiz.title}</p>
             <p
-              className={`md:hidden block ${
-                quiz.title.length > 20 && 'text-xs'
+              className={`block md:hidden ${
+                quiz.title.length > 20 && "text-xs"
               }`}
             >
               {quiz.title}
@@ -94,7 +93,7 @@ const SmallQuizBlock = ({
         quizAuthor={author}
       /> */}
     </div>
-  )
-}
+  );
+};
 
-export default SmallQuizBlock
+export default SmallQuizBlock;

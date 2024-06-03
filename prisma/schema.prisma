@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuizLevel {
+  easy
+  medium
+  hard
+  expert
+}
+
+enum QuizVisibility {
+  public
+  private
+}
+
+enum QuestionType {
+  multipleChoice
+  openEnded
+  sortable
+  trueOrFalse
+}
+
+enum QuizAccess {
+  all
+  authorizedOnly
+}
+
+enum CollectionVisibility {
+  public
+  private
+}
+
+model User {
+  id           String    @id @default(cuid())
+  kindeId      String    @unique
+  email        String    @unique
+  firstName    String
+  lastName     String
+  desc         String?
+  img          String?
+  points       Int       @default(0)
+  gamePlayed   Int       @default(0)
+  gameWon      Int       @default(0)
+  streak       Int       @default(0)
+  lastGameDate DateTime?
+  slug         String    @default(cuid())
+  level        Int       @default(1)
+  isVerified   Boolean   @default(false)
+  followedBy   User[]    @relation("UserFollows")
+  following    User[]    @relation("UserFollows")
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  playedQuizzes   Quiz[]       @relation("UserPlayedQuizzes")
+  favoriteQuizzes Quiz[]       @relation("UserFavoriteQuizzes")
+  createdQuizzes  Quiz[]       @relation("UserCreatedQuizzes")
+  collections     Collection[] @relation("UserCreatedCollections")
+}
+
+model Quiz {
+  id               String         @id @default(cuid())
+  title            String
+  desc             String?
+  img              String?
+  slug             String         @default(cuid())
+  level            QuizLevel      @default(easy)
+  visibility       QuizVisibility @default(public)
+  collections      Collection[]   @relation("CollectionQuizzes")
+  records          Record[]
+  access           QuizAccess     @default(all)
+  questions        Question[]
+  favoritedBy      User[]         @relation("UserFavoriteQuizzes")
+  playedBy         User[]         @relation("UserPlayedQuizzes")
+  author           User           @relation(fields: [authorId], references: [id], name: "UserCreatedQuizzes")
+  authorId         String
+  playCount        Int            @default(0)
+  reward           String?
+  questionsPercent Int
+  hiddenQuestions  Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  title     String
+  img       String
+  type      QuestionType @default(multipleChoice)
+  time      Int          @default(20)
+  points    Int          @default(20)
+  quiz      Quiz         @relation(fields: [quizId], references: [id])
+  quizId    String
+  answers   Answer[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  title      String
+  isCorrect  Boolean
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  img        String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Collection {
+  id         String               @id @default(cuid())
+  author     User                 @relation(fields: [authorId], references: [id], name: "UserCreatedCollections")
+  authorId   String
+  quizzes    Quiz[]               @relation("CollectionQuizzes")
+  title      String
+  desc       String?
+  img        String?
+  slug       String
+  isDefault  Boolean              @default(false)
+  visibility CollectionVisibility @default(public)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+}
+
+model Level {
+  id           String   @id @default(cuid())
+  number       Int
+  threshold    Int
+  badge        String?
+  profileFrame String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ShopItem {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String?
+  price     Int?
+  promotion Int?
+  type      String?
+  img       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Record {
+  id     String @id @default(cuid())
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  email  String
+  score  Int
+}

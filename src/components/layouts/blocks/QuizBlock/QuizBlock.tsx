@@ -1,11 +1,10 @@
 import { daysAgo } from "@/lib/utils";
-import { ExtendedQuiz } from "@/types/extended";
-import { Question, Quiz } from "@prisma/client";
+
+import { Quiz } from "@prisma/client";
 import { User, Users } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-import QuizBlockMenuBar from "./QuizBlockMenuBar";
 import Link from "next/link";
 
 // interface QuizBlockProps extends Quiz {

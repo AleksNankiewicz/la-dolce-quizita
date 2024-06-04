@@ -1,53 +1,38 @@
-import HomeQuizSectionLabel from "@/components/atoms/HomeQuizSectionLabel";
+import { getNewestQuizes } from "@/lib/actions";
 
-import {
-  getNewestQuizes,
-  getPopularQuizes,
-  getRandomSubCategories,
-} from "@/lib/actions";
-
-import HomeSlider from "@/components/misc/HomeSlider";
-import HomeCategoriesSlider from "@/components/misc/HomeCategoriesSlider";
-
-import { Question } from "@/lib/models";
-import HomeNavbar from "@/components/pages/home/HomeNavbar";
 import { db } from "@/lib/db";
 
+import QuizzesSlider from "@/components/layouts/sliders/QuizzesSlider";
+import CollectionsSlider from "@/components/layouts/sliders/CollectionsSlider";
+
 export default async function Home() {
-  const quizes = await db.quiz.findMany({
+  const quizzes = await db.quiz.findMany({
     take: 10,
     include: {
       questions: true,
     },
   });
   const newestQuizes = await getNewestQuizes(8);
-  const subCategories = await getRandomSubCategories(8);
+  const collections = await db.collection.findMany();
 
   return (
     <>
-      <HomeNavbar />
-      <main className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
-        {/* <HomeQuizSectionLabel title={'Najpopularniejsze wyzwanie'} /> */}
-        {/* <BigQuizBlock
-        slug={quizes[0].slug}
-        title={quizes[0].title}
-        desc={quizes[0].desc}
-        img={quizes[0].img}
-        categorySlug={quizes[0].categorySlug}
-        categoryName={quizes[0].categoryName}
-      /> */}
-        <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/" />
+      {/* <HomeNavbar /> */}
+      <main className="flex flex-col gap-4">
+        {/* <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/quizzes" /> */}
 
-        <HomeSlider quizes={quizes} />
+        <QuizzesSlider quizzes={quizzes} title="Nowe Quizy" seeAllLink="/" />
 
-        {/* <HomeQuizSectionLabel title={"Najnowsze Quizy"} />
+        {/* <HomeQuizSectionLabel title={"Najnowsze Quizy"} /> */}
 
-        <HomeSlider quizes={newestQuizes} />
+        <QuizzesSlider quizzes={newestQuizes} title="Nie działające Quizy" />
 
-        <HomeQuizSectionLabel title={"Kategorie"} />
-        <HomeCategoriesSlider categories={subCategories} />
-
-        <HomeQuizSectionLabel title="Najlepsi gracze" /> */}
+        {/* <HomeQuizSectionLabel title={"Kolekcje"} seeMoreLink="/collections" /> */}
+        <CollectionsSlider
+          collections={collections}
+          title="Kolekcje"
+          seeAllLink="/collections"
+        />
       </main>
     </>
   );

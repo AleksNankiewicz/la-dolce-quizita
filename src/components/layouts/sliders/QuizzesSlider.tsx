@@ -9,8 +9,15 @@ import { ThreeDots } from "react-loader-spinner";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { QuizWithQuestions } from "@/types/extended";
+import SliderLabel from "./SliderLabel";
 
-const HomeSlider = ({ quizes }: { quizes: QuizWithQuestions[] }) => {
+type QuizzesSliderProps = {
+  quizzes: QuizWithQuestions[];
+  title: string;
+  seeAllLink?: string;
+};
+
+const QuizzesSlider = ({ quizzes, title, seeAllLink }: QuizzesSliderProps) => {
   const [email, setEmail] = useState<string | undefined>();
 
   const animation = { duration: 20000, easing: (t: number) => t };
@@ -34,15 +41,15 @@ const HomeSlider = ({ quizes }: { quizes: QuizWithQuestions[] }) => {
       spacing: 13,
     },
 
-    created(s) {
-      s.moveToIdx(5, true, animation);
-    },
-    updated(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
-    },
-    animationEnded(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
-    },
+    // created(s) {
+    //   s.moveToIdx(5, true, animation);
+    // },
+    // updated(s) {
+    //   s.moveToIdx(s.track.details.abs + 5, true, animation);
+    // },
+    // animationEnded(s) {
+    //   s.moveToIdx(s.track.details.abs + 5, true, animation);
+    // },
   });
 
   useEffect(() => {
@@ -67,12 +74,13 @@ const HomeSlider = ({ quizes }: { quizes: QuizWithQuestions[] }) => {
   }
 
   return (
-    <div className="col-span-2 w-full md:col-span-4">
+    <div className="w-full">
+      <SliderLabel title={title} seeAllLink={seeAllLink} />
       <div ref={sliderRef} className="keen-slider">
-        <div className="absolute -left-2 top-0 z-20 h-full w-16 bg-gradient-to-r from-slate-950 to-black/0"></div>
-        <div className="absolute -right-2 top-0 z-20 h-full w-20 bg-gradient-to-l from-slate-950 to-black/0"></div>
+        {/* <div className="absolute -left-2 top-0 z-20 h-full w-16 bg-gradient-to-r from-slate-950 to-black/0"></div> */}
+        <div className="absolute -right-2 top-0 z-20 h-full w-20 bg-gradient-to-l from-background to-background/0"></div>
 
-        {quizes.map((quiz: QuizWithQuestions) => (
+        {quizzes.map((quiz: QuizWithQuestions) => (
           <SliderQuiz quiz={quiz} email={email} key={quiz.slug} />
         ))}
       </div>
@@ -80,4 +88,4 @@ const HomeSlider = ({ quizes }: { quizes: QuizWithQuestions[] }) => {
   );
 };
 
-export default HomeSlider;
+export default QuizzesSlider;

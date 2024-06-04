@@ -45,7 +45,7 @@ const layout = async ({
 
   return (
     <>
-      <ProfileNavbar user={user} isUserProfile={user.id == authUser?.id} />
+      {/* <ProfileNavbar user={user} isUserProfile={user.id == authUser?.id} /> */}
 
       <main className="mt-8">
         <div className="flex flex-col gap-5 sm:flex-row">

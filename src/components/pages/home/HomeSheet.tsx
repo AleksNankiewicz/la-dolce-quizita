@@ -26,6 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import Link from "next/link";
+import useMediaQuery from "@/lib/hooks/use-media-querry";
 
 type Shortcut = {
   title: string;
@@ -38,7 +39,7 @@ type Shortcut = {
   unloggedOnly?: boolean;
 };
 
-const sheetShortcuts: Shortcut[] = [
+export const sheetShortcuts: Shortcut[] = [
   {
     title: "Profil",
     link: "/profiles",
@@ -122,9 +123,12 @@ type HomeSheetProps = {
 };
 
 const HomeSheet = ({ userSlug }: HomeSheetProps) => {
+  // const isMediumScreen = useMediaQuery("(min-width: 768px)");
+
+  // if (isMediumScreen) return;
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger className="sm:hidden">
         <Menu size={30} />
       </SheetTrigger>
       <SheetContent className="w-full">

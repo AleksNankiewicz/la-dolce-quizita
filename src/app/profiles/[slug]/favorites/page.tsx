@@ -1,9 +1,9 @@
 import QuizBlock from "@/components/layouts/blocks/QuizBlock/QuizBlock";
 import { db } from "@/lib/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
-import { unstable_noStore as noStore } from "next/cache";
+
 const page = async ({ params }: { params: any }) => {
   const { slug } = params;
   const favoritesQuizzes = await db.quiz.findMany({

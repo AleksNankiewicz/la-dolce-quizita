@@ -15,23 +15,28 @@ import QuestionBlock from "@/components/layouts/blocks/QuestionBlock";
 import BottomNavbar from "@/components/layouts/BottomNavbar";
 import Navbar from "@/components/layouts/Navbar";
 import QuizAddToFavorite from "@/components/pages/quizzes/quiz/QuizAddToFavorites";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug;
 
-  const { getUser, isAuthenticated } = getKindeServerSession();
+  const session = await auth();
 
-  const kindeUser = await getUser();
-  const user = await db.user.findFirst({
+  const user = session?.user;
+
+  // const quiz = await getQuizBySlug(slug)
+
+  const favoriteQuizzes = await db.quiz.findMany({
     where: {
-      kindeId: kindeUser?.id,
-    },
-    include: {
-      favoriteQuizzes: true,
+      favoritedBy: {
+        some: {
+          id: user?.id,
+        },
+      },
     },
   });
-  // const quiz = await getQuizBySlug(slug)
+
+  console.log(favoriteQuizzes);
   const quiz = await db.quiz.findFirst({
     where: {
       slug: slug,
@@ -77,10 +82,12 @@ const SingleQuizPage = async (params: any) => {
           </Link>
           {user && (
             <QuizAddToFavorite
-              isInFavorites={user.favoriteQuizzes.some(
-                (favoriteQuiz) => favoriteQuiz.slug === slug,
-              )}
-              userId={user?.id}
+              isInFavorites={
+                !favoriteQuizzes.some(
+                  (favoriteQuiz) => favoriteQuiz.slug === slug,
+                )
+              }
+              userId={user?.id as string}
               quizId={quiz.id}
             />
           )}

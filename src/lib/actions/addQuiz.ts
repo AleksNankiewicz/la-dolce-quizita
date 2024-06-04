@@ -35,6 +35,7 @@ export const addQuiz = async (quizData: ExtendedQuiz) => {
           hiddenQuestions: quizData.hiddenQuestions,
           createdAt: quizData.createdAt,
           updatedAt: quizData.updatedAt,
+
           collections: {
             connect: quizData.collections.map((collection) => ({
               id: collection.id,

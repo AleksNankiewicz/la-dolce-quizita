@@ -5,6 +5,7 @@ import React from "react";
 
 const page = async () => {
   const collections = await db.collection.findMany();
+
   return (
     <>
       <CollectionsNavbar />

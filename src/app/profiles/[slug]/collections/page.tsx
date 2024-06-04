@@ -1,7 +1,6 @@
 import CollectionBlock from "@/components/layouts/blocks/CollectionBlock";
-import EditCollectionDialog from "@/components/pages/profile/collections/EditCollectionDialog";
 import { db } from "@/lib/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
 import { ArrowUpDown, Plus } from "lucide-react";
 import React from "react";
 
@@ -14,7 +13,7 @@ const page = async ({ params }: { params: any }) => {
       },
     },
   });
-
+  console.log(collections);
   return (
     <div className="">
       <div className="flex justify-between py-10">

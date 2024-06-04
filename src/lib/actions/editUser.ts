@@ -5,9 +5,9 @@ import { db } from "../db";
 
 export const editUser = async (
   id: string,
-  firstName: string,
-  lastName: string,
-  img: string,
+  firstName: string | null,
+  lastName: string | null,
+  image: string | null,
   desc: string | null,
 ) => {
   try {
@@ -16,7 +16,7 @@ export const editUser = async (
       data: {
         firstName,
         lastName,
-        img,
+        image,
         desc,
       },
     });

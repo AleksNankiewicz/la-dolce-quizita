@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Menu, Plus, Sparkles, SquarePen, User } from "lucide-react";
+import { Plus, Sparkles, SquarePen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import NavigationDropdown, {
   TSubHeader,
@@ -8,9 +8,10 @@ import NavigationDropdown, {
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import Navbar from "@/components/layouts/Navbar";
 import HomeSheet from "./HomeSheet";
-import { db } from "@/lib/db";
 
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth, signIn, signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
+
 const profileSubHeaders: TSubHeader[] = [
   {
     title: "Profil",
@@ -39,20 +40,14 @@ const createQuizSubHeaders: TSubHeader[] = [
 ];
 
 const HomeNavbar = async () => {
-  const { getUser, isAuthenticated } = getKindeServerSession();
-  const kindeUser = await getUser();
-  const isAuth = await isAuthenticated();
-  const user = await db.user.findFirst({
-    where: {
-      kindeId: kindeUser?.id,
-    },
-  });
+  const session = await auth();
+
+  const user = session?.user;
 
   return (
     <Navbar>
       <h1 className="text-2xl font-bold">Quizymania</h1>
 
-      <HomeSheet userSlug={user?.slug} isAuth={isAuth} />
       <div className="hidden gap-4 md:flex">
         <ThemeSwitcher />
 
@@ -65,7 +60,34 @@ const HomeNavbar = async () => {
           }
           subHeaders={createQuizSubHeaders}
         />
-        <NavigationDropdown trigger={<User />} subHeaders={profileSubHeaders} />
+
+        {/* <NavigationDropdown trigger={<User />} subHeaders={profileSubHeaders} /> */}
+
+        {!user && (
+          <form
+            action={async () => {
+              "use server";
+              await signIn();
+            }}
+          >
+            <Button type="submit" variant={"default"}>
+              Zaloguj się
+            </Button>
+          </form>
+        )}
+        {user && (
+          <form
+            action={async () => {
+              "use server";
+              await signOut();
+            }}
+          >
+            <Button type="submit" variant={"outline"}>
+              Wyloguj się
+            </Button>
+          </form>
+        )}
+        <HomeSheet userSlug={user?.slug} />
       </div>
     </Navbar>
   );

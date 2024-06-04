@@ -1,16 +1,17 @@
-import HomeQuizSectionLabel from '@/components/atoms/HomeQuizSectionLabel'
+import HomeQuizSectionLabel from "@/components/atoms/HomeQuizSectionLabel";
 
 import {
   getNewestQuizes,
   getPopularQuizes,
   getRandomSubCategories,
-} from '@/lib/actions'
+} from "@/lib/actions";
 
-import HomeSlider from '@/components/misc/HomeSlider'
-import HomeCategoriesSlider from '@/components/misc/HomeCategoriesSlider'
-import { db } from '@/lib/db'
-import { Question } from '@/lib/models'
-import HomeNavbar from '@/components/pages/home/HomeNavbar'
+import HomeSlider from "@/components/misc/HomeSlider";
+import HomeCategoriesSlider from "@/components/misc/HomeCategoriesSlider";
+
+import { Question } from "@/lib/models";
+import HomeNavbar from "@/components/pages/home/HomeNavbar";
+import { db } from "@/lib/db";
 
 export default async function Home() {
   const quizes = await db.quiz.findMany({
@@ -18,14 +19,14 @@ export default async function Home() {
     include: {
       questions: true,
     },
-  })
-  const newestQuizes = await getNewestQuizes(8)
-  const subCategories = await getRandomSubCategories(8)
+  });
+  const newestQuizes = await getNewestQuizes(8);
+  const subCategories = await getRandomSubCategories(8);
 
   return (
     <>
       <HomeNavbar />
-      <main className=" w-full  grid grid-cols-2 gap-3 md:grid-cols-4">
+      <main className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
         {/* <HomeQuizSectionLabel title={'Najpopularniejsze wyzwanie'} /> */}
         {/* <BigQuizBlock
         slug={quizes[0].slug}
@@ -35,19 +36,19 @@ export default async function Home() {
         categorySlug={quizes[0].categorySlug}
         categoryName={quizes[0].categoryName}
       /> */}
-        <HomeQuizSectionLabel title={'Wybrane Quizy'} seeMoreLink="/" />
+        <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/" />
 
         <HomeSlider quizes={quizes} />
 
-        <HomeQuizSectionLabel title={'Najnowsze Quizy'} />
+        {/* <HomeQuizSectionLabel title={"Najnowsze Quizy"} />
 
         <HomeSlider quizes={newestQuizes} />
 
-        <HomeQuizSectionLabel title={'Kategorie'} />
+        <HomeQuizSectionLabel title={"Kategorie"} />
         <HomeCategoriesSlider categories={subCategories} />
 
-        <HomeQuizSectionLabel title="Najlepsi gracze" />
+        <HomeQuizSectionLabel title="Najlepsi gracze" /> */}
       </main>
     </>
-  )
+  );
 }

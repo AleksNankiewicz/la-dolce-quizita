@@ -1,9 +1,10 @@
 "use server";
 import { ExtendedQuiz } from "@/types/extended";
-import { Quiz } from "@prisma/client";
+
 import { v4 as uuidv4 } from "uuid";
-export const getBlankQuiz = async () => {
-  const randomSlug = Math.floor(Math.random() * 999923) + "";
+import { slugify } from "../utils";
+export const getBlankQuiz = async (userId: string) => {
+  const randomSlug = slugify("quiz");
   try {
     const blankQuiz: ExtendedQuiz = {
       id: uuidv4(),
@@ -12,7 +13,7 @@ export const getBlankQuiz = async () => {
       desc: "",
       slug: randomSlug,
       img: "",
-      authorId: "clwfcaw9q000022hhr1a11j7w",
+      authorId: userId,
 
       playCount: 0,
 

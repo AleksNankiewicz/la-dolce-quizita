@@ -21,7 +21,7 @@ const profileShortcuts = [
 const ProfileNavigation = ({ slug }: { slug: string }) => {
   const pathName = usePathname();
   return (
-    <div className="flex gap-3 md:hidden">
+    <div className="flex gap-3 sm:hidden">
       {profileShortcuts.map((shortcut) => (
         <Link
           key={shortcut.title}

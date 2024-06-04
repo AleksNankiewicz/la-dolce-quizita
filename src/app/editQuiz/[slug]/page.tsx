@@ -2,28 +2,18 @@ import React from "react";
 import { db } from "@/lib/db";
 import { getBlankQuiz } from "@/lib/actions/getBlankQuiz";
 import EditQuizForm from "@/components/pages/editQuiz/EditQuizForm";
-import { Quiz, Question } from "@prisma/client";
 import { ExtendedQuiz } from "@/types/extended";
+import { auth } from "@/auth";
 
 type Params = {
   params: { slug: string };
 };
 
-const calculateQuizDuration = (questions: Question[]) => {
-  const totalTime = questions.reduce((acc, question) => acc + question.time, 0);
-  return {
-    time: totalTime,
-    minutes: Math.floor(totalTime / 60),
-    seconds: totalTime % 60,
-  };
-};
-
-const calculateQuizMaxPoints = (questions: Question[]) => {
-  return questions.reduce((acc, question) => acc + question.points, 0);
-};
-
 const EditQuizPage = async ({ params }: Params) => {
   const { slug } = params;
+  const session = await auth();
+
+  const user = session?.user;
 
   let quiz = (await db.quiz.findFirst({
     where: { slug },
@@ -35,15 +25,15 @@ const EditQuizPage = async ({ params }: Params) => {
   })) as ExtendedQuiz | undefined;
 
   if (!quiz) {
-    quiz = await getBlankQuiz();
+    quiz = await getBlankQuiz(user?.id as string);
+
     if (!quiz) return null;
   }
 
   const questions = quiz.questions || [];
-  const quizDuration = calculateQuizDuration(questions);
-  const quizMaxPoints = calculateQuizMaxPoints(questions);
+  if (!user) return;
 
-  return <EditQuizForm initialQuiz={quiz} />;
+  return <EditQuizForm initialQuiz={quiz} userId={user.id as string} />;
 };
 
 export default EditQuizPage;

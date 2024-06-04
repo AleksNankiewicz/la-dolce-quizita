@@ -2,8 +2,7 @@ import QuizBlock from "@/components/layouts/blocks/QuizBlock/QuizBlock";
 import SortingPopover from "@/components/pages/profile/SortingPopover";
 import { TSortingOption, sortingOptions } from "@/lib/constants/sortingOptions";
 import { db } from "@/lib/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { ArrowUpDown } from "lucide-react";
+
 import React from "react";
 
 type PageProps = {

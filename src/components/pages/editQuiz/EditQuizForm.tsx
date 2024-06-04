@@ -42,11 +42,16 @@ import EditQuizNavbar from "./EditQuizNavbar";
 import UnderlineInput from "@/components/layouts/inputs/UnderlineInput";
 import ImageInput from "@/components/layouts/inputs/ImageInput";
 
-const EditQuizForm = ({ initialQuiz }: { initialQuiz: ExtendedQuiz }) => {
+type EditQuizFormProps = {
+  initialQuiz: ExtendedQuiz;
+  userId: string;
+};
+const EditQuizForm = ({ initialQuiz, userId }: EditQuizFormProps) => {
   const [fetchedUser, setFetchedUser] = useState<any>();
   const [quiz, setQuiz] = useState<ExtendedQuiz>(initialQuiz);
   const pathName = usePathname();
-
+  console.log(userId);
+  console.log("quizAuthorId", quiz.authorId);
   //content
   const [questions, setQuestions] = useState<QuestionWithAnswers[]>(
     quiz.questions,
@@ -146,7 +151,7 @@ const EditQuizForm = ({ initialQuiz }: { initialQuiz: ExtendedQuiz }) => {
       desc: quiz.desc,
       slug: quiz.slug || randomSlug,
       img: imageRefs[0] as string,
-      authorId: quiz.authorId || "clwfcaw9q000022hhr1a11j7w",
+      authorId: quiz.authorId || userId,
       records: quiz.records || [],
       questions: questions,
       playCount: quiz.playCount || 0,

@@ -28,6 +28,15 @@ const toggleQuizInFavorites = async (quizId: string, userId: string) => {
           },
         },
       });
+
+      await db.quiz.update({
+        where: { id: quizId },
+        data: {
+          favoritedBy: {
+            disconnect: { id: userId },
+          },
+        },
+      });
     } else {
       // Quiz is not favorited, so add it
       await db.user.update({
@@ -38,8 +47,18 @@ const toggleQuizInFavorites = async (quizId: string, userId: string) => {
           },
         },
       });
+
+      await db.quiz.update({
+        where: { id: quizId },
+        data: {
+          favoritedBy: {
+            connect: { id: userId },
+          },
+        },
+      });
     }
-    revalidateTag("quizes");
+
+    revalidateTag("quizzes");
     return { success: true };
   } catch (error) {
     console.error("Error toggling quiz in favorites:", error);

@@ -23,7 +23,7 @@ import { uploadImages } from "@/lib/actions/uploadImages";
 import { Pencil } from "lucide-react";
 import { revalidateTag } from "next/cache";
 const EditProfileDialog = ({ user }: { user: User }) => {
-  const [image, setImage] = useState<any>(user.img);
+  const [image, setImage] = useState<any>(user.image);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [desc, setDesc] = useState(user.desc);

@@ -26,11 +26,6 @@ import {
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import Link from "next/link";
-import {
-  LoginLink,
-  LogoutLink,
-  RegisterLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 
 type Shortcut = {
   title: string;
@@ -123,12 +118,10 @@ const sheetShortcuts: Shortcut[] = [
 ];
 
 type HomeSheetProps = {
-  isAuth: boolean;
   userSlug?: string;
 };
 
-const HomeSheet = ({ isAuth, userSlug }: HomeSheetProps) => {
-  console.log(isAuth);
+const HomeSheet = ({ userSlug }: HomeSheetProps) => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -144,13 +137,13 @@ const HomeSheet = ({ isAuth, userSlug }: HomeSheetProps) => {
           </SheetTitle>
           <div className="flex flex-col gap-4 pt-4">
             {sheetShortcuts.map((shortcut) => {
-              if (isAuth && shortcut.unloggedOnly) return null;
-              if (!isAuth && shortcut.loggedOnly) return null;
+              if (userSlug && shortcut.unloggedOnly) return null;
+              if (!userSlug && shortcut.loggedOnly) return null;
               return (
                 <Link
                   href={
                     shortcut.link == "/profiles"
-                      ? `${shortcut.link}/${userSlug}`
+                      ? `${shortcut.link}/${userSlug}/quizzes`
                       : shortcut.link || "#"
                   }
                   key={shortcut.title}

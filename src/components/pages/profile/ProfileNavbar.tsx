@@ -26,7 +26,7 @@ const ProfileNavbar = ({ user, isUserProfile }: ProfileNavbarProps) => {
         <div className="">
           <EditProfileDialog user={user} />
         </div>
-        <Settings size={30} />
+        {/* <Settings size={30} /> */}
       </div>
     </Navbar>
   );

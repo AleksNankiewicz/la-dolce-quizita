@@ -57,7 +57,7 @@ const EditAiQuizForm = () => {
       </Card>
 
       {/* no user temp */}
-      {quiz && <EditQuizForm initialQuiz={quiz} userId="noUser" />}
+      {/* {quiz && <EditQuizForm initialQuiz={quiz} userId="noUser" />} */}
     </>
   );
 };

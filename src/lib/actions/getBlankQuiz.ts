@@ -14,7 +14,7 @@ export const getBlankQuiz = async (userId: string) => {
       slug: randomSlug,
       img: "",
       authorId: userId,
-
+      color: "",
       playCount: 0,
 
       createdAt: new Date(),

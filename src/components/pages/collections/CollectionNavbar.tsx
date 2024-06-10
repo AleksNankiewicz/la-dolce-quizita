@@ -17,12 +17,21 @@ const CollectionNavbar = ({
   );
 
   const pathName = usePathname();
-  if (!isAuthor) return;
+
   useEffect(() => {
-    setNavbarComponents([
-      <EditCollectionDialog collection={collection} isEditing />,
-    ]);
-  }, [collection, pathName, setNavbarComponents]);
+    if (isAuthor) {
+      setNavbarComponents([
+        <EditCollectionDialog
+          key="edit-dialog"
+          collection={collection}
+          isEditing
+        />,
+      ]);
+    } else {
+      setNavbarComponents([]);
+    }
+  }, [collection, pathName, setNavbarComponents, isAuthor]);
+
   return null;
 };
 

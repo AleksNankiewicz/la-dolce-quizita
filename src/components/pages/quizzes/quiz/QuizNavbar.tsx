@@ -27,7 +27,7 @@ const QuizNavbar = ({
 
   useEffect(() => {
     setNavbarComponents([
-      <div className="flex items-center gap-4">
+      <div key={"quiz-navbar"} className="flex items-center gap-4">
         <Link
           className={cn(buttonVariants(), "hidden md:flex")}
           href={`/game/${slug}`}

@@ -22,7 +22,10 @@ const GameNavbar = ({
 
   useEffect(() => {
     setNavbarComponents([
-      <div className="flex w-[94vw] flex-1 items-center justify-between gap-4 text-xl font-semibold sm:w-[96.5vw]">
+      <div
+        key={"game-navbar"}
+        className="flex w-[94vw] flex-1 items-center justify-between gap-4 text-xl font-semibold sm:w-[96.5vw]"
+      >
         <GameSheet />
         {!hideAnswerType && <p className="text-center">Wybierz odpowiedź</p>}
         <p className="relative z-40">

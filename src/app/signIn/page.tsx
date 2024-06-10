@@ -26,12 +26,13 @@ export default async function SignInPage() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" />
-          </div>
+          </div> */}
           {Object.values(providerMap).map((provider) => (
             <form
+              key={provider.id}
               action={async () => {
                 "use server";
                 try {

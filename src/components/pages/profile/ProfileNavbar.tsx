@@ -19,7 +19,7 @@ const ProfileNavbar = ({ user, isUserProfile }: ProfileNavbarProps) => {
 
   useEffect(() => {
     setNavbarComponents([
-      <div className="flex items-center gap-2">
+      <div key={"profile-navbar"} className="flex items-center gap-2">
         {isUserProfile ? (
           <EditProfileDialog user={user} />
         ) : (

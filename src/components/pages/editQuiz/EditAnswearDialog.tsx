@@ -1,5 +1,5 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -9,72 +9,76 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 
-import { Button } from '../../ui/button'
-import { FaRectangleXmark } from 'react-icons/fa6'
-import { Separator } from '../../ui/separator'
-import { cn } from '@/lib/utils'
-import { TbSquareXFilled } from 'react-icons/tb'
-import { Switch } from '../../ui/switch'
+import { Button } from "../../ui/button";
+import { FaRectangleXmark } from "react-icons/fa6";
+import { Separator } from "../../ui/separator";
+import { cn } from "@/lib/utils";
+import { TbSquareXFilled } from "react-icons/tb";
+import { Switch } from "../../ui/switch";
 
-import { FaCheckSquare, FaXingSquare } from 'react-icons/fa'
-import { Answer } from '@prisma/client'
-import { TAnswerButtonColors } from '@/lib/constants/answerButtonColors'
-import { Trash } from 'lucide-react'
-import ContentEditable from '@/components/ui/ContentEditable'
+import { FaCheckSquare, FaXingSquare } from "react-icons/fa";
+import { Answer } from "@prisma/client";
+import { TAnswerButtonColors } from "@/lib/constants/answerButtonColors";
+import { Trash } from "lucide-react";
+import ContentEditable from "@/components/ui/ContentEditable";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import useMediaQuery from '@/lib/hooks/use-media-querry'
+} from "@/components/ui/tooltip";
+import useMediaQuery from "@/lib/hooks/use-media-querry";
 type EditableAnswerProps = {
-  answer: Answer
-  editAnswer: (answer: Answer) => void
-  deleteAnswer: (id: string) => void
-  color: TAnswerButtonColors
-}
+  answer: Answer;
+  editAnswer: (answer: Answer) => void;
+  deleteAnswer: (id: string) => void;
+  color: TAnswerButtonColors;
+};
 const EditAnswerDialog = ({
   answer,
   color,
   editAnswer,
   deleteAnswer,
 }: EditableAnswerProps) => {
-  const [isCorrect, setIsCorrect] = useState(answer.isCorrect)
-  const [title, setTitle] = useState(answer.title)
-  const [error, setError] = useState(false)
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isCorrect, setIsCorrect] = useState(answer.isCorrect);
+  const [title, setTitle] = useState(answer.title);
+  const [error, setError] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  const isMediumScreen = useMediaQuery('(min-width: 768px)')
+  const isMediumScreen = useMediaQuery("(min-width: 768px)");
 
   const handleCheckChange = () => {
-    setIsCorrect((prevIsCorrect) => !prevIsCorrect)
+    setIsCorrect((prevIsCorrect) => !prevIsCorrect);
     if (isMediumScreen) {
-      const updatedAnswer = { ...answer, title: title, isCorrect: !isCorrect }
-      editAnswer(updatedAnswer)
+      const updatedAnswer = { ...answer, title: title, isCorrect: !isCorrect };
+      editAnswer(updatedAnswer);
     }
-  }
+  };
   const handleTitleChange = (newTilte: string) => {
-    setTitle(newTilte)
+    setTitle(newTilte);
     if (isMediumScreen) {
-      const updatedAnswer = { ...answer, title: newTilte, isCorrect: isCorrect }
-      editAnswer(updatedAnswer)
+      const updatedAnswer = {
+        ...answer,
+        title: newTilte,
+        isCorrect: isCorrect,
+      };
+      editAnswer(updatedAnswer);
     }
-  }
+  };
 
   const saveChanges = () => {
-    setError(false)
-    const updatedAnswer = { ...answer, title: title, isCorrect: isCorrect }
-    editAnswer(updatedAnswer)
-  }
+    setError(false);
+    const updatedAnswer = { ...answer, title: title, isCorrect: isCorrect };
+    editAnswer(updatedAnswer);
+  };
 
   const handleDelete = () => {
-    deleteAnswer(answer.id)
+    deleteAnswer(answer.id);
 
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative w-full">
@@ -87,10 +91,9 @@ const EditAnswerDialog = ({
             errorMessage="Odpowiedź nie może być pusta"
             placeholder="tu wpisz odpowiedź"
             className={cn(
-              `p-7   
-               text-center  min-h-[84px]  text-xl  flex sm:justify-center items-center rounded-md shadow-[0px_5px_0px_0px_#00000024] text-white relative`,
+              `relative flex min-h-[84px] items-center rounded-md p-7 text-center text-xl text-white shadow-[0px_5px_0px_0px_#00000024] sm:justify-center`,
               color.background,
-              color.shadow
+              color.shadow,
             )}
           ></ContentEditable>
         </DialogTrigger>
@@ -98,7 +101,7 @@ const EditAnswerDialog = ({
           <Trash
             size={20}
             onClick={() => handleDelete()}
-            className="absolute left-[20px] top-[20px] sm:top-auto bottom-[30px] text-red-500 cursor-pointer z-50"
+            className="absolute bottom-[30px] left-[20px] top-[20px] z-50 cursor-pointer text-red-500 sm:top-auto"
           />
           <DialogHeader className="relative">
             <DialogTitle className="font-bold">Edytuj Odpowiedź</DialogTitle>
@@ -111,13 +114,12 @@ const EditAnswerDialog = ({
             errorMessage="Odpowiedź nie może być pusta"
             className={cn(
               // buttonVariants(),
-              `p-7   
-             text-center  min-h-[84px]  text-xl  flex sm:justify-center items-center rounded-md shadow-[0px_5px_0px_0px_#00000024] text-white `,
+              `flex min-h-[84px] items-center rounded-md p-7 text-center text-xl text-white shadow-[0px_5px_0px_0px_#00000024] sm:justify-center`,
               color.background,
-              color.shadow
+              color.shadow,
             )}
           />
-          <div className="flex gap-2 justify-between">
+          <div className="flex justify-between gap-2">
             <p className="font-semibold">Poprawna Odpowiedź</p>
             <Switch
               checked={isCorrect}
@@ -128,7 +130,7 @@ const EditAnswerDialog = ({
           <Separator />
           <DialogFooter>
             <DialogClose>
-              <Button onClick={saveChanges} className="rounded-full w-full ">
+              <Button onClick={saveChanges} className="w-full rounded-full">
                 OK
               </Button>
             </DialogClose>
@@ -140,7 +142,7 @@ const EditAnswerDialog = ({
           <Tooltip>
             <TooltipTrigger
               onClick={handleDelete}
-              className="absolute left-2 top-2 "
+              className="absolute left-2 top-2 text-white"
             >
               <Trash size={16} />
             </TooltipTrigger>
@@ -153,11 +155,11 @@ const EditAnswerDialog = ({
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
-            isMediumScreen && handleCheckChange()
+            isMediumScreen && handleCheckChange();
           }}
           className={cn(
-            'absolute right-2 top-2 ',
-            !isMediumScreen && 'pointer-events-none'
+            "absolute right-2 top-2 text-white",
+            !isMediumScreen && "pointer-events-none",
           )}
         >
           {isCorrect ? <FaCheckSquare /> : <TbSquareXFilled />}
@@ -169,7 +171,7 @@ const EditAnswerDialog = ({
         )}
       </Tooltip>
     </div>
-  )
-}
+  );
+};
 
-export default EditAnswerDialog
+export default EditAnswerDialog;

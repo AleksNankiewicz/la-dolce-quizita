@@ -1,17 +1,10 @@
 "use client";
-import React, { ChangeEvent, useEffect, useState } from "react";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import React, { useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
-import { deleteQuiz, getUserByEmail } from "@/lib/actions";
+import { deleteQuiz } from "@/lib/actions";
 
-import EditableQuestion from "./EditableQuestion";
+import EditableQuestion from "./Questions/EditableQuestion";
 import { v4 as uuidv4 } from "uuid";
 import {
   cn,
@@ -20,42 +13,42 @@ import {
   sliceArrayByPercentage,
 } from "@/lib/utils";
 
-import toast from "react-hot-toast";
-
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 import { addQuiz } from "@/lib/actions/addQuiz";
-import { Question } from "@prisma/client";
+import { Collection, Question } from "@prisma/client";
 
 // Dodajemy pola dla pytań i odpowiedzi do typu Quiz
 
-import { Checkbox } from "../../ui/checkbox";
 import { uploadImages } from "@/lib/actions/uploadImages";
 import { usePathname } from "next/navigation";
 
-import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
-import { Label } from "../../ui/label";
 import { ExtendedQuiz, QuestionWithAnswers } from "@/types/extended";
 import { AddQuestionDialog } from "./AddQuestionDialog";
-import { editQuizAccordionData } from "@/lib/constants/editQuizAccordionData";
+
 import EditQuizNavbar from "./EditQuizNavbar";
-import UnderlineInput from "@/components/layouts/inputs/UnderlineInput";
-import ImageInput from "@/components/layouts/inputs/ImageInput";
+
+import { toast } from "sonner";
 
 type EditQuizFormProps = {
   initialQuiz: ExtendedQuiz;
   userId: string;
+  collections: Collection[];
 };
-const EditQuizForm = ({ initialQuiz, userId }: EditQuizFormProps) => {
-  const [fetchedUser, setFetchedUser] = useState<any>();
+const EditQuizForm = ({
+  initialQuiz,
+  userId,
+  collections,
+}: EditQuizFormProps) => {
   const [quiz, setQuiz] = useState<ExtendedQuiz>(initialQuiz);
   const pathName = usePathname();
-  console.log(userId);
-  console.log("quizAuthorId", quiz.authorId);
+  const [allCollections, setAllCollections] =
+    useState<Collection[]>(collections);
   //content
   const [questions, setQuestions] = useState<QuestionWithAnswers[]>(
     quiz.questions,
   );
+
   //refs
 
   const [editableQuestionsRef, setEditableQuestionsRef] = useState<
@@ -66,6 +59,7 @@ const EditQuizForm = ({ initialQuiz, userId }: EditQuizFormProps) => {
     const newQuestion: QuestionWithAnswers = {
       id: uuidv4(),
       title: "",
+      color: "",
       // correctAnswear: false,
       points: 20,
       answers: [],
@@ -147,6 +141,7 @@ const EditQuizForm = ({ initialQuiz, userId }: EditQuizFormProps) => {
     } = {
       id: quiz.id,
       reward: "",
+      color: quiz.color || "",
       title: quiz.title,
       desc: quiz.desc,
       slug: quiz.slug || randomSlug,
@@ -198,87 +193,15 @@ const EditQuizForm = ({ initialQuiz, userId }: EditQuizFormProps) => {
   return (
     <>
       <EditQuizNavbar
+        quizSlug={quiz.slug}
         isNewQuiz={pathName.includes("newQuiz")}
         addQuestion={addNewQuestion}
         saveQuiz={saveQuiz}
+        quiz={quiz}
+        setQuiz={setQuiz}
+        allCollections={allCollections}
       />
       <main className="flex w-full flex-col gap-3 py-4 pb-24">
-        <div className="flex flex-col gap-4 md:flex-row md:gap-8">
-          <ImageInput
-            image={quiz.img}
-            onImageChange={(image) =>
-              setQuiz({ ...quiz, img: image as unknown as string })
-            }
-            title="Zdjęcie główne"
-            className="rounded-xl dark:bg-transparent"
-            containerClassName="flex-[2] lg:flex-1 aspect-video  rounded-xl"
-          />
-          <div className="flex-[2] flex-col gap-4">
-            <UnderlineInput
-              value={quiz.title}
-              onBlur={(value) => setQuiz({ ...quiz, title: value })}
-              title="Tytuł"
-              placeholder="Tu wpisz tytuł quizu"
-              className=""
-            />
-            <UnderlineInput
-              value={quiz.desc}
-              onBlur={(value) => setQuiz({ ...quiz, desc: value })}
-              placeholder="Tu wpisz opis quizu"
-              title="Opis"
-              className="h-[209px] overflow-y-auto rounded-xl border-primary p-4"
-            />
-          </div>
-        </div>
-        <div className="mt-4 flex flex-col justify-end gap-4 md:flex-row md:gap-8">
-          {editQuizAccordionData.map((accordion) => (
-            <Accordion
-              className=""
-              key={accordion.value}
-              type="single"
-              collapsible
-            >
-              <h1 className="text-lg font-medium">{accordion.title}</h1>
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="border-b-2 border-b-primary pb-2 text-xl font-semibold">
-                  {getTitleFromValue(
-                    quiz[accordion.value as keyof ExtendedQuiz],
-                    accordion.data,
-                  )}
-                </AccordionTrigger>
-                <AccordionContent className="flex items-center gap-2 py-6">
-                  <RadioGroup
-                    defaultValue={quiz[
-                      accordion.value as keyof ExtendedQuiz
-                    ]?.toString()}
-                    value={quiz[
-                      accordion.value as keyof ExtendedQuiz
-                    ]?.toString()}
-                    onValueChange={(value) => {
-                      setQuiz({
-                        ...quiz,
-                        [accordion.value as keyof ExtendedQuiz]: value,
-                      });
-                    }}
-                  >
-                    {accordion.data.map((data) => (
-                      <div
-                        className="flex items-center space-x-3"
-                        key={data.value}
-                      >
-                        <RadioGroupItem value={data.value} id="r1" />
-                        <Label className="text-xl font-semibold" htmlFor="r1">
-                          {data.title}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
-        </div>
-
         <h1 className="text-xl font-semibold">
           Pytania (
           {sliceArrayByPercentage(questions, quiz.questionsPercent).length})

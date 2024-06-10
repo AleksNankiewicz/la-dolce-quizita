@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <>
       {/* <HomeNavbar /> */}
-      <main className="flex flex-col gap-4">
+      <main className="flex flex-col gap-4 rounded-xl bg-card p-4">
         {/* <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/quizzes" /> */}
 
         <QuizzesSlider quizzes={quizzes} title="Nowe Quizy" seeAllLink="/" />

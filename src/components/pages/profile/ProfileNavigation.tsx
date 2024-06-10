@@ -1,5 +1,6 @@
 "use client";
 import { badgeVariants } from "@/components/ui/badge";
+import useMediaQuery from "@/lib/hooks/use-media-querry";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,8 +21,9 @@ const profileShortcuts = [
 ];
 const ProfileNavigation = ({ slug }: { slug: string }) => {
   const pathName = usePathname();
+
   return (
-    <div className="flex gap-3 sm:hidden">
+    <div className="flex gap-3">
       {profileShortcuts.map((shortcut) => (
         <Link
           key={shortcut.title}

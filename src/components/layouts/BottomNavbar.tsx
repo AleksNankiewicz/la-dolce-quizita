@@ -1,17 +1,24 @@
-import { Compass, Home, PlusSquare, User } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+import { cn } from "@/lib/utils";
+import { Compass, Home, PlusSquare, User } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
 type BottomNavbarProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+  className?: string;
+};
 
-const BottomNavbar = ({ children }: BottomNavbarProps) => {
+const BottomNavbar = ({ children, className }: BottomNavbarProps) => {
   return (
-    <div className="fixed bottom-0 left-0 bg-background p-4 z-50 w-full flex justify-evenly border-t md:hidden">
+    <div
+      className={cn(
+        "fixed bottom-0 left-0 z-50 flex w-full justify-evenly border-t bg-background p-4",
+        className,
+      )}
+    >
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default BottomNavbar
+export default BottomNavbar;

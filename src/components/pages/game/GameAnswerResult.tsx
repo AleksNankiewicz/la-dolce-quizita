@@ -1,62 +1,61 @@
-import Navbar from '@/components/layouts/Navbar'
-import { Badge } from '@/components/ui/badge'
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { Badge } from "@/components/ui/badge";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 type GameAnswerResultProps = {
-  isCorrect: boolean
-  isIncorrect: boolean
-  isTimeout: boolean
-}
+  isCorrect: boolean;
+  isIncorrect: boolean;
+  isTimeout: boolean;
+};
 
 const GameAnswerResult = ({
   isCorrect,
   isIncorrect,
   isTimeout,
 }: GameAnswerResultProps) => {
-  const [resultContent, setResultContent] = useState<React.ReactNode | null>()
+  const [resultContent, setResultContent] = useState<React.ReactNode | null>();
 
   useEffect(() => {
     if (isCorrect) {
       setResultContent(
-        <div className=" bg-green-500 left-0 w-full flex flex-col items-center justify-center gap-4 py-4">
-          <h1 className="font-semibold text-xl">Poprawna odpowiedź!</h1>
-          <Badge className="text-emerald-500 bg-white pointer-events-none">
+        <div className="left-0 flex w-full flex-col items-center justify-center gap-4 bg-green-500 py-4">
+          <h1 className="text-xl font-semibold">Poprawna odpowiedź!</h1>
+          <Badge className="pointer-events-none bg-white text-emerald-500">
             +200
           </Badge>
-        </div>
-      )
+        </div>,
+      );
     }
     if (isIncorrect) {
       setResultContent(
-        <div className=" bg-red-500 left-0 w-full flex flex-col items-center justify-center gap-4 py-4">
-          <h1 className="font-semibold text-xl">Niepoprawna odpowiedź!</h1>
-          <Badge className="text-red-500 bg-white pointer-events-none">
+        <div className="left-0 flex w-full flex-col items-center justify-center gap-4 bg-red-500 py-4">
+          <h1 className="text-xl font-semibold">Niepoprawna odpowiedź!</h1>
+          <Badge className="pointer-events-none bg-white text-red-500">
             Następnym razem się postaraj
           </Badge>
-        </div>
-      )
+        </div>,
+      );
     }
     if (isTimeout) {
       setResultContent(
-        <div className=" bg-yellow-500 left-0 w-full flex flex-col items-center justify-center gap-4 py-4">
-          <h1 className="font-semibold text-xl">Czas minął</h1>
-          <Badge className="text-yellow-500 bg-white pointer-events-none">
+        <div className="left-0 flex w-full flex-col items-center justify-center gap-4 bg-yellow-500 py-4">
+          <h1 className="text-xl font-semibold">Czas minął</h1>
+          <Badge className="pointer-events-none bg-white text-yellow-500">
             Postaraj się być szybszy
           </Badge>
-        </div>
-      )
+        </div>,
+      );
     }
-  }, [isCorrect, isIncorrect, isTimeout])
+  }, [isCorrect, isIncorrect, isTimeout]);
 
   return (
     <motion.div
-      className="z-10  fixed top-0 bg-black left-0 w-full "
+      className="fixed left-0 top-0 z-50 w-full bg-black"
       initial={{ y: -400, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
       {resultContent}
     </motion.div>
-  )
-}
+  );
+};
 
-export default GameAnswerResult
+export default GameAnswerResult;

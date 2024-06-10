@@ -1,23 +1,27 @@
-import { daysAgo } from "@/lib/utils";
+import { cn, daysAgo, getQuestionLabel } from "@/lib/utils";
 
-import { Quiz } from "@prisma/client";
+import { Question, Quiz } from "@prisma/client";
 import { User, Users } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-
+import { QuizWithQuestions } from "@/types/extended";
 import Link from "next/link";
 
-// interface QuizBlockProps extends Quiz {
-//   questions: Question[];
-// }
+interface QuizBlockProps {
+  quiz: QuizWithQuestions;
+  className?: string;
+}
 
-const QuizBlock = ({ quiz }: { quiz: Quiz }) => {
+const QuizBlock = ({ quiz, className }: QuizBlockProps) => {
   return (
     <Link
       href={`/quizzes/${quiz.slug}`}
-      className="flex min-h-[121px] overflow-hidden rounded-2xl border"
+      className={cn(
+        "flex h-[250px] flex-col overflow-hidden rounded-2xl border",
+        className,
+      )}
     >
-      <div className="relative min-w-[35%]">
+      <div className="relative flex-1">
         {quiz.img ? (
           <Image
             alt={`zdjęcie quizu`}
@@ -26,9 +30,9 @@ const QuizBlock = ({ quiz }: { quiz: Quiz }) => {
             fill
           />
         ) : null}
-        {/* <div className="absolute right-3 bottom-3 bg-primary p-1 flex gap-2 items-center text-sm rounded-md">
-          <p>{quiz.questions.length} ?</p>
-        </div> */}
+        <div className="absolute bottom-2 right-2 flex items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-white">
+          <p>{getQuestionLabel(quiz.questions.length)}</p>
+        </div>
       </div>
       <div className="flex w-full flex-col gap-3 p-3">
         <h1 className="line-clamp-1 text-xl font-semibold">{quiz.title}</h1>

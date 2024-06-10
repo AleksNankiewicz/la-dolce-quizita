@@ -16,16 +16,19 @@ const QuizAddToFavorites = ({
   const [isFavorite, setIsFavorite] = useState(isInFavorites);
 
   const addToFavoriteHandler = async () => {
+    setIsFavorite((prev) => !prev);
     const result = await toggleQuizInFavorites(quizId, userId);
     console.log(result);
-    if (result.success) {
-      setIsFavorite((prev) => !prev);
-    }
+
+    // if (result.success) {
+    //   setIsFavorite((prev) => !prev);
+    // }
     // revalidateTag("quizes");
   };
 
   return (
     <Star
+      className="cursor-pointer"
       fill={isFavorite ? "black" : "white"}
       onClick={addToFavoriteHandler}
     />

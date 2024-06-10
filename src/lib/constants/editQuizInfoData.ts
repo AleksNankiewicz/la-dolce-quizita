@@ -1,8 +1,8 @@
 import { QuizAccess, QuizLevel, QuizVisibility } from "@prisma/client";
 
-export const editQuizAccordionData: TEditQuizAccordionData[] = [
+export const editQuizInfoData: TEditQuizInfoData[] = [
   {
-    title: "Wybierz Ilość Pytań",
+    title: "Ilość Ilość Pytań",
     value: "questionsPercent",
     data: [
       {
@@ -75,13 +75,13 @@ export const editQuizAccordionData: TEditQuizAccordionData[] = [
   // },
 ] as const;
 
-type TEditQuizAccordionDataArr = {
+type TEditQuizInfoDataArr = {
   title: string;
   value: string;
 };
 
-type TEditQuizAccordionData = {
+type TEditQuizInfoData = {
   title: string;
   value: string;
-  data: TEditQuizAccordionDataArr[];
+  data: TEditQuizInfoDataArr[];
 };

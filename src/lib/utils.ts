@@ -1,3 +1,4 @@
+import { QuestionType } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -235,4 +236,29 @@ export function slugify(text: string): string {
     .replace(/-+/g, "-"); // Replace multiple consecutive hyphens with a single hyphen
 
   return `${slug}-${randomString}`;
+}
+
+export const getQuestionTypeTranslation = (type: QuestionType) => {
+  switch (type) {
+    case "multipleChoice":
+      return "Wielkorotnego wyboru";
+    case "openEnded":
+      return "Pytanie otwarte";
+    case "sortable":
+      return "Sortowalne";
+    case "trueOrFalse":
+      return "Prawda fałsz";
+    default:
+      return type; // If the type is not found, return the original type
+  }
+};
+
+export function getQuestionLabel(count: number): string {
+  if (count === 1) {
+    return `${count} Pytanie`;
+  } else if (count > 1 && count < 5) {
+    return `${count} Pytania`;
+  } else {
+    return `${count} Pytań`;
+  }
 }

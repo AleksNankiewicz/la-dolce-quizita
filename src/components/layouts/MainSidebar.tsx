@@ -1,6 +1,6 @@
-import React from "react";
-import { sheetShortcuts } from "../pages/home/HomeSheet";
-import { auth } from "@/auth";
+"use client";
+import React, { useEffect, useState } from "react";
+
 import Link from "next/link";
 import { ThemeSwitcher } from "../ui/ThemeSwitcher";
 
@@ -23,9 +23,12 @@ import {
   UserPlus,
 } from "lucide-react";
 
-type TNavigaitonShortcut = {
+import { usePathname } from "next/navigation";
+
+export type TNavigaitonShortcut = {
   title: string;
   link?: string;
+  altLink?: string;
   icon: React.ReactNode;
   iconStrokeColor?: string;
   iconBackgroundColor?: string;
@@ -34,14 +37,15 @@ type TNavigaitonShortcut = {
   unloggedOnly?: boolean;
   mobileOnly?: boolean;
 };
-const navigationShortcuts: TNavigaitonShortcut[] = [
+export const navigationShortcuts: TNavigaitonShortcut[] = [
   {
-    title: "Profil",
-    link: "/profiles",
-    icon: <User size={30} />,
+    title: "Zaloguj się",
+    link: "/api/auth/signin",
+    altLink: "signIn",
+    icon: <LogIn size={30} />,
     iconStrokeColor: "text-orange-500",
     iconBackgroundColor: "bg-orange-500/20",
-    loggedOnly: true,
+    unloggedOnly: true,
   },
 
   {
@@ -50,6 +54,14 @@ const navigationShortcuts: TNavigaitonShortcut[] = [
     icon: <Compass size={30} />,
     iconStrokeColor: "text-blue-500",
     iconBackgroundColor: "bg-blue-500/20",
+  },
+  {
+    title: "Profil",
+    link: "/profiles",
+    icon: <User size={30} />,
+    iconStrokeColor: "text-orange-500",
+    iconBackgroundColor: "bg-orange-500/20",
+    loggedOnly: true,
   },
 
   {
@@ -68,30 +80,30 @@ const navigationShortcuts: TNavigaitonShortcut[] = [
     iconBackgroundColor: "bg-orange-500/20",
     loggedOnly: true,
   },
-  // {
-  //   title: "Tryb Ciemny",
-  //   icon: <Moon size={30} />,
-  //   iconStrokeColor: "text-yellow-500",
-  //   iconBackgroundColor: "bg-yellow-500/20",
-  //   themeSwitcher: true,
-  // },
+  {
+    title: "Tryb Ciemny",
+    icon: <Moon size={30} />,
+    iconStrokeColor: "text-yellow-500",
+    iconBackgroundColor: "bg-yellow-500/20",
+    themeSwitcher: true,
+  },
   {
     title: "O Quizymanii",
-    link: "/",
+    link: "/about",
     icon: <Info size={30} />,
     iconStrokeColor: "text-purple-500",
     iconBackgroundColor: "bg-purple-500/20",
   },
   {
     title: "Pomoc",
-    link: "/",
+    link: "/help",
     icon: <HelpCircle size={30} />,
     iconStrokeColor: "text-red-500",
     iconBackgroundColor: "bg-red-500/20",
   },
   {
     title: "Wyloguj się",
-    link: "/api/auth/logout",
+    link: "/api/auth/signout",
     icon: <LogOut size={30} />,
     iconStrokeColor: "text-gray-500",
     iconBackgroundColor: "bg-gray-500/20",
@@ -99,16 +111,39 @@ const navigationShortcuts: TNavigaitonShortcut[] = [
   },
 ];
 
-const MainSidebar = async () => {
-  const session = await auth();
+const MainSidebar = ({
+  userSlug,
+  isGame,
+}: {
+  userSlug?: string;
+  isGame: boolean;
+}) => {
+  const [isHidden, setIsHidden] = useState(isGame);
+  const pathName = usePathname();
 
-  const userSlug = session?.user.slug;
+  useEffect(() => {
+    if (pathName.includes("game")) setIsHidden(true);
+    else setIsHidden(false);
+  }, [isHidden, pathName]);
+
+  if (isHidden) return;
 
   return (
     <div className="fixed left-0 top-[66px] hidden h-full w-[155px] flex-col items-center gap-4 overflow-y-auto border-r bg-background p-3 pb-20 sm:flex lg:w-[220px] lg:items-start">
       {navigationShortcuts.map((shortcut) => {
         if (userSlug && shortcut.unloggedOnly) return null;
         if (!userSlug && shortcut.loggedOnly) return null;
+        const shouldHighlight =
+          (shortcut.link &&
+            shortcut.link !== "/" &&
+            pathName.includes(shortcut.link)) ||
+          (pathName.includes(shortcut.altLink as string) &&
+            !(
+              pathName.includes("profiles") &&
+              pathName.includes("profiles") &&
+              shortcut.link == "/collections"
+            )) ||
+          pathName === shortcut.link;
         return (
           <Link
             href={
@@ -117,7 +152,10 @@ const MainSidebar = async () => {
                 : shortcut.link || "#"
             }
             key={shortcut.title}
-            className="flex items-center justify-between py-2"
+            className={cn(
+              "flex w-full items-center justify-center rounded-xl px-2 py-2 lg:justify-between",
+              shouldHighlight ? "bg-primary text-white" : "",
+            )}
           >
             <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
               <div
@@ -132,8 +170,8 @@ const MainSidebar = async () => {
               <h1 className="text-center text-lg font-semibold">
                 {shortcut.title}
               </h1>
+              {shortcut.themeSwitcher ? <ThemeSwitcher /> : null}
             </div>
-            {shortcut.themeSwitcher ? <ThemeSwitcher /> : null}
           </Link>
         );
       })}

@@ -13,9 +13,10 @@ import { db } from "@/lib/db";
 import QuestionBlock from "@/components/layouts/blocks/QuestionBlock";
 
 import BottomNavbar from "@/components/layouts/BottomNavbar";
-import Navbar from "@/components/layouts/Navbar";
+
 import QuizAddToFavorite from "@/components/pages/quizzes/quiz/QuizAddToFavorites";
 import { auth } from "@/auth";
+import QuizNavbar from "@/components/pages/quizzes/quiz/QuizNavbar";
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug;
@@ -69,7 +70,15 @@ const SingleQuizPage = async (params: any) => {
 
   return (
     <>
-      <Navbar title="Quiz" exit>
+      <QuizNavbar
+        isInFavorites={favoriteQuizzes.some(
+          (favoriteQuiz) => favoriteQuiz.slug === slug,
+        )}
+        quizId={quiz.id}
+        slug={quiz.slug}
+        userId={user?.id}
+      />
+      {/* <Navbar title="Quiz" exit>
         <div className="flex items-center gap-4">
           <Link
             className={cn(buttonVariants(), "hidden md:flex")}
@@ -93,20 +102,22 @@ const SingleQuizPage = async (params: any) => {
           )}
           <Share />
         </div>
-      </Navbar>
+      </Navbar> */}
       <main className="grid w-full grid-cols-2 gap-3 pb-[100px] md:pb-0">
-        {quiz.img && (
-          <div className="relative col-span-2 mx-auto flex h-full min-h-[200px] w-full justify-center overflow-hidden rounded-xl text-center text-2xl text-black">
-            <Image
-              src={quiz.img}
-              fill
-              alt="background"
-              className="overflow-hidden rounded-2xl object-cover duration-300"
-            />
+        <div className="col-span-2 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {quiz.img && (
+            <div className="relative col-span-1 mx-auto flex aspect-video h-full w-full justify-center overflow-hidden rounded-xl text-center text-2xl text-black">
+              <Image
+                src={quiz.img}
+                fill
+                alt="background"
+                className="overflow-hidden rounded-2xl object-cover duration-300"
+              />
+            </div>
+          )}
+          <div className="col-span-1 pt-4">
+            <h1 className="text-2xl font-semibold">{quiz.title}</h1>
           </div>
-        )}
-        <div className="col-span-2 pt-4">
-          <h1 className="text-2xl font-semibold">{quiz.title}</h1>
         </div>
 
         {/* <div className=" text-sm border-y   col-span-2 w-full text-center  flex justify-evenly items-center divide-x py-3">
@@ -157,7 +168,7 @@ const SingleQuizPage = async (params: any) => {
           </div>
         )}
 
-        <BottomNavbar>
+        <BottomNavbar className="sm:hidden">
           <Link
             className={cn(buttonVariants({ size: "xl" }))}
             href={`/game/${slug}`}

@@ -1,19 +1,32 @@
-import Navbar from "@/components/layouts/Navbar";
+"use client";
 import { buttonVariants } from "@/components/ui/button";
+import useNavbarStore from "@/lib/store/useNavbarStore";
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
 import { Pencil, Share, Star, X } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import QuizAddToFavorites from "./QuizAddToFavorites";
 
 type QuizNavbarProps = {
+  userId?: string;
+  isInFavorites: boolean;
   slug: string;
-  id: string;
+  quizId: string;
 };
 
-const QuizNavbar = ({ slug, id }: QuizNavbarProps) => {
-  return (
-    <Navbar title="Quiz" exit>
+const QuizNavbar = ({
+  userId,
+  quizId,
+  isInFavorites,
+  slug,
+}: QuizNavbarProps) => {
+  const setNavbarComponents = useNavbarStore(
+    (state) => state.setNavbarComponents,
+  );
+
+  useEffect(() => {
+    setNavbarComponents([
       <div className="flex items-center gap-4">
         <Link
           className={cn(buttonVariants(), "hidden md:flex")}
@@ -24,12 +37,20 @@ const QuizNavbar = ({ slug, id }: QuizNavbarProps) => {
         <Link href={`/editQuiz/${slug}`}>
           <Pencil />
         </Link>
-
-        <Star />
+        {userId && (
+          <QuizAddToFavorites
+            isInFavorites={isInFavorites}
+            userId={userId as string}
+            quizId={quizId}
+          />
+        )}
         <Share />
-      </div>
-    </Navbar>
-  );
+      </div>,
+    ]);
+  }, [userId, quizId, isInFavorites, slug, setNavbarComponents]);
+
+  // Return null or a placeholder if necessary
+  return null;
 };
 
 export default QuizNavbar;

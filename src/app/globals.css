@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 95%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -57,7 +57,7 @@
   }
 }
 
-[contenteditable='true']:focus {
+[contenteditable="true"]:focus {
   outline: none;
 }
 
@@ -67,11 +67,12 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #151c2c; /* Color of the scrollbar track */
+  background: var(--background); /* Color of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #7e22ce; /* Color of the scrollbar thumb */
+  background: #7e22ce7e;
+  /* Color of the scrollbar thumb */
   cursor: pointer;
   border-radius: 6px; /* Rounded corners */
 }
@@ -90,8 +91,8 @@
   outline: none;
 }
 
-[class^='number-slide'],
-[class*=' number-slide'] {
+[class^="number-slide"],
+[class*=" number-slide"] {
   background: grey;
   display: flex;
   align-items: center;

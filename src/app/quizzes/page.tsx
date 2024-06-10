@@ -8,7 +8,7 @@ import React from "react";
 const Page = async () => {
   // Assuming getQuizes() returns an array of quiz objects
 
-  const quizzes = await db.quiz.findMany();
+  const quizzes = await db.quiz.findMany({ include: { questions: true } });
 
   return (
     <div className="flex flex-col gap-4">

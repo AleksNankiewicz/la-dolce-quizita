@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import ProfileNavigation from "@/components/pages/profile/ProfileNavigation";
 import EditCollectionDialog from "@/components/pages/profile/collections/EditCollectionDialog";
 import { emptyCollection } from "@/lib/constants/emptyCollection";
-import { headers } from "next/headers";
+
 import { auth } from "@/auth";
 const layout = async ({
   children,
@@ -45,9 +45,9 @@ const layout = async ({
 
   return (
     <>
-      {/* <ProfileNavbar user={user} isUserProfile={user.id == authUser?.id} /> */}
+      <ProfileNavbar user={user} isUserProfile={user.id == authUser?.id} />
 
-      <main className="mt-8">
+      <main className="mt-8 flex flex-col gap-5">
         <div className="flex flex-col gap-5 sm:flex-row">
           <div className="flex items-center gap-5">
             <Avatar className="h-[70px] w-[70px] sm:h-[200px] sm:w-[200px]">
@@ -82,8 +82,8 @@ const layout = async ({
               <p>Kolekcje</p>
             </div>
           </div> */}
-          <ProfileNavigation slug={slug} />
         </div>
+        <ProfileNavigation slug={slug} />
         {children}
       </main>
       {user.id == authUser?.id ? (

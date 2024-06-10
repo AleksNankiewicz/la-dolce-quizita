@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 
-import SliderQuiz from "./SliderQuiz";
-
 import { ThreeDots } from "react-loader-spinner";
 
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { QuizWithQuestions } from "@/types/extended";
 import SliderLabel from "./SliderLabel";
+import QuizBlock from "../blocks/QuizBlock/QuizBlock";
 
 type QuizzesSliderProps = {
   quizzes: QuizWithQuestions[];
@@ -81,7 +80,11 @@ const QuizzesSlider = ({ quizzes, title, seeAllLink }: QuizzesSliderProps) => {
         <div className="absolute -right-2 top-0 z-20 h-full w-20 bg-gradient-to-l from-background to-background/0"></div>
 
         {quizzes.map((quiz: QuizWithQuestions) => (
-          <SliderQuiz quiz={quiz} email={email} key={quiz.slug} />
+          <QuizBlock
+            className="keen-slider__slide"
+            quiz={quiz}
+            key={quiz.slug}
+          />
         ))}
       </div>
     </div>

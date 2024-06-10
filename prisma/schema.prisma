@@ -115,6 +115,7 @@ model Quiz {
   title            String
   desc             String?
   img              String?
+  color            String?
   slug             String         @default(cuid())
   level            QuizLevel      @default(easy)
   visibility       QuizVisibility @default(public)
@@ -138,6 +139,7 @@ model Question {
   id        String       @id @default(cuid())
   title     String
   img       String
+  color     String?
   type      QuestionType @default(multipleChoice)
   time      Int          @default(20)
   points    Int          @default(20)
@@ -167,6 +169,7 @@ model Collection {
   title      String
   desc       String?
   img        String?
+  color      String?
   slug       String
   isDefault  Boolean              @default(false)
   visibility CollectionVisibility @default(public)
@@ -175,9 +178,10 @@ model Collection {
 }
 
 model Level {
-  id           String   @id @default(cuid())
-  number       Int
-  threshold    Int
+  id        String @id @default(cuid())
+  number    Int
+  threshold Int
+
   badge        String?
   profileFrame String?
   createdAt    DateTime @default(now())

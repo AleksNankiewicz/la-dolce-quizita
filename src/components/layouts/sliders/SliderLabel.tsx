@@ -9,7 +9,7 @@ type HomeQuizSectionLabelProps = {
 
 const SliderLabel = ({ title, seeAllLink }: HomeQuizSectionLabelProps) => {
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="flex w-full items-center justify-between pb-5">
       <h1 className="text-2xl font-semibold">{title}</h1>
       {seeAllLink && (
         <Link

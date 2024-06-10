@@ -1,4 +1,5 @@
 import QuizBlock from "@/components/layouts/blocks/QuizBlock/QuizBlock";
+import ProfileSorting from "@/components/pages/profile/ProfileSorting";
 import { db } from "@/lib/db";
 
 import { ArrowUpDown } from "lucide-react";
@@ -14,20 +15,15 @@ const page = async ({ params }: { params: any }) => {
         },
       },
     },
+    include: {
+      questions: true,
+    },
   });
 
   return (
     <div className="">
-      <div className="flex justify-between py-10">
-        <h1 className="text-2xl font-semibold">
-          Ulubione ({favoritesQuizzes.length})
-        </h1>
-        <div className="flex gap-2 text-xl font-semibold text-purple-500">
-          <p className="">Najowsze</p>
-          <ArrowUpDown />
-        </div>
-      </div>
-      <div className="flex flex-col gap-5">
+      <ProfileSorting title="Ulubione" length={favoritesQuizzes.length} />
+      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
         {favoritesQuizzes.map((quiz) => (
           <QuizBlock key={quiz.id} quiz={quiz} />
         ))}

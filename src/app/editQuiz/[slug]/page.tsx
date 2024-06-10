@@ -4,6 +4,7 @@ import { getBlankQuiz } from "@/lib/actions/getBlankQuiz";
 import EditQuizForm from "@/components/pages/editQuiz/EditQuizForm";
 import { ExtendedQuiz } from "@/types/extended";
 import { auth } from "@/auth";
+import { getCollections } from "@/lib/actions/getCollections";
 
 type Params = {
   params: { slug: string };
@@ -30,10 +31,17 @@ const EditQuizPage = async ({ params }: Params) => {
     if (!quiz) return null;
   }
 
-  const questions = quiz.questions || [];
+  const collections = await getCollections();
+
   if (!user) return;
 
-  return <EditQuizForm initialQuiz={quiz} userId={user.id as string} />;
+  return (
+    <EditQuizForm
+      initialQuiz={quiz}
+      userId={user.id as string}
+      collections={collections}
+    />
+  );
 };
 
 export default EditQuizPage;

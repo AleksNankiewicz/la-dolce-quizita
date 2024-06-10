@@ -1,21 +1,17 @@
 import { ImagePlusIcon, Plus, Trash } from "lucide-react";
-import Image from "next/image";
-import React, { ChangeEvent, useEffect, useState } from "react";
 
-import { answearProps, questionsProps } from "@/types/data";
-import { Button } from "../../ui/button";
+import React, { useState } from "react";
 
-import { Input } from "../../ui/input";
+import { Button, buttonVariants } from "../../../ui/button";
 
 import { answerButtonColors } from "@/lib/constants/answerButtonColors";
-import { Badge } from "../../ui/badge";
-import QuestionTimeDialog from "./QuestionTimeDialog";
-import EditAnswearDialog from "./EditAnswearDialog";
+
+import EditAnswearDialog from "../EditAnswearDialog";
 import { v4 as uuidv4 } from "uuid";
-import QuestionPointsDialog from "./QuestionPointsDialog";
-import AddAnswearDialog from "./AddAnswearDialog";
-import ContentEditable from "../../ui/ContentEditable";
-import { Answer, Question } from "@prisma/client";
+
+import AddAnswearDialog from "../AddAnswearDialog";
+import ContentEditable from "../../../ui/ContentEditable";
+import { Answer } from "@prisma/client";
 import { QuestionWithAnswers } from "@/types/extended";
 import { motion } from "framer-motion";
 import {
@@ -24,6 +20,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ImageInput from "@/components/layouts/inputs/ImageInput";
+import { cn, getQuestionTypeTranslation } from "@/lib/utils";
+import { GradientPicker } from "@/components/ui/GradientPicker";
+import QuestionTimeDialog from "./QuestionTimeDialog";
+import QuestionPointsDialog from "./QuestionPointsDialog";
+import TooltipButton from "@/components/ui/TooltipButton";
 
 type EditableQuestionProps = {
   question: QuestionWithAnswers;
@@ -36,13 +37,11 @@ type EditableQuestionProps = {
 const EditableQuestion = ({
   question,
   index,
-
   deleteQuestion,
-
   editQuestion,
 }: EditableQuestionProps) => {
   const [answers, setAnswers] = useState<Answer[]>(question.answers || []);
-
+  const [imgInputId, setImgInputId] = useState(uuidv4());
   // const [imagePreview, setImagePreview] = useState<string | null>(question.img)
 
   const addAnswear = (title: string, isCorrect: boolean) => {
@@ -104,8 +103,14 @@ const EditableQuestion = ({
       }}
       key={question.id}
       id={question.id}
-      className={`relative col-span-2 flex w-full flex-col items-center justify-evenly gap-3 rounded-xl border-2 p-4 text-center`}
+      // style={question.color ? { backgroundColor: question.color } : {}}
+      className={cn(
+        `relative col-span-2 flex w-full flex-col items-center justify-evenly gap-3 rounded-xl border-2 p-4 text-center`,
+      )}
     >
+      <h1 className="flex-1 text-center text-xl font-bold md:hidden">
+        {getQuestionTypeTranslation(question.type)}
+      </h1>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 gap-3 text-white">
           <QuestionTimeDialog time={question.time} editTime={editTime} />
@@ -116,24 +121,65 @@ const EditableQuestion = ({
         </div>
 
         <h1 className="hidden flex-1 text-center text-xl font-bold md:block">
-          {question.type}
+          {getQuestionTypeTranslation(question.type)}
         </h1>
         <div className="flex flex-1 justify-end gap-4">
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge
-                onClick={() => deleteQuestion(question.id)}
-                className={"border-2 border-primary bg-background text-primary"}
+          <TooltipButton content="Wybierz kolor">
+            <div className="">
+              <GradientPicker
+                className={cn(
+                  // badgeVariants(),
+                  "flex w-[48px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-background text-primary",
+                )}
+                placeholder=""
+                background={question.color || ""}
+                setBackground={(color) => {
+                  editQuestion({
+                    ...question,
+                    color: color,
+                  });
+                }}
+              />
+            </div>
+          </TooltipButton>
+
+          {!question.img && (
+            <TooltipButton content="Dodaj zdjęcie">
+              <label
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "cursor-pointer rounded-full border-2 border-primary px-3 text-primary",
+                )}
+                htmlFor={imgInputId}
               >
-                <Trash className="dark:text-white" />
-              </Badge>
-            </TooltipTrigger>
+                <ImagePlusIcon />
+              </label>
+            </TooltipButton>
+          )}
+
+          <TooltipButton content="Usuń pytanie">
+            <Button
+              variant={"outline"}
+              onClick={() => deleteQuestion(question.id)}
+              className={
+                "rounded-full border-0 border-primary px-3 text-primary sm:border-2"
+              }
+            >
+              <Trash />
+            </Button>
+          </TooltipButton>
+          <Tooltip>
+            <TooltipTrigger
+              asChild
+              className="absolute right-2 top-2 sm:static"
+            ></TooltipTrigger>
             <TooltipContent>Usuń pytanie</TooltipContent>
           </Tooltip>
         </div>
       </div>
       <div className="flex w-full flex-col gap-4 md:flex-row">
         <ImageInput
+          inputId={imgInputId}
           image={question.img}
           onImageChange={(image) =>
             editQuestion({
@@ -143,7 +189,7 @@ const EditableQuestion = ({
           }
           placeholder="Dodaj zdjęcie pytania "
           className="aspect-video"
-          containerClassName="w-full"
+          containerClassName={cn("w-full", !question.img && "hidden")}
         />
 
         <ContentEditable

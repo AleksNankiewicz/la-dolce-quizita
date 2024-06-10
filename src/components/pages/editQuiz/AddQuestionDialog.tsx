@@ -37,14 +37,14 @@ export function AddQuestionDialog({
       <DialogTrigger asChild>
         <Button className={cn(className)}>Dodaj pytanie</Button>
       </DialogTrigger>
-      <DialogContent className="w-[80%] rounded-3xl">
+      <DialogContent className="w-[90%] rounded-3xl sm:w-[50%]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Dodaj Pytanie
           </DialogTitle>
         </DialogHeader>
         <Separator />
-        <div className="mt-2 grid grid-cols-2 items-center gap-4">
+        <div className="mt-2 grid grid-cols-2 items-center gap-4 sm:grid-cols-1">
           {questionsTypes.map((type, index) => (
             <div
               key={index}

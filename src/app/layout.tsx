@@ -7,12 +7,14 @@ import "react-circular-progressbar/dist/styles.css";
 
 import { AppProvider } from "@/components/Appcontext";
 
-import { Toaster } from "react-hot-toast";
-
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import { cn } from "@/lib/utils";
-import MainNavbar from "@/components/layouts/MainNavbar";
+
 import MainSidebar from "@/components/layouts/MainSidebar";
+import Navbar from "@/components/layouts/navbar/Navbar";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,18 +24,22 @@ export const metadata: Metadata = {
     "QuizyMania to platforma, która zapewnia entuzjastom quizów możliwość eksplorowania różnorodnych tematów i testowania swojej wiedzy w przyjaznej i interaktywnej atmosferze.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  const headersList = headers();
+  const fullUrl = headersList.get("referer") || "";
+  const userSlug = session?.user.slug;
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
         <AppProvider>
-          <MainNavbar />
-          <MainSidebar />
-          <MaxWidthWrapper>
+          <Navbar userSlug={userSlug} isGame={fullUrl.includes("game")} />
+          <MainSidebar userSlug={userSlug} isGame={fullUrl.includes("game")} />
+          <MaxWidthWrapper isGame={fullUrl.includes("game")}>
             <div className="mt-[80px] min-h-[90vh] px-0">{children}</div>
             <Toaster />
           </MaxWidthWrapper>

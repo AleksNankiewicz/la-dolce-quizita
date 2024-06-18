@@ -88,7 +88,7 @@ export const navigationShortcuts: TNavigaitonShortcut[] = [
     themeSwitcher: true,
   },
   {
-    title: "O Quizymanii",
+    title: "O Nas",
     link: "/about",
     icon: <Info size={30} />,
     iconStrokeColor: "text-purple-500",
@@ -136,14 +136,21 @@ const MainSidebar = ({
         const shouldHighlight =
           (shortcut.link &&
             shortcut.link !== "/" &&
-            pathName.includes(shortcut.link)) ||
+            pathName.includes(shortcut.link) &&
+            !(
+              pathName.includes("collections") &&
+              pathName.includes("profiles") &&
+              shortcut.link === "/collections"
+            )) ||
           (pathName.includes(shortcut.altLink as string) &&
             !(
+              pathName.includes("collections") &&
               pathName.includes("profiles") &&
-              pathName.includes("profiles") &&
-              shortcut.link == "/collections"
+              shortcut.link === "/collections"
             )) ||
-          pathName === shortcut.link;
+          pathName === shortcut.link ||
+          (pathName.includes("profiles") && shortcut.link === "/profiles");
+
         return (
           <Link
             href={

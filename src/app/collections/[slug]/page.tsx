@@ -38,6 +38,7 @@ const page = async ({ params }: any) => {
               alt={collection.title}
               fill
               className="object-cover"
+              priority
             />
           </div>
         )}

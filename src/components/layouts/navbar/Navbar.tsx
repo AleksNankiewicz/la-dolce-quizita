@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import HomeSheet from "../HomeSheet";
 import NavbarComponents from "./NavbarComponents";
 import { usePathname } from "next/navigation";
+import SearchBar from "./SearchBar";
 
 const Navbar = ({
   userSlug,
@@ -29,7 +30,9 @@ const Navbar = ({
           <p className="text-3xl text-primary sm:hidden">Q</p>
         </Link>
       )}
-
+      {!pathName.includes("game") && !pathName.includes("editQuiz") ? (
+        <SearchBar />
+      ) : null}
       <div className={cn("flex items-center", isHidden && "w-full flex-1")}>
         <NavbarComponents />
         {!isHidden && <HomeSheet userSlug={userSlug} />}

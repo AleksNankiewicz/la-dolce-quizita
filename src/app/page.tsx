@@ -21,7 +21,11 @@ export default async function Home() {
       <main className="flex flex-col gap-4 rounded-xl bg-card p-4">
         {/* <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/quizzes" /> */}
 
-        <QuizzesSlider quizzes={quizzes} title="Nowe Quizy" seeAllLink="/" />
+        <QuizzesSlider
+          quizzes={quizzes}
+          title="Nowe Quizy"
+          seeAllLink="/quizzes"
+        />
 
         {/* <HomeQuizSectionLabel title={"Najnowsze Quizy"} /> */}
 

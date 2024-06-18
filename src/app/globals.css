@@ -111,6 +111,50 @@
   display: block;
 }
 
+.center-cursor::after {
+  content: "|"; /* Cursor symbol */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: cursor-blink 1s infinite step-end;
+}
+
+@keyframes cursor-blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor-hidden {
+  caret-color: transparent;
+}
+
+.center-cursor {
+  text-align: center;
+}
+
+.center-cursor.cursor-hidden::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  pointer-events: none; /* Ensure no interaction with hidden cursor */
+}
+
+.centered-text {
+  display: table-cell; /* Display as table-cell */
+  text-align: center; /* Center horizontally */
+  vertical-align: middle; /* Center vertically */
+  height: 100%; /* Take full height of the parent */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
 /* .overflow-wrap{
   overflow-wrap: break-word;
   overflow-wrap: a;

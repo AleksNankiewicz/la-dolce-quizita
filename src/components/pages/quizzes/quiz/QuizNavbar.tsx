@@ -1,5 +1,5 @@
 "use client";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import useNavbarStore from "@/lib/store/useNavbarStore";
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
@@ -35,7 +35,10 @@ const QuizNavbar = ({
           Graj
         </Link>
         <Link href={`/editQuiz/${slug}`}>
-          <Pencil />
+          <Pencil className="sm:hidden" />
+          <Button className="hidden sm:block" variant={"secondary"}>
+            Edytuj
+          </Button>
         </Link>
         {userId && (
           <QuizAddToFavorites
@@ -44,7 +47,7 @@ const QuizNavbar = ({
             quizId={quizId}
           />
         )}
-        <Share />
+        {/* <Share /> */}
       </div>,
     ]);
   }, [userId, quizId, isInFavorites, slug, setNavbarComponents]);

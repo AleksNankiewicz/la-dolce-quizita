@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Pencil, Share } from "lucide-react";
+import { Dot, Pencil, Share } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 
@@ -17,6 +17,8 @@ import BottomNavbar from "@/components/layouts/BottomNavbar";
 import QuizAddToFavorite from "@/components/pages/quizzes/quiz/QuizAddToFavorites";
 import { auth } from "@/auth";
 import QuizNavbar from "@/components/pages/quizzes/quiz/QuizNavbar";
+
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug;
@@ -44,6 +46,9 @@ const SingleQuizPage = async (params: any) => {
     },
     include: {
       questions: true,
+      favoritedBy: true,
+      playedBy: true,
+      author: true,
     },
   });
   // console.log(quiz)
@@ -71,40 +76,16 @@ const SingleQuizPage = async (params: any) => {
   return (
     <>
       <QuizNavbar
-        isInFavorites={favoriteQuizzes.some(
-          (favoriteQuiz) => favoriteQuiz.slug === slug,
-        )}
+        isInFavorites={
+          !favoriteQuizzes.some((favoriteQuiz) => favoriteQuiz.slug === slug)
+        }
         quizId={quiz.id}
         slug={quiz.slug}
         userId={user?.id}
       />
-      {/* <Navbar title="Quiz" exit>
-        <div className="flex items-center gap-4">
-          <Link
-            className={cn(buttonVariants(), "hidden md:flex")}
-            href={`/game/${slug}`}
-          >
-            Graj
-          </Link>
-          <Link href={`/editQuiz/${slug}`}>
-            <Pencil />
-          </Link>
-          {user && (
-            <QuizAddToFavorite
-              isInFavorites={
-                !favoriteQuizzes.some(
-                  (favoriteQuiz) => favoriteQuiz.slug === slug,
-                )
-              }
-              userId={user?.id as string}
-              quizId={quiz.id}
-            />
-          )}
-          <Share />
-        </div>
-      </Navbar> */}
-      <main className="grid w-full grid-cols-2 gap-3 pb-[100px] md:pb-0">
-        <div className="col-span-2 grid grid-cols-1 gap-4 md:grid-cols-2">
+
+      <main className="flex flex-col gap-3 pb-[100px] md:flex-row md:pb-0">
+        <div className="flex flex-1 flex-col gap-6">
           {quiz.img && (
             <div className="relative col-span-1 mx-auto flex aspect-video h-full w-full justify-center overflow-hidden rounded-xl text-center text-2xl text-black">
               <Image
@@ -115,9 +96,32 @@ const SingleQuizPage = async (params: any) => {
               />
             </div>
           )}
-          <div className="col-span-1 pt-4">
-            <h1 className="text-2xl font-semibold">{quiz.title}</h1>
+
+          <h1 className="text-3xl font-semibold">{quiz.title}</h1>
+          <div className="flex items-center gap-2">
+            {quiz.author.image && (
+              <Avatar className="h-7 w-7">
+                <AvatarImage src={quiz.author.image} />
+              </Avatar>
+            )}
+            <div className="font-medium">{quiz.author.name}</div>
           </div>
+          {/* <div className="flex gap-1 text-muted-foreground">
+            <p>{quiz.playedBy.length} graczy</p>
+            <Dot />
+            <p>{quiz.favoritedBy.length} Polubień</p>
+          </div> */}
+          <Link
+            className={cn(buttonVariants(), "hidden sm:flex")}
+            href={`/game/${slug}`}
+          >
+            Graj
+          </Link>
+          {quiz.desc && (
+            <div className="text-md col-span-2 flex flex-col gap-1 rounded-xl">
+              <p>{quiz.desc}</p>
+            </div>
+          )}
         </div>
 
         {/* <div className=" text-sm border-y   col-span-2 w-full text-center  flex justify-evenly items-center divide-x py-3">
@@ -137,16 +141,10 @@ const SingleQuizPage = async (params: any) => {
           </div>
         </div> */}
         {/* <Separator /> */}
-        {quiz.desc && (
-          <div className="text-md col-span-2 flex flex-col gap-1 rounded-xl">
-            <h1 className="py-3 text-lg font-semibold">Opis</h1>
-            <p>{quiz.desc}</p>
-          </div>
-        )}
 
         {quiz.questions && (
-          <div className="col-span-full">
-            <div className="flex justify-between py-10">
+          <div className="flex-1 md:flex-[2]">
+            <div className="flex justify-between">
               <h1 className="text-2xl font-semibold">
                 Pytania ({quiz.questions.length})
               </h1>

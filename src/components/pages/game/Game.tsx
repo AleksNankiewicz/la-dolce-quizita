@@ -5,11 +5,14 @@ import GameNavbar from "./GameNavbar";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { answerButtonColors } from "@/lib/constants/answerButtonColors";
+
 import BottomNavbar from "@/components/layouts/BottomNavbar";
 import GameTimeProgress from "./GameTimeProgress";
 import GameAnswerResult from "./GameAnswerResult";
 import EndGameModal from "./EndGameModal";
+import ChoiceAnswer from "./gameAnswerTypes/ChoiceAnswer";
+import OpenChoiceAnswer from "./gameAnswerTypes/OpenChoiceAnswer";
+import SortableAnswer from "./gameAnswerTypes/SortableAnswer";
 
 type GameProps = {
   quiz: ExtendedQuiz;
@@ -17,8 +20,10 @@ type GameProps = {
 
 export type UserAnswer = {
   questionId: string;
-  answerId: string;
+  id: string;
   isCorrect: boolean;
+  originalIndex?: number;
+  title?: string;
 };
 
 const Game = ({ quiz }: GameProps) => {
@@ -46,6 +51,28 @@ const Game = ({ quiz }: GameProps) => {
     });
   };
 
+  const checkSortedAnswer = (
+    sortedOrder: { id: string; originalIndex: number }[],
+  ) => {
+    const isCorrectOrder = sortedOrder.every(
+      (item, index) => item.originalIndex === index,
+    );
+    setIsGameRunning(false);
+    if (isCorrectOrder) {
+      setIsCorrect(true);
+    } else {
+      setIsIncorrect(true);
+    }
+    setUserAnswers((prevAnswers) => [
+      ...prevAnswers,
+      {
+        questionId: quiz.questions[index].id,
+        id: "",
+        isCorrect: isCorrectOrder,
+        originalIndex: -1,
+      },
+    ]);
+  };
   const checkAnswer = (answerId: string, isCorrectAnswer: boolean) => {
     setIsGameRunning(false);
     if (isCorrectAnswer) {
@@ -57,7 +84,7 @@ const Game = ({ quiz }: GameProps) => {
       ...prevAnswers,
       {
         questionId: quiz.questions[index].id,
-        answerId: answerId,
+        id: answerId,
         isCorrect: isCorrectAnswer,
       },
     ]);
@@ -95,7 +122,7 @@ const Game = ({ quiz }: GameProps) => {
               src={quiz.questions[index].img}
               fill
               alt="background"
-              className="overflow-hidden rounded-2xl object-cover duration-300"
+              className="overflow-hidden rounded-2xl object-contain duration-300"
             />
           </div>
         )}
@@ -104,30 +131,40 @@ const Game = ({ quiz }: GameProps) => {
             {quiz.questions[index].title}
           </h1>
         )}
-        {quiz.questions[index].answers && (
-          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:justify-center">
-            {quiz.questions[index].answers.map((answer, i) => (
-              <Button
-                variant={"game"}
-                onClick={() => checkAnswer(answer.id, answer.isCorrect)}
-                key={answer.id}
-                className={cn(
-                  (isCorrect || isIncorrect || isTimeout) &&
-                    (answer.isCorrect
-                      ? "bg-green-500 shadow-green-600"
-                      : "bg-red-500 shadow-red-600"),
-                  !(isCorrect || isIncorrect || isTimeout) &&
-                    `${answerButtonColors[i].background} ${answerButtonColors[i].shadow}`,
-                )}
-              >
-                {answer.title}
-              </Button>
-            ))}
-          </div>
-        )}
+        {quiz.questions[index].type === "multipleChoice" ||
+        quiz.questions[index].type === "trueOrFalse" ? (
+          <ChoiceAnswer
+            answers={quiz.questions[index].answers}
+            index={index}
+            checkAnswer={checkAnswer}
+            isCorrect={isCorrect}
+            isIncorrect={isIncorrect}
+            isTimeout={isTimeout}
+          />
+        ) : null}
+        {quiz.questions[index].type === "openEnded" ? (
+          <OpenChoiceAnswer
+            answers={quiz.questions[index].answers}
+            index={index}
+            checkAnswer={checkAnswer}
+            isCorrect={isCorrect}
+            isIncorrect={isIncorrect}
+            isTimeout={isTimeout}
+          />
+        ) : null}
+        {quiz.questions[index].type === "sortable" ? (
+          <SortableAnswer
+            answers={quiz.questions[index].answers}
+            index={index}
+            checkSortedAnswer={checkSortedAnswer}
+            isCorrect={isCorrect}
+            isIncorrect={isIncorrect}
+            isTimeout={isTimeout}
+          />
+        ) : null}
       </div>
       {!isGameRunning && !isEndGame ? (
-        <BottomNavbar className="left-1/2 w-fit -translate-x-1/2 md:bottom-10 md:rounded-full md:border-0">
+        <BottomNavbar className="left-1/2 -translate-x-1/2 sm:bottom-10 sm:w-fit sm:rounded-full sm:border-0">
           <Button size={"xl"} onClick={handleNextQuestion}>
             Dalej
           </Button>

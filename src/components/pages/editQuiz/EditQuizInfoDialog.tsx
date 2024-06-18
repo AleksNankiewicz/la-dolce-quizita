@@ -87,8 +87,8 @@ const EditQuizInfoDialog = ({
             }
             title="Zdjęcie główne"
             placeholder="Dodaj zdjęcie"
-            className="rounded-xl dark:bg-transparent md:min-h-[200px]"
-            containerClassName=" md:w-1/2 w-full"
+            className="aspect-auto rounded-xl dark:bg-transparent md:min-h-[200px]"
+            containerClassName=" md:w-1/2 w-full aspect-auto"
           />
         </div>
         <div className="flex flex-col justify-between gap-4 md:flex-row">

@@ -1,38 +1,38 @@
-import { daysAgo } from '@/lib/utils'
-import { ExtendedQuiz } from '@/types/extended'
-import { Question, Quiz } from '@prisma/client'
-import { User, Users } from 'lucide-react'
-import Image from 'next/image'
-import React from 'react'
+import { getQuestionTypeTranslation } from "@/lib/utils";
+
+import { Question } from "@prisma/client";
+
+import Image from "next/image";
+import React from "react";
 
 const QuestionBlock = ({
   question,
   index,
 }: {
-  question: Question
-  index: number
+  question: Question;
+  index: number;
 }) => {
   return (
-    <div className="border flex rounded-2xl overflow-hidden min-h-[121px]">
+    <div className="flex min-h-[121px] overflow-hidden rounded-2xl border">
+      <div className="flex w-full flex-col gap-3 p-3">
+        <p className="line-clamp-1">
+          <span>{index} - </span>
+          {getQuestionTypeTranslation(question.type)}
+        </p>
+        <h1 className="text-xl font-semibold">{question.title}</h1>
+      </div>
       {question.img ? (
-        <div className="min-w-[35%] relative">
+        <div className="relative min-w-[35%]">
           <Image
             alt={`zdjęcie quizu`}
-            className="object-cover"
+            className="object-contain"
             src={question.img}
             fill
           />
         </div>
       ) : null}
-      <div className="p-3 flex flex-col gap-3 w-full">
-        <h1 className="text-xl font-semibold line-clamp-1">
-          <span>{index} - </span>
-          {question.type}
-        </h1>
-        <p>{question.title}</p>
-      </div>
     </div>
-  )
-}
+  );
+};
 
-export default QuestionBlock
+export default QuestionBlock;

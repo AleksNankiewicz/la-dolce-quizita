@@ -2,33 +2,72 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CopyCheck } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 import { Separator } from "../../ui/separator";
 import { questionsTypes } from "@/lib/constants/questionsTypes";
 import { QuestionType } from "@prisma/client";
 import { useState } from "react";
 import { answerButtonColors } from "@/lib/constants/answerButtonColors";
 import { cn } from "@/lib/utils";
+import { QuestionWithAnswers } from "@/types/extended";
+
 type AddQuestionDialogProps = {
-  addNewQuestion: (questionType: QuestionType) => void;
+  addNewQuestion: (newQuestion: QuestionWithAnswers) => void;
+  quizId: string;
   className?: string;
 };
+
 export function AddQuestionDialog({
   addNewQuestion,
+  quizId,
   className,
 }: AddQuestionDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const addQuestionHandler = (questionType: QuestionType) => {
-    addNewQuestion(questionType);
+    const questionId = uuidv4();
+
+    const newQuestion: QuestionWithAnswers = {
+      id: questionId,
+      title: "",
+      color: "",
+      points: 20,
+      answers: [
+        {
+          id: uuidv4(),
+          title: "",
+          img: "",
+          isCorrect: true,
+          questionId: questionId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      time: 20,
+      img: "",
+      type: questionType,
+      quizId: quizId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    if (questionType === "trueOrFalse") {
+      newQuestion.answers.push({
+        id: uuidv4(),
+        title: "",
+        img: "",
+        isCorrect: false,
+        questionId: questionId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    addNewQuestion(newQuestion);
     setIsOpen(false);
   };
 
@@ -51,12 +90,7 @@ export function AddQuestionDialog({
               onClick={() => addQuestionHandler(type.value)}
               className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl bg-secondary p-6"
             >
-              {
-                <type.icon
-                  size={40}
-                  className={answerButtonColors[index].text}
-                />
-              }
+              <type.icon size={40} className={answerButtonColors[index].text} />
               <h1 className="text-center text-xl font-bold">{type.title}</h1>
             </div>
           ))}

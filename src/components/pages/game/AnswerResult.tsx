@@ -1,15 +1,15 @@
-import { QuestionWithAnswers } from '@/types/extended'
-import React from 'react'
-import { UserAnswer } from './Game'
-import Image from 'next/image'
-import { Check, CheckCircle2Icon, X, XCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { QuestionWithAnswers } from "@/types/extended";
+import React from "react";
+import { UserAnswer } from "./Game";
+import Image from "next/image";
+import { Check, CheckCircle2Icon, X, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type AnswerResultProps = {
-  question: QuestionWithAnswers
-  userAnswer: UserAnswer | undefined
-  className?: string
-}
+  question: QuestionWithAnswers;
+  userAnswer: UserAnswer | undefined;
+  className?: string;
+};
 
 const AnswerResult = ({
   question,
@@ -19,23 +19,13 @@ const AnswerResult = ({
   return (
     <div
       className={cn(
-        'border flex rounded-2xl overflow-hidden min-h-[121px]',
-        className
+        "flex min-h-[121px] overflow-hidden rounded-2xl border",
+        className,
       )}
     >
-      {question.img ? (
-        <div className="min-w-[35%] relative">
-          <Image
-            alt={`zdjęcie pytania`}
-            className="object-cover"
-            src={question.img}
-            fill
-          />
-        </div>
-      ) : null}
-      <div className="p-3 flex flex-col gap-3 w-full">
+      <div className="flex w-full flex-col gap-3 p-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold line-clamp-2">
+          <h1 className="line-clamp-2 text-xl font-semibold">
             {question.title}
           </h1>
           {userAnswer ? (
@@ -52,18 +42,33 @@ const AnswerResult = ({
         <div className="grid grid-cols-2 text-sm">
           {question.answers.map((answer) => (
             <div key={answer.id} className="flex items-center gap-1">
-              <p>{answer.title}</p>{' '}
-              {answer.isCorrect ? (
-                <Check size={15} className="text-green-400" />
-              ) : (
-                <X size={15} className="text-red-500" />
-              )}
+              <p>{answer.title}</p>
+              {question.type !== "openEnded" && question.type !== "sortable" ? (
+                <>
+                  {answer.isCorrect ? (
+                    <Check size={15} className="text-green-400" />
+                  ) : (
+                    <X size={15} className="text-red-500" />
+                  )}
+                  d
+                </>
+              ) : null}
             </div>
           ))}
         </div>
       </div>
+      {question.img ? (
+        <div className="relative min-w-[35%]">
+          <Image
+            alt={`zdjęcie pytania`}
+            className="object-contain"
+            src={question.img}
+            fill
+          />
+        </div>
+      ) : null}
     </div>
-  )
-}
+  );
+};
 
-export default AnswerResult
+export default AnswerResult;

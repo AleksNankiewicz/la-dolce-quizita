@@ -243,11 +243,11 @@ export const getQuestionTypeTranslation = (type: QuestionType) => {
     case "multipleChoice":
       return "Wielkorotnego wyboru";
     case "openEnded":
-      return "Pytanie otwarte";
+      return "Otwarte";
     case "sortable":
       return "Sortowalne";
     case "trueOrFalse":
-      return "Prawda fałsz";
+      return "Prawda/Fałsz";
     default:
       return type; // If the type is not found, return the original type
   }
@@ -262,3 +262,57 @@ export function getQuestionLabel(count: number): string {
     return `${count} Pytań`;
   }
 }
+
+export function hexToRgb(hex: string): [number, number, number] {
+  // Usuń znak hash (#) jeśli jest obecny
+  hex = hex.replace(/^#/, "");
+
+  // Jeśli kod koloru jest w formacie skróconym (3 znaki), przekształć go do pełnego formatu (6 znaków)
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  // Przekształć wartości HEX na wartości RGB
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return [r, g, b];
+}
+
+export function isColorLight(hex: string): boolean {
+  const [r, g, b] = hexToRgb(hex);
+  // Wzór do przeliczenia jasności
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  // Jasność powyżej 128 oznacza jasny kolor, w przeciwnym razie kolor jest ciemny
+  return brightness > 128;
+}
+
+export function getTextColorForBackground(hex: string): string {
+  return isColorLight(hex) ? "#000000" : "#FFFFFF";
+}
+
+export const errorQuestionTypeTranslations: Record<string, string> = {
+  noTitle: "Brak tytułu pytania",
+  noAnswers: "Brak odpowiedzi",
+  noCorrectAnswer: "Brak poprawnej odpowiedzi",
+};
+export const getQuestionDescription = (type: QuestionType) => {
+  switch (type) {
+    case "multipleChoice":
+      return "Wybierz jedną lub więcej poprawnych odpowiedzi.";
+    case "trueOrFalse":
+      return "Wybierz prawdę lub fałsz.";
+    case "openEnded":
+      return "Wpisz poprawne odpowiedzi.";
+    case "sortable":
+      return "Ułóż odpowiedzi w odpowiedniej kolejności.";
+    default:
+      return "Rodzaj pytania nieznany.";
+  }
+};

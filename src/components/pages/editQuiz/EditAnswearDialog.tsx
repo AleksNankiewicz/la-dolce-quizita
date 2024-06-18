@@ -19,7 +19,7 @@ import { TbSquareXFilled } from "react-icons/tb";
 import { Switch } from "../../ui/switch";
 
 import { FaCheckSquare, FaXingSquare } from "react-icons/fa";
-import { Answer } from "@prisma/client";
+import { Answer, QuestionType } from "@prisma/client";
 import { TAnswerButtonColors } from "@/lib/constants/answerButtonColors";
 import { Trash } from "lucide-react";
 import ContentEditable from "@/components/ui/ContentEditable";
@@ -35,10 +35,12 @@ type EditableAnswerProps = {
   editAnswer: (answer: Answer) => void;
   deleteAnswer: (id: string) => void;
   color: TAnswerButtonColors;
+  questionType: QuestionType;
 };
 const EditAnswerDialog = ({
   answer,
   color,
+  questionType,
   editAnswer,
   deleteAnswer,
 }: EditableAnswerProps) => {
@@ -119,14 +121,17 @@ const EditAnswerDialog = ({
               color.shadow,
             )}
           />
-          <div className="flex justify-between gap-2">
-            <p className="font-semibold">Poprawna Odpowiedź</p>
-            <Switch
-              checked={isCorrect}
-              onCheckedChange={handleCheckChange}
-              className="bg-blue-500"
-            />
-          </div>
+          {questionType == "multipleChoice" || questionType == "trueOrFalse" ? (
+            <div className="flex justify-between gap-2">
+              <p className="font-semibold">Poprawna Odpowiedź</p>
+              <Switch
+                checked={isCorrect}
+                onCheckedChange={handleCheckChange}
+                className="bg-blue-500"
+              />
+            </div>
+          ) : null}
+
           <Separator />
           <DialogFooter>
             <DialogClose>
@@ -142,7 +147,7 @@ const EditAnswerDialog = ({
           <Tooltip>
             <TooltipTrigger
               onClick={handleDelete}
-              className="absolute left-2 top-2 text-white"
+              className="absolute right-2 top-2 text-white"
             >
               <Trash size={16} />
             </TooltipTrigger>
@@ -152,24 +157,26 @@ const EditAnswerDialog = ({
           </Tooltip>
         </>
       )}
-      <Tooltip>
-        <TooltipTrigger
-          onClick={() => {
-            isMediumScreen && handleCheckChange();
-          }}
-          className={cn(
-            "absolute right-2 top-2 text-white",
-            !isMediumScreen && "pointer-events-none",
+      {questionType == "multipleChoice" || questionType == "trueOrFalse" ? (
+        <Tooltip>
+          <TooltipTrigger
+            onClick={() => {
+              isMediumScreen && handleCheckChange();
+            }}
+            className={cn(
+              "absolute left-2 top-2 text-white",
+              !isMediumScreen && "pointer-events-none",
+            )}
+          >
+            {isCorrect ? <FaCheckSquare /> : <TbSquareXFilled />}
+          </TooltipTrigger>
+          {isMediumScreen && (
+            <TooltipContent>
+              <p>Zmień poprawności odpowiedzi</p>
+            </TooltipContent>
           )}
-        >
-          {isCorrect ? <FaCheckSquare /> : <TbSquareXFilled />}
-        </TooltipTrigger>
-        {isMediumScreen && (
-          <TooltipContent>
-            <p>Zmień poprawności odpowiedzi</p>
-          </TooltipContent>
-        )}
-      </Tooltip>
+        </Tooltip>
+      ) : null}
     </div>
   );
 };

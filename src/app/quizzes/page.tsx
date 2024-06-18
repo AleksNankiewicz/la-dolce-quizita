@@ -11,7 +11,7 @@ const Page = async () => {
   const quizzes = await db.quiz.findMany({ include: { questions: true } });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
       {quizzes.map((quiz) => (
         <QuizBlock quiz={quiz} key={quiz.id} />
       ))}

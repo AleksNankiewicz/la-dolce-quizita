@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getTextColorForBackground } from "@/lib/utils";
 import { Collection } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import React from "react";
 
 type CollectionBlockProps = {
   collection: Collection;
+  quizzesLength?: number;
   className?: string;
 };
 
@@ -41,6 +42,19 @@ const CollectionBlock = ({ collection, className }: CollectionBlockProps) => {
           {collection.title}
         </p>
       )}
+      {/* <div
+          className="absolute bottom-2 right-2 flex items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-white"
+          style={
+            collection.color
+              ? {
+                  backgroundColor: collection.color,
+                  color: getTextColorForBackground(collection.color),
+                }
+              : {}
+          }
+        >
+          <p>{getQuestionLabel(quiz.questions.length)}</p>
+        </div> */}
     </Link>
   );
 };

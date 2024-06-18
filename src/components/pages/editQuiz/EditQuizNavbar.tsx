@@ -10,10 +10,12 @@ import { Collection, QuestionType, Quiz } from "@prisma/client";
 import { AddQuestionDialog } from "./AddQuestionDialog";
 import useNavbarStore from "@/lib/store/useNavbarStore";
 import EditQuizInfoDialog from "./EditQuizInfoDialog";
-import { ExtendedQuiz } from "@/types/extended";
+import { ExtendedQuiz, QuestionWithAnswers } from "@/types/extended";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import TooltipButton from "@/components/ui/TooltipButton";
 
 type EditQuizNavbarProps = {
-  addQuestion: (questionType: QuestionType) => void;
+  addQuestion: (newQuestion: QuestionWithAnswers) => void;
   saveQuiz: () => void;
   setQuiz: (quiz: ExtendedQuiz) => void;
   allCollections: Collection[];
@@ -38,22 +40,10 @@ const EditQuizNavbar = ({
 
   useEffect(() => {
     setNavbarComponents([
-      // <div className="flex items-center gap-4" key="left">
-      //   <Link href={"/"}>
-      //     <X strokeWidth={3} />
-      //   </Link>
-      //   {isNewQuiz ? (
-      //     <h1 className="text-2xl font-bold">Dodaj Quiz</h1>
-      //   ) : (
-      //     <h1 className="text-2xl font-bold">Edytuj Quiz</h1>
-      //   )}
-      // </div>,
       <div
         className="flex w-full flex-1 items-center justify-between gap-4"
         key="right"
       >
-        {/* <ThemeSwitcher /> */}
-
         <EditQuizInfoDialog
           allCollections={allCollections}
           quiz={quiz}
@@ -65,12 +55,20 @@ const EditQuizNavbar = ({
           </Link>
         )}
         <div className="hidden gap-4 md:flex">
-          <AddQuestionDialog addNewQuestion={addQuestion} />
-          <Button variant={"secondary"} onClick={saveQuiz}>
-            Zapisz
-          </Button>
+          <AddQuestionDialog addNewQuestion={addQuestion} quizId={quiz.id} />
+          <TooltipButton content={!quiz.title && "Quiz musi mieć tytuł"}>
+            <div className="pointer-events-auto cursor-pointer">
+              <Button
+                disabled={!quiz.title}
+                variant={"secondary"}
+                onClick={saveQuiz}
+                className=""
+              >
+                Zapisz
+              </Button>
+            </div>
+          </TooltipButton>
         </div>
-        {/* <Settings size={30} /> */}
       </div>,
     ]);
   }, [addQuestion, saveQuiz, isNewQuiz, setNavbarComponents]);

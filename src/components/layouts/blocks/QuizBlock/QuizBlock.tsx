@@ -1,4 +1,9 @@
-import { cn, daysAgo, getQuestionLabel } from "@/lib/utils";
+import {
+  cn,
+  daysAgo,
+  getQuestionLabel,
+  getTextColorForBackground,
+} from "@/lib/utils";
 
 import { Question, Quiz } from "@prisma/client";
 import { User, Users } from "lucide-react";
@@ -20,6 +25,14 @@ const QuizBlock = ({ quiz, className }: QuizBlockProps) => {
         "flex h-[250px] flex-col overflow-hidden rounded-2xl border",
         className,
       )}
+      style={
+        quiz.color
+          ? {
+              backgroundColor: quiz.color,
+              color: getTextColorForBackground(quiz.color),
+            }
+          : {}
+      }
     >
       <div className="relative flex-1">
         {quiz.img ? (
@@ -30,7 +43,17 @@ const QuizBlock = ({ quiz, className }: QuizBlockProps) => {
             fill
           />
         ) : null}
-        <div className="absolute bottom-2 right-2 flex items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-white">
+        <div
+          className="absolute bottom-2 right-2 flex items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-white"
+          style={
+            quiz.color
+              ? {
+                  backgroundColor: quiz.color,
+                  color: getTextColorForBackground(quiz.color),
+                }
+              : {}
+          }
+        >
           <p>{getQuestionLabel(quiz.questions.length)}</p>
         </div>
       </div>

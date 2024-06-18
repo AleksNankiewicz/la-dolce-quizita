@@ -22,14 +22,29 @@ const SingleGamePage = async ({ params }: any) => {
   });
 
   if (!quiz) return;
-  const shuffledQuestions = shuffleArray(quiz.questions);
-  const shuffledQuiz = {
+
+  // Add original index to each answer
+  const quizWithOriginalIndex = {
     ...quiz,
+    questions: quiz.questions.map((question) => ({
+      ...question,
+      answers: question.answers.map((answer, index) => ({
+        ...answer,
+        originalIndex: index,
+      })),
+    })),
+  };
+
+  // Shuffle questions and answers
+  const shuffledQuestions = shuffleArray(quizWithOriginalIndex.questions);
+  const shuffledQuiz = {
+    ...quizWithOriginalIndex,
     questions: shuffledQuestions.map((question) => ({
       ...question,
       answers: shuffleArray(question.answers),
     })),
   };
+
   return <Game quiz={shuffledQuiz} />;
 };
 

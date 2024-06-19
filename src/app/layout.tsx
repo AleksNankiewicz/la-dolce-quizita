@@ -40,7 +40,9 @@ export default async function RootLayout({
           <Navbar userSlug={userSlug} isGame={fullUrl.includes("game")} />
           <MainSidebar userSlug={userSlug} isGame={fullUrl.includes("game")} />
           <MaxWidthWrapper isGame={fullUrl.includes("game")}>
-            <div className="mt-[80px] min-h-[90vh] px-0">{children}</div>
+            <div className="mt-[80px] min-h-[90vh] bg-background px-0">
+              {children}
+            </div>
             <Toaster />
           </MaxWidthWrapper>
         </AppProvider>

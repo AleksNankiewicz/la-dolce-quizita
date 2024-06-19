@@ -115,7 +115,7 @@ const SearchBar: React.FC = () => {
             <CommandList
               ref={listRef}
               className={cn(
-                `absolute top-14 z-10 w-[94vw] -translate-x-[1px] rounded-b-xl border border-primary bg-background sm:w-[300px] md:w-[425px]`,
+                `absolute top-9 z-10 w-[94vw] -translate-x-[1px] rounded-b-xl border border-primary bg-background sm:top-[50px] sm:w-[300px] md:w-[425px]`,
                 quizzes.length === 0 && collections.length === 0
                   ? "hidden"
                   : "block",

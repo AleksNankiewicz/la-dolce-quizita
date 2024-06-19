@@ -19,6 +19,7 @@ import { auth } from "@/auth";
 import QuizNavbar from "@/components/pages/quizzes/quiz/QuizNavbar";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import QuizAddToFavorites from "@/components/pages/quizzes/quiz/QuizAddToFavorites";
 
 const SingleQuizPage = async (params: any) => {
   const slug = params.params.slug;
@@ -76,9 +77,10 @@ const SingleQuizPage = async (params: any) => {
   return (
     <>
       <QuizNavbar
-        isInFavorites={
-          !favoriteQuizzes.some((favoriteQuiz) => favoriteQuiz.slug === slug)
-        }
+        isInFavorites={favoriteQuizzes.some(
+          (favoriteQuiz) => favoriteQuiz.slug === slug,
+        )}
+        isAuthor={quiz.author.id === user?.id}
         quizId={quiz.id}
         slug={quiz.slug}
         userId={user?.id}
@@ -106,6 +108,14 @@ const SingleQuizPage = async (params: any) => {
             )}
             <div className="font-medium">{quiz.author.name}</div>
           </div>
+          <QuizAddToFavorites
+            isInFavorites={favoriteQuizzes.some(
+              (favoriteQuiz) => favoriteQuiz.slug === slug,
+            )}
+            userId={user?.id as string}
+            quizId={quiz.id}
+            // slug={quiz.slug}
+          />
           {/* <div className="flex gap-1 text-muted-foreground">
             <p>{quiz.playedBy.length} graczy</p>
             <Dot />

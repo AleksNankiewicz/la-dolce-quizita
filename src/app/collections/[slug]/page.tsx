@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import QuizBlock from "@/components/layouts/blocks/QuizBlock/QuizBlock";
 import CollectionNavbar from "@/components/pages/collections/CollectionNavbar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { db } from "@/lib/db";
@@ -16,13 +17,16 @@ const page = async ({ params }: any) => {
       slug: slug,
     },
     include: {
-      quizzes: true,
+      quizzes: {
+        include: {
+          questions: true,
+          author: true,
+        },
+      },
       author: true,
     },
   });
 
-  if (user?.id == collection?.authorId) console.log("to autor");
-  console.log(collection?.id);
   if (!collection) return;
   return (
     <>
@@ -54,6 +58,13 @@ const page = async ({ params }: any) => {
             <BadgeCheck className="text-blue-500" />
           </div>
         </div>
+        {collection.quizzes && (
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+            {collection.quizzes.map((quiz) => (
+              <QuizBlock key={quiz.id} quiz={quiz} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

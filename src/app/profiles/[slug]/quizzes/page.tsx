@@ -27,6 +27,7 @@ const page = async ({ params, searchParams }: PageProps) => {
     },
     include: {
       questions: true,
+      author: true,
     },
     orderBy: sortingOption.orderBy,
   });

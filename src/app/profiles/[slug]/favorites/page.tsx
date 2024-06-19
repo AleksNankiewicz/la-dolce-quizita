@@ -17,6 +17,7 @@ const page = async ({ params }: { params: any }) => {
     },
     include: {
       questions: true,
+      author: true,
     },
   });
 

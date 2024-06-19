@@ -23,7 +23,7 @@ const Navbar = ({
   }, [pathName]);
 
   return (
-    <div className="fixed left-0 top-0 z-40 flex min-h-[65px] w-full items-center justify-between bg-background p-3">
+    <div className="fixed left-0 top-0 z-40 flex min-h-[65px] w-full items-center justify-between gap-4 bg-background p-3">
       {!isHidden && (
         <Link href={"/"} className="text-2xl font-bold">
           <p className="hidden sm:block">Quizymania</p>

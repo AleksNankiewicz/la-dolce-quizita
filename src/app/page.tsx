@@ -10,6 +10,7 @@ export default async function Home() {
     take: 10,
     include: {
       questions: true,
+      author: true,
     },
   });
   const newestQuizes = await getNewestQuizes(8);

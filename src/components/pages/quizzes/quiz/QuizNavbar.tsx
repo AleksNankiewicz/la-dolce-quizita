@@ -2,14 +2,15 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import useNavbarStore from "@/lib/store/useNavbarStore";
 import { cn } from "@/lib/utils";
-import { Quiz } from "@prisma/client";
-import { Pencil, Share, Star, X } from "lucide-react";
+
+import { Pencil } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import QuizAddToFavorites from "./QuizAddToFavorites";
 
 type QuizNavbarProps = {
   userId?: string;
+  isAuthor: boolean;
   isInFavorites: boolean;
   slug: string;
   quizId: string;
@@ -18,6 +19,7 @@ type QuizNavbarProps = {
 const QuizNavbar = ({
   userId,
   quizId,
+  isAuthor,
   isInFavorites,
   slug,
 }: QuizNavbarProps) => {
@@ -28,25 +30,29 @@ const QuizNavbar = ({
   useEffect(() => {
     setNavbarComponents([
       <div key={"quiz-navbar"} className="flex items-center gap-4">
-        <Link
+        {/* <Link
           className={cn(buttonVariants(), "hidden md:flex")}
           href={`/game/${slug}`}
         >
           Graj
-        </Link>
-        <Link href={`/editQuiz/${slug}`}>
-          <Pencil className="sm:hidden" />
-          <Button className="hidden sm:block" variant={"secondary"}>
-            Edytuj
-          </Button>
-        </Link>
-        {userId && (
+        </Link> */}
+
+        {isAuthor && (
+          <Link href={`/editQuiz/${slug}`}>
+            <Pencil className="sm:hidden" />
+            <Button className="hidden sm:block" variant={"secondary"}>
+              Edytuj
+            </Button>
+          </Link>
+        )}
+
+        {/* {userId && (
           <QuizAddToFavorites
             isInFavorites={isInFavorites}
             userId={userId as string}
             quizId={quizId}
           />
-        )}
+        )} */}
         {/* <Share /> */}
       </div>,
     ]);

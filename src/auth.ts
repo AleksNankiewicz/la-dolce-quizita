@@ -8,9 +8,9 @@ import type { Provider } from "next-auth/providers";
 
 const providers: Provider[] = [
   Google,
-  Resend({
-    from: "quizy@quizymania.pl",
-  }),
+  // Resend({
+  //   from: "quizy@quizymania.pl",
+  // }),
 ];
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

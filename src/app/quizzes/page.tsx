@@ -8,7 +8,9 @@ import React from "react";
 const Page = async () => {
   // Assuming getQuizes() returns an array of quiz objects
 
-  const quizzes = await db.quiz.findMany({ include: { questions: true } });
+  const quizzes = await db.quiz.findMany({
+    include: { questions: true, author: true },
+  });
 
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">

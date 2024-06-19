@@ -9,11 +9,14 @@ import { Question, Quiz } from "@prisma/client";
 import { User, Users } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { QuizWithQuestions } from "@/types/extended";
+import {
+  QuizWithQuestions,
+  QuizWithQuestionsAndAuthor,
+} from "@/types/extended";
 import Link from "next/link";
 
 interface QuizBlockProps {
-  quiz: QuizWithQuestions;
+  quiz: QuizWithQuestionsAndAuthor;
   className?: string;
 }
 
@@ -58,14 +61,14 @@ const QuizBlock = ({ quiz, className }: QuizBlockProps) => {
         </div>
       </div>
       <div className="flex w-full flex-col gap-3 p-3">
-        <h1 className="line-clamp-1 text-xl font-semibold">{quiz.title}</h1>
+        <h1 className="line-clamp-2 text-xl font-semibold">{quiz.title}</h1>
 
-        <div className="flex text-sm">
+        {/* <div className="flex text-sm">
           <p>{daysAgo(quiz.createdAt)}</p>
-        </div>
+        </div> */}
         <div className="flex w-full justify-between">
           <div className="flex items-center gap-2 text-sm">
-            {quiz.visibility === "public" ? (
+            {/* {quiz.visibility === "public" ? (
               <>
                 <Users size={17} />
                 <p>Publiczny</p>
@@ -75,7 +78,9 @@ const QuizBlock = ({ quiz, className }: QuizBlockProps) => {
                 <User size={17} />
                 <p>Prywatny</p>
               </>
-            )}
+            )} */}
+
+            {quiz.author.name && <p>{quiz.author.name}</p>}
           </div>
           {/* <QuizBlockMenuBar id={quiz.id} slug={quiz.slug} /> */}
         </div>

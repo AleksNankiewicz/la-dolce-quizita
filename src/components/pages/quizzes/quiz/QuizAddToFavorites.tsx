@@ -1,10 +1,11 @@
-"use client";
+import { Button } from "@/components/ui/button";
 import toggleQuizInFavorites from "@/lib/actions/toggleQuizInFavorites";
 import { Star } from "lucide-react";
 import { revalidateTag } from "next/cache";
+
 import React, { useState } from "react";
 
-const QuizAddToFavorites = ({
+const QuizAddToFavorites = async ({
   userId,
   quizId,
   isInFavorites,
@@ -13,10 +14,8 @@ const QuizAddToFavorites = ({
   quizId: string;
   isInFavorites: boolean;
 }) => {
-  const [isFavorite, setIsFavorite] = useState(isInFavorites);
-
   const addToFavoriteHandler = async () => {
-    setIsFavorite((prev) => !prev);
+    // setIsFavorite((prev) => !prev);
     const result = await toggleQuizInFavorites(quizId, userId);
     console.log(result);
 
@@ -27,11 +26,24 @@ const QuizAddToFavorites = ({
   };
 
   return (
-    <Star
-      className="cursor-pointer"
-      fill={isFavorite ? "black" : "white"}
-      onClick={addToFavoriteHandler}
-    />
+    <form
+      action={async () => {
+        "use server";
+
+        await toggleQuizInFavorites(quizId, userId);
+        revalidateTag("quizzes");
+        revalidateTag("favorites");
+        console.log("jjj");
+      }}
+    >
+      <Button type="submit" variant={"ghost"}>
+        <Star
+          className="cursor-pointer"
+          fill={isInFavorites ? "black" : "white"}
+          // onClick={addToFavoriteHandler}
+        />
+      </Button>
+    </form>
   );
 };
 

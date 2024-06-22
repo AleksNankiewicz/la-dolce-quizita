@@ -27,12 +27,17 @@ const Navbar = ({
       {!isHidden && (
         <Link href={"/"} className="text-2xl font-bold">
           <p className="hidden sm:block">Quizymania</p>
-          <p className="text-3xl text-primary sm:hidden">Q</p>
+          <p className="text-3xl sm:hidden">
+            <span className="text-primary">Q</span>uizy
+          </p>
         </Link>
       )}
       {!pathName.includes("game") && !pathName.includes("editQuiz") ? (
-        <SearchBar />
+        <div className="flex w-full justify-end">
+          <SearchBar userSlug={userSlug} />
+        </div>
       ) : null}
+
       <div className={cn("flex items-center", isHidden && "w-full flex-1")}>
         <NavbarComponents />
         {!isHidden && <HomeSheet userSlug={userSlug} />}

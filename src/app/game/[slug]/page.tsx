@@ -3,8 +3,14 @@ import React from "react";
 import { db } from "@/lib/db";
 import Game from "@/components/pages/game/Game";
 import { shuffleArray } from "@/lib/utils";
+import { auth } from "@/auth";
+import { User } from "@prisma/client";
 
 const SingleGamePage = async ({ params }: any) => {
+  const session = await auth();
+
+  const authUser = session?.user as User;
+
   const { slug } = params;
   const quiz = await db.quiz.findFirst({
     where: {
@@ -45,7 +51,7 @@ const SingleGamePage = async ({ params }: any) => {
     })),
   };
 
-  return <Game quiz={shuffledQuiz} />;
+  return <Game quiz={shuffledQuiz} user={authUser} />;
 };
 
 export default SingleGamePage;

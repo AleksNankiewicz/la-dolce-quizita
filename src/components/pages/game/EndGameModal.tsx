@@ -9,29 +9,35 @@ import {
 } from "@/components/ui/dialog";
 import { BadgeCheck } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+
 import { UserAnswer } from "./Game";
 import { QuestionWithAnswers } from "@/types/extended";
 import AnswerResult from "./AnswerResult";
 import { useRouter } from "next/navigation";
+import { User } from "@prisma/client";
+import { updateQuizPlayCount } from "@/lib/actions/updateQuizPlayCount";
 
 type EndGameModalProps = {
   userAnswers: UserAnswer[];
   questions: QuestionWithAnswers[];
-  quizSlug: string;
+  quizId: string;
+  user: User | undefined | null;
 };
 
 const EndGameModal = ({
   userAnswers,
   questions,
-  quizSlug,
+  quizId,
 }: EndGameModalProps) => {
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
-    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    const updatePlayCount = async () => {
+      await updateQuizPlayCount(quizId);
+    };
+    updatePlayCount();
   }, []);
+
   const { correctAnswersCount, incorrectAnswersCount } = questions.reduce(
     (counts, question) => {
       const userAnswer = userAnswers.find(
@@ -59,7 +65,7 @@ const EndGameModal = ({
             <BadgeCheck size={50} className="text-green-400" />
             <p>Gratulacje</p>
             <DialogDescription>
-              Ukończyłeś pomyślnie ten quiz odpowiadając poprawnie na{" "}
+              Ukończyłeś ten quiz odpowiadając poprawnie na{" "}
               {correctAnswersCount} z {questions.length} pytań!
             </DialogDescription>
           </DialogTitle>

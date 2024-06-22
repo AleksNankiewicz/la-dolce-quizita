@@ -1,42 +1,84 @@
-import { getNewestQuizes } from "@/lib/actions";
-
 import { db } from "@/lib/db";
 
 import QuizzesSlider from "@/components/layouts/sliders/QuizzesSlider";
 import CollectionsSlider from "@/components/layouts/sliders/CollectionsSlider";
 
 export default async function Home() {
-  const quizzes = await db.quiz.findMany({
+  const newestQuizes = await db.quiz.findMany({
     take: 10,
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       questions: true,
       author: true,
     },
   });
-  const newestQuizes = await getNewestQuizes(8);
-  const collections = await db.collection.findMany();
+
+  const mostPlayedQuizes = await db.quiz.findMany({
+    take: 10,
+    orderBy: {
+      playCount: "desc",
+    },
+    include: {
+      questions: true,
+      author: true,
+    },
+  });
+
+  const animalsQuizzes = await db.quiz.findMany({
+    include: { collections: true, questions: true, author: true },
+    where: {
+      collections: {
+        some: {
+          title: "Zwierzęta",
+        },
+      },
+    },
+  });
+  const foodQuizzes = await db.quiz.findMany({
+    include: { collections: true, questions: true, author: true },
+    where: {
+      collections: {
+        some: {
+          title: "Jedzenie",
+        },
+      },
+    },
+  });
+
+  const collections = await db.collection.findMany({
+    take: 10,
+  });
 
   return (
     <>
-      {/* <HomeNavbar /> */}
       <main className="flex flex-col gap-4 rounded-xl bg-card p-4">
-        {/* <HomeQuizSectionLabel title={"Wybrane Quizy"} seeMoreLink="/quizzes" /> */}
-
         <QuizzesSlider
-          quizzes={quizzes}
+          quizzes={newestQuizes}
           title="Nowe Quizy"
           seeAllLink="/quizzes"
         />
 
-        {/* <HomeQuizSectionLabel title={"Najnowsze Quizy"} /> */}
-
-        <QuizzesSlider quizzes={newestQuizes} title="Nie działające Quizy" />
-
-        {/* <HomeQuizSectionLabel title={"Kolekcje"} seeMoreLink="/collections" /> */}
         <CollectionsSlider
           collections={collections}
           title="Kolekcje"
           seeAllLink="/collections"
+        />
+        <QuizzesSlider
+          quizzes={mostPlayedQuizes}
+          title="Popularne Quizy"
+          seeAllLink="/quizzes"
+        />
+        <QuizzesSlider
+          quizzes={animalsQuizzes}
+          title="Quizy ze zwierzętami"
+          seeAllLink="/quizzes"
+        />
+        <QuizzesSlider
+          quizzes={foodQuizzes}
+          title="Quizy o jedzeniu"
+          seeAllLink="/quizzes"
         />
       </main>
     </>

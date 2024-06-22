@@ -58,10 +58,10 @@ const layout = async ({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="">
-              <span className="flex gap-2">
-                <h1 className="text-xl font-semibold">{user?.name}</h1>
-                <h1 className="text-xl font-semibold">{user?.firstName}</h1>
-                <h1 className="text-xl font-semibold">{user?.lastName}</h1>
+              <h1 className="text-xl font-semibold">{user?.name}</h1>
+              <span className="flex gap-2 text-lg font-medium">
+                <h1>{user?.firstName}</h1>
+                <h1>{user?.lastName}</h1>
               </span>
               <p>{user?.desc}</p>
             </div>

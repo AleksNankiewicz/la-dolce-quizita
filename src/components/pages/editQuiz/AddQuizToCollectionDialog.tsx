@@ -1,12 +1,14 @@
 import React from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Collection } from "@prisma/client";
 import CollectionBlock from "@/components/layouts/blocks/CollectionBlock";
@@ -65,25 +67,38 @@ const AddQuizToCollectionDialog = ({
         <DialogHeader>
           <DialogTitle className="font-bold">Kolekcje</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
           {allCollections.map((collection) => (
             <div
-              className="relative"
+              className="group relative cursor-pointer overflow-hidden rounded-xl"
               key={collection.id}
               onClick={() => handleCollectionToggle(collection)}
             >
               <CollectionBlock
                 collection={collection}
-                className="pointer-events-none"
+                className="pointer-events-none text-base"
               />
+
+              {!quiz.collections.some((col) => col.id === collection.id) && (
+                <div className="absolute inset-0 hidden items-center justify-center bg-black bg-opacity-50 font-semibold text-white sm:group-hover:flex">
+                  Wybierz kolekcje
+                </div>
+              )}
               {quiz.collections.some((col) => col.id === collection.id) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 font-semibold text-white">
                   Wybrana
                 </div>
               )}
             </div>
           ))}
         </div>
+        <DialogFooter className="mt-4 flex flex-row-reverse sm:justify-end">
+          <DialogClose asChild>
+            <Button type="button" variant="default">
+              OK
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

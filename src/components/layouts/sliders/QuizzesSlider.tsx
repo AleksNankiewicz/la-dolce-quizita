@@ -33,7 +33,7 @@ const QuizzesSlider = ({ quizzes, title, seeAllLink }: QuizzesSliderProps) => {
     breakpoints: {
       "(min-width: 768px)": {
         slides: {
-          perView: 4,
+          perView: quizzes.length > 4 ? 4 : quizzes.length - 1,
           spacing: 13,
         },
       },

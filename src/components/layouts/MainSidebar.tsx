@@ -95,8 +95,8 @@ export const navigationShortcuts: TNavigaitonShortcut[] = [
     iconBackgroundColor: "bg-purple-500/20",
   },
   {
-    title: "Pomoc",
-    link: "/help",
+    title: "FAQs",
+    link: "/faqs",
     icon: <HelpCircle size={30} />,
     iconStrokeColor: "text-red-500",
     iconBackgroundColor: "bg-red-500/20",

@@ -1,19 +1,31 @@
-// Import necessary dependencies and types
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react";
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Command,
+  CommandDialog,
+  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
+  CommandShortcut,
 } from "@/components/ui/command"; // Adjust the import path as needed
 import { cn } from "@/lib/utils";
 import { searchQuizOrCollection } from "@/lib/actions/searchQuizOrCollection"; // Adjust the import path as needed
 import { Collection, Quiz } from "@prisma/client"; // Adjust the import path as needed
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import useMediaQuery from "@/lib/hooks/use-media-querry";
+
+import { buttonVariants } from "@/components/ui/button";
 
 // Define types for SearchResults
 type SearchResults = {
@@ -22,154 +34,162 @@ type SearchResults = {
 };
 
 // SearchBar component
-const SearchBar: React.FC = () => {
+
+type SearchBarProps = {
+  userSlug?: string;
+};
+
+const SearchBar = ({ userSlug }: SearchBarProps) => {
   // State to manage input focus and query
 
   const router = useRouter();
-  const isSmallScreen = useMediaQuery("(max-width: 640px)");
-  const pathName = usePathname();
-  const [isFocused, setIsFocused] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResults>({
     quizzes: [],
     collections: [],
   });
 
-  // Ref for CommandList element
-  const listRef = useRef<HTMLDivElement>(null);
-
   // Effect to fetch search results when query changes
   useEffect(() => {
     const fetchResults = async () => {
       // Trim query and check if it's empty
-
       const trimmedQuery = query.trim();
       if (trimmedQuery === "") {
         setSearchResults({ quizzes: [], collections: [] });
         return;
       }
 
+      setLoading(true); // Set loading to true before fetching data
+
       try {
         // Fetch search results from the server
         const results = await searchQuizOrCollection(trimmedQuery);
-        setSearchResults(results);
+        setSearchResults({
+          quizzes: results.quizzes.slice(0, 5), // Limit results to 10
+          collections: results.collections.slice(0, 5), // Limit results to 10
+        });
       } catch (error) {
         console.error("Error fetching search results:", error);
         setSearchResults({ quizzes: [], collections: [] });
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
     fetchResults();
   }, [query]);
 
-  useEffect(() => {
-    setIsFocused(false);
-  }, [pathName]);
-
-  // Event handler for input focus
-  const handleFocus = () => setIsFocused(true);
-
-  // Event handler for input blur
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Check if blur event is related to clicking inside CommandList
-    if (listRef.current && listRef.current.contains(e.relatedTarget as Node)) {
-      return;
-    }
-    setIsFocused(false);
-  };
-
-  // Event handler for input change
-
-  // Destructure quizzes and collections from searchResults
   const { quizzes, collections } = searchResults;
 
   return (
     <>
-      <div className="flex flex-1 items-end justify-end sm:hidden">
-        <Search onClick={() => setIsFocused(true)} className="cursor-pointer" />
-      </div>
       <div
+        onClick={() => setOpen(true)}
         className={cn(
-          "fixed top-20 w-[94vw] sm:static sm:w-[300px] md:w-[425px]",
-          isFocused && isSmallScreen ? "" : "hidden sm:block",
+          buttonVariants({ variant: "outline" }),
+          "hidden h-auto cursor-pointer text-xl text-muted-foreground sm:flex",
         )}
       >
-        <Command
-          className={cn(
-            "rounded-xl border border-primary sm:top-auto",
-            // isFocused && isSmallScreen ? "hidden" : "",
-            isFocused && (quizzes.length || collections.length)
-              ? "rounded-b-none rounded-t-xl"
-              : "rounded-xl",
-          )}
-        >
-          <CommandInput
-            value={query}
-            onValueChange={setQuery}
-            placeholder="Wyszukaj..."
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            className="w-[10vw] border-primary sm:w-full"
-          />
-          {isFocused ? (
-            <CommandList
-              ref={listRef}
-              className={cn(
-                `absolute top-9 z-10 w-[94vw] -translate-x-[1px] rounded-b-xl border border-primary bg-background sm:top-[50px] sm:w-[300px] md:w-[425px]`,
-                quizzes.length === 0 && collections.length === 0
-                  ? "hidden"
-                  : "block",
-              )}
-              onMouseDown={(e) => e.preventDefault()} // Prevent blur when clicking inside the list
-              tabIndex={-1} // Make it focusable
-              onBlur={handleBlur}
-            >
-              {/* Conditional rendering based on search results */}
-              {quizzes.length === 0 &&
-              collections.length === 0 &&
-              query ? null : (
-                <>
-                  {quizzes.length > 0 && (
-                    <CommandGroup heading="Quizy">
-                      {quizzes.map((quiz) => (
-                        <CommandItem
-                          // children={'juj'}
-                          value={quiz.title}
-                          onSelect={() => router.push(`/quizzes/${quiz.slug}`)}
-                          key={quiz.id}
-                          data-disabled={false} // Example data attribute, adjust as needed
-                          data-selected={false} // Example data attribute, adjust as needed
-                        >
-                          {/* <Link href={`/quizzes/${quiz.slug}`}> */}
-                          {quiz.title}
-                          {/* </Link> */}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  )}
-                  {/* Separator between Quizy and Kolekcje if both are present */}
-                  {quizzes.length > 0 && collections.length > 0 && (
-                    <CommandSeparator />
-                  )}
-                  {collections.length > 0 && (
-                    <CommandGroup heading="Kolekcje">
-                      {collections.map((collection) => (
-                        <CommandItem
-                          key={collection.id}
-                          data-disabled={false} // Example data attribute, adjust as needed
-                          data-selected={false} // Example data attribute, adjust as needed
-                        >
-                          {collection.title}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  )}
-                </>
-              )}
-            </CommandList>
-          ) : null}
-        </Command>
+        <p className="">Przeszukaj Quizymanie...</p>
+        <Search />
       </div>
+      <div className="flex flex-1 items-end justify-end sm:hidden">
+        <Search onClick={() => setOpen(true)} className="cursor-pointer" />
+      </div>
+
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput onValueChange={setQuery} placeholder="Wyszukaj..." />
+        <CommandList>
+          {loading && (
+            <CommandItem className="flex min-h-[200px] justify-center">
+              <span>Wczytywanie...</span>
+            </CommandItem>
+          )}
+          {quizzes.length > 0 && (
+            <CommandGroup heading="Quizy">
+              {quizzes.map((quiz) => (
+                <CommandItem
+                  value={quiz.title}
+                  onSelect={() => {
+                    router.push(`/quizzes/${quiz.slug}`);
+                    setOpen(false);
+                    setQuery("");
+                  }}
+                  key={quiz.id}
+                >
+                  {quiz.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+          {/* Separator between Quizy and Kolekcje if both are present */}
+          {quizzes.length > 0 && collections.length > 0 && <CommandSeparator />}
+
+          {!loading && collections.length > 0 && (
+            <CommandGroup heading="Kolekcje">
+              {collections.map((collection) => (
+                <CommandItem
+                  value={collection.title}
+                  onSelect={() => {
+                    router.push(`/collections/${collection.slug}`);
+                    setOpen(false);
+                    setQuery("");
+                  }}
+                  key={collection.id}
+                >
+                  {collection.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+
+          <CommandSeparator />
+
+          {!loading && quizzes.length === 0 && collections.length === 0 && (
+            <CommandEmpty>Brak wyników.</CommandEmpty>
+          )}
+          {/* {!loading && ( */}
+          <>
+            <CommandGroup heading="Skróty">
+              <CommandItem>
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>Quizy</span>
+              </CommandItem>
+              <CommandItem>
+                <Smile className="mr-2 h-4 w-4" />
+                <span>Kolekcje</span>
+              </CommandItem>
+              {/* <CommandItem>
+              <Calculator className="mr-2 h-4 w-4" />
+              <span>Calculator</span>
+            </CommandItem> */}
+            </CommandGroup>
+
+            <CommandSeparator />
+            {userSlug && (
+              <CommandGroup heading="Profil">
+                <CommandItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Moje Quizy</span>
+                </CommandItem>
+                <CommandItem>
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  <span>Ulubione Quizy</span>
+                </CommandItem>
+                <CommandItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Moje Kolekcje</span>
+                </CommandItem>
+              </CommandGroup>
+            )}
+          </>
+          {/* )} */}
+        </CommandList>
+      </CommandDialog>
     </>
   );
 };

@@ -22,7 +22,7 @@ const NavbarComponents = () => {
   }, [pathname, setNavbarComponents]);
 
   return (
-    <div className="mr-4 flex w-full flex-1 items-center gap-4 sm:mr-0">
+    <div className="mr-4 flex w-full flex-1 items-center sm:mr-0 sm:gap-4">
       {navbarComponents.map((Component, index) => (
         <div key={index}>{Component}</div>
       ))}

@@ -15,6 +15,7 @@ type ImageInputProps = {
   className?: string;
   containerClassName?: string;
   iconSize?: number;
+  containImage?: boolean;
 };
 
 function ImageInput({
@@ -26,6 +27,7 @@ function ImageInput({
   className,
   containerClassName,
   iconSize = 50,
+  containImage,
 }: ImageInputProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
@@ -69,23 +71,27 @@ function ImageInput({
       {title && <h1 className="text-lg font-medium">{title}</h1>}
       <div
         className={cn(
-          "relative flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl text-center dark:bg-muted md:flex-1",
+          "group relative flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl text-center dark:bg-muted md:flex-1",
           className,
         )}
       >
         {selectedImage ||
         (image && image !== "undefined" && image !== "null") ? (
           <>
-            <Image
-              draggable={false}
-              alt="quizphoto"
-              src={selectedImage ? URL.createObjectURL(selectedImage) : image!}
-              width={2000}
-              height={2000}
-              className="rounded-tr-xl"
-            />
-
-            <div className="absolute bottom-3 right-3 flex gap-2">
+            <div className="bg-blue-400">
+              <Image
+                draggable={false}
+                alt="quizphoto"
+                src={
+                  selectedImage ? URL.createObjectURL(selectedImage) : image!
+                }
+                fill={containImage}
+                width={!containImage ? 2000 : undefined}
+                height={!containImage ? 2000 : undefined}
+                className="rounded-tr-xl object-contain"
+              />
+            </div>
+            <div className="absolute bottom-3 right-3 flex gap-2 sm:hidden sm:group-hover:flex">
               <label
                 htmlFor={inputId}
                 className={cn(

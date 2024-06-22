@@ -17,9 +17,9 @@ import TooltipButton from "@/components/ui/TooltipButton";
 type EditQuizNavbarProps = {
   addQuestion: (newQuestion: QuestionWithAnswers) => void;
   saveQuiz: () => void;
+  isSaving: boolean;
   setQuiz: (quiz: ExtendedQuiz) => void;
   allCollections: Collection[];
-
   quiz: ExtendedQuiz;
   isNewQuiz: boolean;
   quizSlug: string;
@@ -28,6 +28,7 @@ type EditQuizNavbarProps = {
 const EditQuizNavbar = ({
   addQuestion,
   saveQuiz,
+  isSaving,
   quiz,
   setQuiz,
   isNewQuiz,
@@ -59,7 +60,7 @@ const EditQuizNavbar = ({
           <TooltipButton content={!quiz.title && "Quiz musi mieć tytuł"}>
             <div className="pointer-events-auto cursor-pointer">
               <Button
-                disabled={!quiz.title}
+                disabled={!quiz.title || isSaving}
                 variant={"secondary"}
                 onClick={saveQuiz}
                 className=""

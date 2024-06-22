@@ -31,7 +31,7 @@ const CollectionsSlider = ({
     breakpoints: {
       "(min-width: 768px)": {
         slides: {
-          perView: 4,
+          perView: collections.length > 4 ? 4 : collections.length - 1,
           spacing: 13,
         },
       },
@@ -41,15 +41,15 @@ const CollectionsSlider = ({
       spacing: 13,
     },
 
-    created(s) {
-      s.moveToIdx(5, true, animation);
-    },
-    updated(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
-    },
-    animationEnded(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
-    },
+    // created(s) {
+    //   s.moveToIdx(5, true, animation);
+    // },
+    // updated(s) {
+    //   s.moveToIdx(s.track.details.abs + 5, true, animation);
+    // },
+    // animationEnded(s) {
+    //   s.moveToIdx(s.track.details.abs + 5, true, animation);
+    // },
   });
 
   useEffect(() => {

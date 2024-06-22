@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import ImageInput from "@/components/layouts/inputs/ImageInput";
 import UnderlineInput from "@/components/layouts/inputs/UnderlineInput";
-import DropdownSelect from "@/components/layouts/DropdownSelect";
+
 import { Collection, CollectionVisibility } from "@prisma/client";
 import { uploadImages } from "@/lib/actions/uploadImages";
 import { addOrEditCollection } from "@/lib/actions/addOrEditCollection";
@@ -57,7 +57,17 @@ const EditCollectionDialog = ({
   }, [collection]);
 
   const handleDelete = async () => {
-    const result = await deleteCollection(collection.id);
+    toast.loading("Usuwanie kolekcji", { id: "delete" });
+
+    const promise = deleteCollection(collection.id);
+
+    toast.promise(promise, {
+      loading: "Zapisywanie...",
+      success: "Kolekcja zapisana",
+      error: "Nie udało się zapisać kolekcji",
+    });
+
+    const result = await promise;
 
     if (result.success) {
       setOpen(false);
@@ -66,7 +76,7 @@ const EditCollectionDialog = ({
   };
 
   const saveChanges = async () => {
-    console.log(editedCollection.id);
+    // console.log(editedCollection.id);
     try {
       const formData = new FormData();
       if (collectionImg) {

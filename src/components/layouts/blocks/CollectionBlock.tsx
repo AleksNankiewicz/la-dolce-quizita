@@ -15,7 +15,7 @@ const CollectionBlock = ({ collection, className }: CollectionBlockProps) => {
     <Link
       href={`/collections/${collection.slug}`}
       className={cn(
-        "relative flex aspect-[5/3] w-full overflow-hidden rounded-xl border",
+        "relative flex aspect-[5/3] w-full overflow-hidden rounded-xl border text-lg",
         className,
       )}
     >
@@ -35,7 +35,7 @@ const CollectionBlock = ({ collection, className }: CollectionBlockProps) => {
       {collection.title && (
         <p
           className={cn(
-            `absolute bottom-2 left-2 flex w-full items-center justify-start px-2 text-lg font-semibold text-white`,
+            `max-w-fulls absolute bottom-2 line-clamp-1 flex w-full items-center justify-start px-2 font-semibold text-white`,
             !collection.img && "text-black dark:text-white",
           )}
         >
@@ -53,7 +53,7 @@ const CollectionBlock = ({ collection, className }: CollectionBlockProps) => {
               : {}
           }
         >
-          <p>{getQuestionLabel(quiz.questions.length)}</p>
+          <p>{getQuestionLabel(quiz.questions.length)}</p
         </div> */}
     </Link>
   );

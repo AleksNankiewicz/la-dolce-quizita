@@ -13,9 +13,11 @@ import EndGameModal from "./EndGameModal";
 import ChoiceAnswer from "./gameAnswerTypes/ChoiceAnswer";
 import OpenChoiceAnswer from "./gameAnswerTypes/OpenChoiceAnswer";
 import SortableAnswer from "./gameAnswerTypes/SortableAnswer";
+import { User } from "@prisma/client";
 
 type GameProps = {
   quiz: ExtendedQuiz;
+  user: User | undefined | null;
 };
 
 export type UserAnswer = {
@@ -26,7 +28,7 @@ export type UserAnswer = {
   title?: string;
 };
 
-const Game = ({ quiz }: GameProps) => {
+const Game = ({ quiz, user }: GameProps) => {
   const [index, setIndex] = useState(0);
 
   const [isGameRunning, setIsGameRunning] = useState(true);
@@ -173,8 +175,9 @@ const Game = ({ quiz }: GameProps) => {
       {isEndGame && (
         <EndGameModal
           questions={quiz.questions}
-          quizSlug={quiz.slug}
+          quizId={quiz.id}
           userAnswers={userAnswers}
+          user={user}
         />
       )}
     </>

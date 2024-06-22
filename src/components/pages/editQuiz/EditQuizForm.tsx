@@ -14,13 +14,13 @@ import { toast } from "sonner";
 import { TQuestionError, TQuestionErrorTypes } from "@/types/TQuestionsTypes";
 import { saveQuiz } from "@/lib/editQuiz/saveQuiz";
 import AddQuestionBlock from "./AddQuestionBlock";
+import { mockedQuestion } from "@/lib/constants/mockedQuestion";
 
 type EditQuizFormProps = {
   initialQuiz: ExtendedQuiz;
   userId: string;
   collections: Collection[];
 };
-
 const EditQuizForm: React.FC<EditQuizFormProps> = ({
   initialQuiz,
   userId,
@@ -28,8 +28,12 @@ const EditQuizForm: React.FC<EditQuizFormProps> = ({
 }) => {
   const [quiz, setQuiz] = useState<ExtendedQuiz>(initialQuiz);
   const pathName = usePathname();
+  const [isSaving, setIsSaving] = useState(false);
   const [allCollections, setAllCollections] =
     useState<Collection[]>(collections);
+  // const [questions, setQuestions] = useState<QuestionWithAnswers[]>(
+  //   mockedQuestion(quiz.id),
+  // );
   const [questions, setQuestions] = useState<QuestionWithAnswers[]>(
     quiz.questions,
   );
@@ -81,27 +85,37 @@ const EditQuizForm: React.FC<EditQuizFormProps> = ({
   };
 
   const handleSaveQuiz = async () => {
+    setIsSaving(true);
+
+    const saveQuizPromise = saveQuiz({
+      quiz,
+      userId,
+      pathName,
+      questions,
+      editableQuestionsRef,
+      setErrorQuestions,
+    });
+
+    toast.promise(saveQuizPromise, {
+      loading: "Zapisywanie...",
+      success: "Quiz zapisany!",
+      error: "Nie udało się zapisać quizu!",
+    });
+
     try {
-      await saveQuiz({
-        quiz,
-        userId,
-        pathName,
-        questions,
-        editableQuestionsRef,
-        setErrorQuestions,
-      });
+      await saveQuizPromise;
+      setIsSaving(false);
     } catch (err) {
+      setIsSaving(false);
+      console.log(err);
       console.error("Error saving quiz:", err);
-      toast.dismiss();
-      toast("Nie udało się zapisać quizu!", {
-        icon: "😢",
-      });
     }
   };
 
   return (
     <>
       <EditQuizNavbar
+        isSaving={isSaving}
         quizSlug={quiz.slug}
         isNewQuiz={pathName.includes("newQuiz")}
         addQuestion={addNewQuestion}
@@ -147,6 +161,7 @@ const EditQuizForm: React.FC<EditQuizFormProps> = ({
 
         <div className="fixed bottom-0 left-0 flex w-full gap-4 bg-background p-4 md:hidden">
           <Button
+            disabled={isSaving}
             onClick={handleSaveQuiz}
             className={cn(
               buttonVariants({

@@ -1,3 +1,4 @@
+"use client";
 import {
   cn,
   daysAgo,
@@ -8,7 +9,7 @@ import {
 import { Question, Quiz } from "@prisma/client";
 import { User, Users } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   QuizWithQuestions,
   QuizWithQuestionsAndAuthor,

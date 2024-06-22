@@ -83,17 +83,18 @@ const EditAnswerDialog = ({
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative h-full w-full">
       <Dialog open={isOpen && !isMediumScreen} onOpenChange={setIsOpen}>
-        <DialogTrigger className="w-full">
+        <DialogTrigger className="h-full w-full">
           <ContentEditable
             onBlur={handleTitleChange}
             value={answer.title}
             error={error}
             errorMessage="Odpowiedź nie może być pusta"
             placeholder="tu wpisz odpowiedź"
+            containerClassName="h-full "
             className={cn(
-              `relative flex min-h-[84px] items-center rounded-md p-7 text-center text-xl text-white shadow-[0px_5px_0px_0px_#00000024] sm:justify-center`,
+              `relative flex h-full min-h-[83px] items-center rounded-md p-7 text-center text-xl text-white shadow-[0px_5px_0px_0px_#00000024] sm:justify-center`,
               color.background,
               color.shadow,
             )}

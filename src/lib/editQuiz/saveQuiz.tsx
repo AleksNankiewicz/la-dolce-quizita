@@ -1,9 +1,5 @@
-import { useState } from "react";
-
-import { toast } from "sonner";
 import { ExtendedQuiz, QuestionWithAnswers } from "@/types/extended";
 
-import { usePathname } from "next/navigation";
 import { TQuestionError } from "@/types/TQuestionsTypes";
 import { addQuiz } from "../actions/addQuiz";
 import { uploadImages } from "../actions/uploadImages";
@@ -67,8 +63,6 @@ export const saveQuiz = async ({
 
   setErrorQuestions([]);
 
-  toast.loading("Zapisywanie quizu...");
-
   let imageRefs: (string | File)[] = [];
   const formData = new FormData();
   formData.append("file", quiz.img as unknown as string);
@@ -122,21 +116,12 @@ export const saveQuiz = async ({
   try {
     const saved = await addQuiz(savedQuiz);
 
-    toast.dismiss();
-    toast("Quiz Zapisany!", {
-      icon: "😊",
-    });
-
     if (pathName.includes("newQuiz")) {
       setTimeout(() => {
         window.location.href = `/editQuiz/${saved.slug}`;
       }, 2000);
     }
   } catch (err: any) {
-    toast.dismiss();
-    toast("Nie udało się zapisać quizu!", {
-      icon: "😢",
-    });
     console.log(err);
     throw new Error(err);
   }

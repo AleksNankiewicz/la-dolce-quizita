@@ -7,6 +7,7 @@ export type ContentEditableProps = {
   onChange?: (newValue: string) => void;
   value: string | null;
   placeholder?: string;
+  containerClassName?: string;
   className?: string;
   error?: boolean;
   errorMessage?: string;
@@ -18,6 +19,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   onChange,
   value,
   placeholder,
+  containerClassName,
   className,
   error,
   errorMessage,
@@ -70,7 +72,7 @@ const ContentEditable: React.FC<ContentEditableProps> = ({
   };
 
   return (
-    <div className="relative col-span-full w-full">
+    <div className={cn("relative col-span-full w-full", containerClassName)}>
       <p
         ref={ref}
         className={cn(

@@ -1,6 +1,5 @@
 "use client";
 import { badgeVariants } from "@/components/ui/badge";
-import useMediaQuery from "@/lib/hooks/use-media-querry";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

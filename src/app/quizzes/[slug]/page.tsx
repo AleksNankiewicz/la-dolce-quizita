@@ -89,7 +89,7 @@ const SingleQuizPage = async (params: any) => {
       <main className="flex flex-col gap-3 pb-[100px] md:flex-row md:pb-0">
         <div className="flex flex-1 flex-col gap-6">
           {quiz.img && (
-            <div className="relative col-span-1 mx-auto flex aspect-video h-full w-full justify-center overflow-hidden rounded-xl text-center text-2xl text-black">
+            <div className="relative col-span-1 mx-auto flex aspect-video h-full w-full justify-center overflow-hidden rounded-xl text-center text-2xl text-black md:max-h-[220px]">
               <Image
                 src={quiz.img}
                 fill
@@ -106,16 +106,24 @@ const SingleQuizPage = async (params: any) => {
                 <AvatarImage src={quiz.author.image} />
               </Avatar>
             )}
-            <div className="font-medium">{quiz.author.name}</div>
+            <Link
+              href={`/profiles/${quiz.author.slug}/quizzes`}
+              className={cn(
+                buttonVariants({ variant: "link" }),
+                "px-0 font-medium text-black dark:text-white",
+              )}
+            >
+              {quiz.author.name}
+            </Link>
           </div>
-          <QuizAddToFavorites
+          {/* <QuizAddToFavorites
             isInFavorites={favoriteQuizzes.some(
               (favoriteQuiz) => favoriteQuiz.slug === slug,
             )}
             userId={user?.id as string}
             quizId={quiz.id}
-            // slug={quiz.slug}
-          />
+      
+          /> */}
           {/* <div className="flex gap-1 text-muted-foreground">
             <p>{quiz.playedBy.length} graczy</p>
             <Dot />
@@ -153,7 +161,7 @@ const SingleQuizPage = async (params: any) => {
         {/* <Separator /> */}
 
         {quiz.questions && (
-          <div className="flex-1 md:flex-[2]">
+          <div className="flex flex-1 flex-col gap-5 md:flex-[2]">
             <div className="flex justify-between">
               <h1 className="text-2xl font-semibold">
                 Pytania ({quiz.questions.length})

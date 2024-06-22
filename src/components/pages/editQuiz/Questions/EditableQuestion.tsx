@@ -223,6 +223,7 @@ const EditableQuestion: React.FC<EditableQuestionProps> = ({
       </div>
       <div className="flex w-full flex-col gap-4 md:flex-row">
         <ImageInput
+          containImage
           inputId={imgInputId}
           image={question.img}
           onImageChange={(image) =>

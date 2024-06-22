@@ -58,8 +58,8 @@ const toggleQuizInFavorites = async (quizId: string, userId: string) => {
       });
     }
 
-    // revalidateTag("quizzes");
-    // revalidateTag("favorites");
+    revalidateTag("quizzes");
+    revalidateTag("favorites");
     return { success: true };
   } catch (error) {
     console.error("Error toggling quiz in favorites:", error);

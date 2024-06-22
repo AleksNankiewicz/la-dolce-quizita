@@ -30,13 +30,6 @@ const QuizNavbar = ({
   useEffect(() => {
     setNavbarComponents([
       <div key={"quiz-navbar"} className="flex items-center gap-4">
-        {/* <Link
-          className={cn(buttonVariants(), "hidden md:flex")}
-          href={`/game/${slug}`}
-        >
-          Graj
-        </Link> */}
-
         {isAuthor && (
           <Link href={`/editQuiz/${slug}`}>
             <Pencil className="sm:hidden" />
@@ -46,13 +39,13 @@ const QuizNavbar = ({
           </Link>
         )}
 
-        {/* {userId && (
+        {userId && (
           <QuizAddToFavorites
             isInFavorites={isInFavorites}
             userId={userId as string}
             quizId={quizId}
           />
-        )} */}
+        )}
         {/* <Share /> */}
       </div>,
     ]);
